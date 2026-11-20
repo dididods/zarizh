@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Кого заріжемо</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&family=Manrope:wght@500;600;700;800&display=swap">
+<style>
+/* v2. One bubblegum page: game first screen (headline, live chick, input, chips, result), then the offer as the next chapter.
+   Deliberately single-theme (a pink toy world), every colour set explicitly. */
+:root{
+  --blush:#FFD9EC;      /* page ground */
+  --blush-deep:#FFB3D6; /* streaks, borders */
+  --hot:#E5007A;        /* the one loud accent */
+  --yolk:#FFD21F;       /* chick yellow */
+  --ink:#2A0F2B;        /* text, dark blocks */
+  --ink-soft:#6E3B62;
+  --paper:#FFF6FA;      /* cards, fields */
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--blush);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;overflow-x:hidden;
+  background-image:repeating-linear-gradient(-28deg, transparent 0 46px, rgba(255,179,214,.45) 46px 50px, transparent 50px 140px);
+}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--hot);outline-offset:3px}
+.pad{
+  max-width:1120px;margin:0 auto;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- Game ---------- */
+.game{padding-block:16px 36px;display:grid;gap:16px;grid-template-areas:"top" "head" "stage" "form"}
+.top{grid-area:top;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;line-height:1.2}
+.brand span{color:var(--hot)}
+.top-r{display:flex;gap:8px;align-items:center}
+.skip{font-weight:800;font-size:13px;text-decoration:none;border-bottom:2px solid var(--hot);white-space:nowrap}
+.sound{font:700 12px var(--body);color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.head{grid-area:head;display:grid;gap:8px}
+.eyebrow{margin:0;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--hot)}
+h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-spacing:-.02em;font-size:clamp(36px, 10.5vw, 80px);text-wrap:balance}
+.knife-word{color:var(--hot);position:relative;display:inline-block}
+.knife-word::after{content:"";position:absolute;left:-3%;right:-3%;top:56%;height:.09em;background:var(--ink);transform:rotate(-1.5deg);border-radius:4px}
+.sub{margin:0;color:var(--ink-soft);font-weight:600;max-width:36ch}
+
+/* Stage */
+.stage{grid-area:stage;position:relative;width:100%;max-width:500px;justify-self:center;aspect-ratio:1/.9;margin-top:-6px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.stage.shake{animation:shake .32s linear}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-9px,5px)}40%{transform:translate(8px,-6px)}60%{transform:translate(-6px,-3px)}80%{transform:translate(5px,4px)}}
+.rig{position:absolute;left:9%;width:76%;bottom:5%;aspect-ratio:760/743;transform-origin:50% 95%;
+  transform:rotate(var(--look,0deg)) translateY(var(--lookY,0%));transition:transform .5s cubic-bezier(.3,1.3,.5,1)}
+.shadow{position:absolute;left:12%;right:12%;bottom:-6%;height:14%;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(110,20,70,.30), rgba(110,20,70,0));animation:shadow 3.4s ease-in-out infinite}
+@keyframes shadow{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.96)}}
+.chick{position:absolute;inset:0;cursor:pointer;transform-origin:50% 92%;transition:transform .2s cubic-bezier(.3,1.6,.5,1);outline-offset:6px;border-radius:40%}
+.puff{position:absolute;inset:0;transform-origin:50% 95%;animation:breathe 3.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.018)}}
+.puff img{position:absolute;display:block;pointer-events:none;max-width:none;height:auto}
+.body{left:0;top:0;width:100%}
+.blink{left:32.43%;top:36.3%;width:41.13%;opacity:0}
+.chick.eyes .blink{opacity:1}
+.bow{left:37%;top:-2%;width:27%;transform-origin:50% 85%;animation:bow 3.4s ease-in-out infinite}
+@keyframes bow{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(-6deg) translateY(1.5%)}}
+.chick.boing .bow{animation:boing .7s cubic-bezier(.3,1.8,.4,1)}
+@keyframes boing{0%{transform:rotate(-9deg) scale(1)}25%{transform:rotate(-20deg) scale(1.12,.9) translateY(-8%)}55%{transform:rotate(4deg) scale(.96,1.06)}80%{transform:rotate(-12deg)}100%{transform:rotate(-9deg)}}
+.knife{position:absolute;left:58.13%;top:43.34%;width:50%;aspect-ratio:360/203;transform-origin:24% 70%;transform:rotate(-18deg);transition:transform .14s ease-out}
+.knife img{position:absolute;inset:0;width:100%;height:100%}
+.glint{position:absolute;inset:0;pointer-events:none;
+  -webkit-mask:url(v2-knife.webp) center/100% 100% no-repeat;mask:url(v2-knife.webp) center/100% 100% no-repeat;
+  background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.95) 50%, transparent 62%) no-repeat;background-size:300% 100%;
+  background-position:130% 0;animation:glint 4.6s ease-in-out infinite}
+@keyframes glint{0%,75%{background-position:130% 0}92%,100%{background-position:-60% 0}}
+.chick.strike .glint{animation:glintNow .3s ease-out}
+@keyframes glintNow{from{background-position:130% 0}to{background-position:-60% 0}}
+.paw{left:58.29%;top:52.76%;width:23.68%}
+/* states */
+.chick.lean{transform:translateY(2%) rotate(-3deg) scale(1.02)}
+.chick.lean .knife{transform:rotate(-30deg)}
+.chick.windup{transform:translateY(3%) rotate(5deg)}
+.chick.windup .knife{transform:rotate(14deg)}
+.chick.strike{transform:translate(-3%,-6%) rotate(-7deg) scale(1.05)}
+.chick.strike .knife{transform:rotate(-95deg);transition-duration:.09s;transition-timing-function:cubic-bezier(.6,0,1,.6)}
+.chick.wave .knife{animation:wave .7s ease-in-out}
+@keyframes wave{0%,100%{transform:rotate(-18deg)}25%{transform:rotate(-55deg)}55%{transform:rotate(2deg)}80%{transform:rotate(-30deg)}}
+.chick.sigh{transform:translateY(3%) scale(1.03,.97)}
+
+.bubble{position:absolute;left:0;top:16%;max-width:46%;z-index:35;background:var(--paper);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;
+  padding:8px 12px;font-weight:800;font-size:clamp(13px,3.5vw,16px);line-height:1.25;box-shadow:4px 4px 0 var(--ink);transform-origin:0 100%;
+  transition:opacity .2s, transform .25s cubic-bezier(.3,1.6,.5,1)}
+.bubble.off{opacity:0;transform:scale(.6)}
+.bubble.big{background:var(--yolk)}
+
+.target{position:absolute;left:0;right:0;top:0;height:24%;z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.word{position:relative;display:inline-block;max-width:94%}
+.word span{display:block;text-align:center;text-wrap:balance;font-family:var(--display);font-weight:900;line-height:1;color:var(--ink);padding:.1em .24em;
+  background:var(--yolk);border:3px solid var(--ink);border-radius:14px;box-shadow:5px 5px 0 var(--ink)}
+.word .half{position:absolute;inset:0;opacity:0}
+.word .top-h{clip-path:polygon(0 0,100% 0,100% 40%,0 64%)}
+.word .bot-h{clip-path:polygon(0 64%,100% 40%,100% 100%,0 100%)}
+.word.pop{animation:pop .22s cubic-bezier(.3,1.7,.5,1)}
+@keyframes pop{from{transform:scale(.4) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
+.word.cut .whole{opacity:0}
+.word.cut .half{opacity:1}
+.word.cut .top-h{animation:flyTop .9s cubic-bezier(.2,.6,.4,1) forwards}
+.word.cut .bot-h{animation:flyBot .9s cubic-bezier(.4,0,.8,.6) forwards}
+@keyframes flyTop{0%{transform:none}25%{transform:translate(18px,-16px) rotate(-6deg)}100%{transform:translate(70px,140px) rotate(-24deg);opacity:0}}
+@keyframes flyBot{0%{transform:none}20%{transform:translate(-14px,10px) rotate(4deg)}100%{transform:translate(-50px,220px) rotate(18deg);opacity:0}}
+.slash{position:absolute;inset:-30% -12%;width:124%;height:160%;overflow:visible;pointer-events:none}
+.slash line{stroke:var(--paper);stroke-width:7;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px var(--hot)) drop-shadow(0 0 2px var(--hot))}
+.word.cut .slash line{animation:draw .11s linear forwards, fade .5s .25s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:0}}
+.flash{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 45% 20%, rgba(255,255,255,.9), transparent 55%);opacity:0}
+.flash.on{animation:flash .35s ease-out}
+@keyframes flash{0%{opacity:1}100%{opacity:0}}
+.count{position:absolute;left:0;bottom:0;z-index:3;font-weight:800;font-size:12px;background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 11px}
+.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
+
+/* Form */
+.form{grid-area:form;display:grid;gap:12px;align-content:start}
+.field{display:flex;gap:8px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:6px;box-shadow:5px 5px 0 var(--ink)}
+.field input{flex:1;min-width:0;border:0;background:transparent;font:700 17px var(--body);color:var(--ink);padding:10px;outline:none}
+.field input::placeholder{color:#a77897}
+.cut-btn{font-family:var(--display);font-weight:800;font-size:15px;background:var(--hot);color:#fff;border:0;border-radius:12px;padding:0 18px;cursor:pointer;white-space:nowrap;transition:transform .1s}
+.cut-btn:active{transform:scale(.95)}
+.cut-btn:disabled{opacity:.6;cursor:wait}
+.chips-label{font-size:13px;font-weight:800;color:var(--ink-soft);letter-spacing:.04em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:700 14px var(--body);color:var(--ink);background:rgba(255,246,250,.8);border:2px solid var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer;transition:transform .12s, background .12s}
+.chip:hover{background:var(--yolk);transform:rotate(-2deg)}
+.chip.life{border-style:dashed}
+
+/* Result */
+.result{display:grid;gap:14px;background:var(--paper);border:3px solid var(--ink);border-radius:20px;padding:16px;box-shadow:5px 5px 0 var(--ink)}
+.result-q{margin:0;font-family:var(--display);font-weight:800;font-size:19px;line-height:1.2}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:800 15px var(--body);border-radius:12px;padding:11px 15px;cursor:pointer;border:2px solid var(--ink);background:var(--yolk);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center}
+.btn.hot{background:var(--hot);border-color:var(--hot);color:#fff}
+.btn.ghost{background:transparent}
+.card-row{display:flex;gap:14px;align-items:center;padding-top:14px;border-top:2px dashed var(--blush-deep)}
+.card-row img{width:86px;aspect-ratio:9/16;border-radius:10px;border:2px solid var(--ink);flex:none;object-fit:cover;background:var(--blush)}
+.card-row h2{font-family:var(--display);font-weight:800;font-size:16px;margin:0 0 4px;line-height:1.2}
+.card-row p{margin:0 0 10px;font-size:14px;color:var(--ink-soft);font-weight:600}
+.note{font-size:13px;color:var(--ink-soft);font-weight:700;margin:0}
+
+/* ---------- Offer ---------- */
+.offer{padding-block:8px 48px}
+.offer-in{display:grid;gap:clamp(22px,4vw,36px)}
+.bridge{display:flex;gap:12px;align-items:center;max-width:620px;background:var(--yolk);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;padding:12px 16px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-1deg)}
+.bridge img{width:58px;height:58px;flex:none;object-fit:contain;padding:4px;background:var(--paper);border:2px solid var(--ink);border-radius:50%}
+.bridge p{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(15px,3.9vw,19px);line-height:1.3;color:var(--ink);letter-spacing:-.005em}
+.bridge p b{display:block;color:var(--hot);font-weight:900}
+.offer.glow .bridge{animation:nudge .8s cubic-bezier(.3,1.6,.5,1) 2}
+@keyframes nudge{50%{transform:rotate(1deg) scale(1.03)}}
+.o-head{display:grid;gap:10px}
+.o-head h2{font-family:var(--display);font-weight:900;margin:0;line-height:1;letter-spacing:-.02em;font-size:clamp(32px,8vw,68px);text-wrap:balance}
+.o-sub{margin:0;font-weight:700;font-size:clamp(18px,2.6vw,23px);line-height:1.35;max-width:32ch}
+.o-sub em{font-style:normal;background:linear-gradient(transparent 58%, var(--yolk) 58% 92%, transparent 92%)}
+.pair{display:grid;gap:16px}
+.card{background:var(--paper);border:2px solid var(--ink);border-radius:22px;padding:20px;box-shadow:6px 6px 0 var(--ink);min-width:0}
+.card h3{margin:0 0 14px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
+.tag{font:800 11px var(--body);letter-spacing:.08em;padding:3px 8px;border-radius:999px;background:var(--blush);color:var(--ink-soft)}
+.card-cut{position:relative;overflow:hidden}
+.card-cut h3{padding-right:74px}
+.cut-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.cut-list li{justify-self:start;font-weight:700;font-size:17px;color:var(--ink);transition:color .3s}
+/* the strike is a background on an inline span, so it follows every wrapped line */
+.cut-list li span{padding-inline:2px;background:linear-gradient(var(--hot),var(--hot)) no-repeat 0 58%/0% 3px;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .32s cubic-bezier(.6,0,.3,1)}
+.cut-list li.cut{color:var(--ink-soft)}
+.cut-list li.cut span{background-size:100% 3px}
+.cut-done{margin:14px 0 0;font-weight:800;font-size:14px;color:var(--hot);opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s}
+.cut-done.on{opacity:1;transform:none}
+/* grab-the-knife control */
+.grab{position:absolute;top:10px;right:10px;width:64px;height:64px;border:0;padding:0;background:none;cursor:grab;z-index:2;touch-action:manipulation}
+.grab img{position:absolute;left:4px;top:16px;width:56px;height:auto;transform:rotate(-24deg);transition:transform .25s cubic-bezier(.3,1.8,.5,1);pointer-events:none}
+.grab .ring{position:absolute;inset:4px;border-radius:50%;border:2.5px solid var(--hot);animation:ring 1.6s ease-out infinite;pointer-events:none}
+@keyframes ring{0%{transform:scale(.7);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+.grab .tip{position:absolute;right:4px;top:62px;white-space:nowrap;background:var(--ink);color:var(--paper);font:800 13px var(--body);padding:6px 10px;border-radius:12px 2px 12px 12px;opacity:0;transform:translateX(6px) scale(.9);transition:opacity .2s,transform .25s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+.grab.near img{animation:hop .5s cubic-bezier(.3,1.8,.5,1) infinite alternate}
+@keyframes hop{from{transform:rotate(-24deg) translateY(0)}to{transform:rotate(-34deg) translateY(-9px)}}
+.grab.near .tip,.grab.hint .tip{opacity:1;transform:none}
+.grab.busy{visibility:hidden}
+.grab.busy .ring,.grab.used .ring{animation:none;opacity:0}
+.flyknife{position:absolute;width:62px;height:auto;left:0;top:0;pointer-events:none;z-index:3;opacity:0;transform-origin:20% 70%}
+.card-build{background:var(--ink);color:var(--paper);box-shadow:6px 6px 0 var(--hot)}
+.card-build .tag{background:rgba(255,246,250,.14);color:var(--paper)}
+.build{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0}
+.build li{list-style:none;font-weight:700;font-size:15px;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,246,250,.35)}
+.build li.main{background:var(--hot);border-color:var(--hot);color:#fff}
+.build-note{margin:14px 0 0;font-size:14px;color:rgba(255,246,250,.75);max-width:44ch}
+.extras{display:grid;gap:16px;align-items:start}
+.prize{background:var(--paper);border:2.5px dashed var(--hot);border-radius:22px;padding:18px 20px;display:grid;gap:6px}
+.prize small{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--hot)}
+.prize strong{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.2}
+.prize p{margin:0;color:var(--ink-soft);font-weight:600;font-size:15px}
+.honest{justify-self:start;max-width:440px;background:var(--yolk);border-radius:4px 18px 18px 18px;padding:16px 20px;font-weight:800;font-size:17px;line-height:1.35;transform:rotate(-1.2deg);box-shadow:4px 4px 0 var(--ink);margin:0}
+.honest span{display:block;font-weight:600;font-size:14px;margin-top:4px;opacity:.85}
+.cta{background:var(--ink);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
+.cta::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(229,0,122,.7), transparent 70%);pointer-events:none}
+.slogan{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(26px,5.4vw,46px);line-height:1.05;text-wrap:balance;position:relative;z-index:1}
+.slogan span{color:var(--hot)}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:relative;z-index:1}
+.cta .btn-main{display:inline-flex;text-decoration:none;font:800 17px var(--body);padding:15px 22px;border-radius:999px;background:var(--hot);color:#fff;transition:transform .15s, box-shadow .15s}
+.cta .btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px var(--hot)}
+.cta .btn-sec{text-decoration:none;font:800 15px var(--body);padding:12px 18px;border-radius:999px;border:2px solid rgba(255,246,250,.4);color:var(--paper)}
+.cta .btn-sec:hover{border-color:var(--paper)}
+.cta-note{margin:0;font-size:14px;color:rgba(255,246,250,.7);position:relative;z-index:1}
+
+/* Save sheet fallback */
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(42,15,43,.72);display:grid;place-items:center;padding:20px}
+.sheet-in{background:var(--paper);border-radius:20px;padding:16px;display:grid;gap:12px;max-width:340px;width:100%;justify-items:center;text-align:center}
+.sheet img{width:100%;max-width:260px;border-radius:12px;border:2px solid var(--ink)}
+.sheet p{margin:0;font-weight:700}
+
+@media (min-width:760px){
+  .pair{grid-template-columns:1fr 1fr;gap:24px}
+  .extras{grid-template-columns:1.3fr 1fr;gap:24px}
+}
+@media (min-width:900px){
+  .game{grid-template-columns:1fr 1fr;column-gap:48px;align-items:start;padding-block:28px 48px;grid-template-areas:"top top" "head stage" "form stage"}
+  .stage{grid-row:2 / span 2;align-self:center}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .puff,.bow,.glint,.shadow{animation:none}
+  .stage.shake{animation:none}
+  .word.cut .top-h,.word.cut .bot-h{animation-duration:.01s}
+  .rig{transition:none}
+}
+</style>
+
+<main>
+<div class="game pad">
+  <div class="top">
+    <div class="brand" id="brand">Діана <span>·</span> digital designer</div>
+    <div class="top-r">
+      <a class="skip" href="#offer" id="skip">Одразу до справи ↓</a>
+      <button class="sound" id="sound" type="button" aria-pressed="true">Звук увімк.</button>
+    </div>
+  </div>
+
+  <header class="head">
+    <p class="eyebrow">Мило. Пухнасто. Небезпечно.</p>
+    <h1>Кого сьогодні <span style="white-space:nowrap"><span class="knife-word">заріжемо</span>?</span></h1>
+    <p class="sub">Напиши, що тебе бісить. Курча розбереться за секунду, а ти забереш картку для сторіс.</p>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="flash" id="flash"></div>
+    <div class="bubble off" id="bubble" role="status"></div>
+    <div class="target" aria-live="polite">
+      <div class="word" id="word" hidden>
+        <span class="whole"></span>
+        <span class="half top-h" aria-hidden="true"></span>
+        <span class="half bot-h" aria-hidden="true"></span>
+        <svg class="slash" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="2" y1="63" x2="98" y2="37" pathLength="1"/></svg>
+      </div>
+    </div>
+    <div class="rig" id="rig">
+      <div class="shadow"></div>
+      <div class="chick" id="chick" role="button" tabindex="0" aria-label="Торкнутися курчати">
+        <div class="puff">
+          <img class="body" src="v2-chick.webp" alt="" width="760" height="743">
+          <img class="blink" src="v2-blink.webp" alt="" width="313" height="152">
+          <img class="bow" src="v2-bow.webp" alt="" width="300" height="169">
+          <div class="knife"><img src="v2-knife.webp" alt="" width="360" height="203"><i class="glint"></i></div>
+          <img class="paw" src="v2-paw.webp" alt="" width="180" height="180">
+        </div>
+      </div>
+    </div>
+    <div class="count" id="count" hidden></div>
+  </div>
+
+  <section class="form" aria-label="Що різати">
+    <form class="field" id="form" autocomplete="off">
+      <label for="pain" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Що тебе бісить</label>
+      <input id="pain" name="pain" maxlength="34" placeholder="що тебе бісить?" enterkeyhint="go">
+      <button class="cut-btn" id="cutBtn" type="submit">Заріж!</button>
+    </form>
+    <div class="chips-label">або обери готове:</div>
+    <div class="chips" id="chips"></div>
+
+    <div class="result" id="result" hidden>
+      <p class="result-q">Ну що, полегшало? Чи ще когось?</p>
+      <div class="actions">
+        <button class="btn hot" id="againBtn" type="button">Ще одного!</button>
+        <button class="btn ghost" id="enoughBtn" type="button">Досить, полегшало</button>
+      </div>
+      <div class="card-row">
+        <img id="cardThumb" alt="Картка для сторіс">
+        <div>
+          <h2 id="resultTitle">Зарізано</h2>
+          <p>Картка для сторіс готова. Відміть того, у кого те саме.</p>
+          <button class="btn" id="saveBtn" type="button">Зберегти для сторіс</button>
+        </div>
+      </div>
+      <p class="note" id="saveNote" hidden></p>
+    </div>
+  </section>
+</div>
+
+<section class="offer pad" id="offer" aria-label="Пропозиція">
+  <div class="offer-in">
+    <div class="bridge">
+      <img src="v2-chick.webp" alt="" width="760" height="743">
+      <p id="bridgeText"><b>Зайве прибрали.</b>А тепер давай створимо щось, що не захочеться різати.</p>
+    </div>
+
+    <div class="o-head">
+      <p class="eyebrow">Сайти · UX/UI · цифрові продукти</p>
+      <h2>Решту проблем <span class="knife-word">заріжемо</span> разом.</h2>
+      <p class="o-sub">Роблю сайти й цифрові продукти: <em>від ідеї до запуску.</em></p>
+    </div>
+
+    <div class="pair">
+      <div class="card card-cut" id="cutCard">
+        <h3>Ріжемо <span class="tag">без жалю</span></h3>
+        <button class="grab" id="grab" type="button" aria-label="Взяти ніж і розрізати ці проблеми">
+          <span class="ring"></span><img src="v2-knife.webp" alt="" width="360" height="203"><span class="tip" id="grabTip">Візьми мене</span>
+        </button>
+        <ul class="cut-list" id="cutList">
+          <li><span>сайту немає</span></li>
+          <li><span>сайт, якому соромно давати посилання</span></li>
+          <li><span>ідея, що роками лежить у нотатках</span></li>
+          <li><span>«зробіть красиво» без плану</span></li>
+          <li><span>заявки, що губляться дорогою</span></li>
+        </ul>
+        <p class="cut-done" id="cutDone">Чисто. А тепер те, що робимо →</p>
+        <img class="flyknife" id="flyknife" src="v2-knife.webp" alt="">
+      </div>
+      <div class="card card-build">
+        <h3>Робимо <span class="tag">під ключ</span></h3>
+        <ul class="build">
+          <li class="main">Сайти під ключ</li>
+          <li class="main">Лендинги</li>
+          <li>Квізи й калькулятори</li>
+          <li>Telegram-боти</li>
+          <li>Вебзастосунки</li>
+          <li>Інтерактиви, що чіпляють</li>
+        </ul>
+        <p class="build-note">Від першої думки до запуску: структура, дизайн, розробка і налаштування.</p>
+      </div>
+    </div>
+
+    <div class="extras">
+      <div class="prize">
+        <small id="prizeLabel">Безкоштовно для перших 10</small>
+        <strong id="prizeTitle">Форма для твоєї ідеї</strong>
+        <p id="prizeText">Напиши свою ідею в Telegram. Я поверну: яким продуктом їй бути, що поставити на перший екран і з чого почати. Якщо сайт уже є, ще й що в ньому заріжемо.</p>
+      </div>
+      <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span></p>
+    </div>
+
+    <div class="cta">
+      <p class="slogan">Ідеям потрібна форма. <span>Тобі&nbsp;-&nbsp;одна&nbsp;я.</span></p>
+      <div class="cta-row">
+        <a class="btn-main" id="cta" href="https://t.me/thisisdi" target="_blank" rel="noopener">Маєш ідею? Давай надамо їй форму →</a>
+        <a class="btn-sec" id="ig" href="https://instagram.com/didi.ods" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn-sec" id="th" href="https://www.threads.net/@didi.ods" target="_blank" rel="noopener">Threads</a>
+      </div>
+      <p class="cta-note">Telegram @thisisdi · Instagram і Threads @didi.ods</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-in">
+    <img id="sheetImg" alt="Картка для сторіс">
+    <p>Затисни картинку і збережи її в галерею.</p>
+    <button class="btn" id="sheetClose" type="button">Готово</button>
+  </div>
+</div>
+
+<script>
+/* ===== Дані: міняти тут ===== */
+const CONFIG = {
+  handle: "@didi.ods",
+  sign: "Діана · digital designer",
+  tgUrl: "https://t.me/thisisdi",
+  cardFooter: "А що зарізати тобі? Шукай @didi.ods",
+};
+const CHIPS = [
+  "Ідея третій рік у нотатках","Сайт, за який соромно","Заявки, що губляться",
+  "Клієнти не розуміють, що я продаю","Сайт за три копійки",
+];
+const CHIPS_LIFE = ["Голосові на 10 хвилин","Непрохані поради","Будильник"];
+const HINT = matchMedia("(pointer:coarse)").matches ? "Пір'я можна ганяти пальцем. Мене - ні." : "Пір'я можна ганяти курсором. Мене - ні.";
+const LINES_AFTER = ["Оце було особисте.","Нарешті хтось це зробив.","Так, наступний!","Я взагалі-то тут за справедливість.","Мені подобається твій підхід.","Чисто. Навіть пух не встиг злетіти."];
+const BRIDGE = "А тепер давай створимо щось, що не захочеться різати.";
+const LINES_TIRED = ["Я ж не іграшка. Ну, трохи іграшка.","Пух уже дибки. Ще одне - і перерва.","Дай хоч бантик поправити."];
+const LINES_TAP = ["Мило? Перевір.","Не гладь. Пиши.","Я тут не для обіймів.","Пух м'який. Ніж - ні.","Ще раз торкнешся - і ти в списку."];
+const LINES_TYPE = ["Так-так…","Пиши, пиши.","Ох, знайоме.","Ніж уже наточено."];
+const CARD_QUIPS = ["Без жалю.","Пух м'який. Ніж - ні.","Чисто. Наступний?","Курча розібралося."];
+
+/* ===== Helpers ===== */
+const $ = id => document.getElementById(id);
+const stage=$("stage"), chick=$("chick"), rig=$("rig"), word=$("word"), bubble=$("bubble"), input=$("pain"), btn=$("cutBtn");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+function track(event, data={}){ try{ (window.dataLayer=window.dataLayer||[]).push({event, ...data}); }catch(e){} }
+
+$("cta").href=CONFIG.tgUrl;
+function addChip(t,cls){const b=document.createElement("button");b.type="button";b.className="chip"+(cls?" "+cls:"");b.textContent=t;b.onclick=()=>{input.value=t;slash(t)};$("chips").append(b)}
+CHIPS.forEach(t=>addChip(t)); CHIPS_LIFE.forEach(t=>addChip(t,"life"));
+
+/* counter */
+let kills=0, sessionCuts=0; try{kills=+localStorage.getItem("kills")||0}catch(e){}
+function showCount(){ if(!kills) return; const c=$("count"); c.hidden=false; c.textContent="Зарізано тобою: "+kills; }
+showCount();
+
+/* sound */
+let soundOn=true, ac=null;
+$("sound").onclick=()=>{soundOn=!soundOn;$("sound").textContent=soundOn?"Звук увімк.":"Звук вимк.";$("sound").setAttribute("aria-pressed",soundOn)};
+function sfx(kind){
+  if(!soundOn) return;
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)(); if(ac.state==="suspended") ac.resume();
+    const t=ac.currentTime, dur=kind==="whoosh"?.25:.12, b=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    const s=ac.createBufferSource(); s.buffer=b; const f=ac.createBiquadFilter(), g=ac.createGain(); f.type="bandpass";
+    if(kind==="whoosh"){f.Q.value=1.2;f.frequency.setValueAtTime(500,t);f.frequency.exponentialRampToValueAtTime(3200,t+.2);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.5,t+.06);g.gain.exponentialRampToValueAtTime(.001,t+.24)}
+    else if(kind==="cut"){f.Q.value=6;f.frequency.value=5200;g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.11)}
+    else {f.Q.value=3;f.frequency.value=900;g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+.08)}
+    s.connect(f).connect(g).connect(ac.destination); s.start(t);
+  }catch(e){}
+}
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+
+/* speech */
+let bubbleT;
+function say(t,ms=2600,big=false){clearTimeout(bubbleT);bubble.textContent=t;bubble.classList.toggle("big",big);bubble.classList.remove("off");if(ms)bubbleT=setTimeout(()=>bubble.classList.add("off"),ms)}
+
+/* ===== Live chick: blink, look, lean, taps ===== */
+function eyes(ms){chick.classList.add("eyes"); setTimeout(()=>chick.classList.remove("eyes"),ms)}
+(function blinkLoop(){
+  setTimeout(()=>{ if(!busy){ eyes(130); if(Math.random()<.25) setTimeout(()=>eyes(110),260); } blinkLoop(); }, 2200+Math.random()*3400);
+})();
+if(matchMedia("(pointer:fine)").matches && !reduce){
+  addEventListener("pointermove",e=>{
+    const r=rig.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+    const dx=Math.max(-1,Math.min(1,(e.clientX-cx)/(innerWidth/2))), dy=Math.max(-1,Math.min(1,(e.clientY-cy)/(innerHeight/2)));
+    rig.style.setProperty("--look",(dx*4).toFixed(2)+"deg"); rig.style.setProperty("--lookY",(dy*1.2).toFixed(2)+"%");
+  },{passive:true});
+}
+let typedOnce=false;
+input.addEventListener("input",()=>{
+  chick.classList.toggle("lean", !!input.value.trim() && !busy);
+  if(!typedOnce && input.value.trim()){ typedOnce=true; say(pick(LINES_TYPE),1800); }
+});
+input.addEventListener("blur",()=>chick.classList.remove("lean"));
+
+/* ===== Feathers ===== */
+const FX=(()=>{
+  const c=document.createElement("canvas"); c.className="fx"; document.body.append(c);
+  const g=c.getContext("2d"); let parts=[], raf=0, last=0;
+  const canBlur="filter" in g;
+  const imgs=["v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(s=>{const i=new Image(); i.src=s; return i});
+  const size=()=>{const d=Math.min(devicePixelRatio||1,2); c.width=innerWidth*d; c.height=innerHeight*d; g.setTransform(d,0,0,d,0,0)};
+  size(); addEventListener("resize",size);
+  function tick(now){
+    const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now;
+    g.clearRect(0,0,innerWidth,innerHeight);
+    const sy=scrollY;
+    parts=parts.filter(p=>p.age<p.life && p.y-sy<innerHeight+80);
+    for(const p of parts){
+      p.age+=dt*16.67;
+      const drag=Math.pow(p.drag,dt); p.vx*=drag; p.vy*=drag;
+      p.vy=Math.min(p.vy+p.grav*dt, p.term);
+      p.ph+=p.fs*dt; const sway=Math.sin(p.ph)*p.amp;
+      p.x+=(p.vx+sway)*dt; p.y+=p.vy*dt; p.flip+=(p.flipS+p.spin)*dt; p.rot+=p.spin*p.dir*.6*dt; p.spin*=Math.pow(.96,dt);
+      const fade=Math.min(1,(p.life-p.age)/900);
+      if(p.y-sy<-120) continue;
+      g.save(); g.globalAlpha=p.alpha*fade; g.translate(p.x,p.y-sy);
+      if(p.dot){
+        const r=g.createRadialGradient(0,0,0,0,0,p.s); r.addColorStop(0,"rgba(255,226,90,.95)"); r.addColorStop(1,"rgba(255,226,90,0)");
+        g.fillStyle=r; g.beginPath(); g.arc(0,0,p.s,0,7); g.fill();
+      }else{
+        g.rotate(p.rot+Math.sin(p.ph)*.55); g.scale(Math.cos(p.flip)*.8+.2*Math.sign(Math.cos(p.flip)||1),1);
+        if(canBlur && p.blur) g.filter="blur("+p.blur+"px)";
+        const im=p.img; if(im.naturalWidth){const w=p.s, h=w*im.naturalHeight/im.naturalWidth; g.drawImage(im,-w/2,-h/2,w,h)}
+      }
+      g.restore();
+    }
+    raf=parts.length?requestAnimationFrame(tick):0; if(!raf) last=0;
+  }
+  /* wind: cursor or finger pushes feathers; a tap or click blows a gust */
+  let px=null, py=null, pt=0, played=false, touchMode=false;
+  function push(x,y,vx,vy,R,blow){
+    if(!parts.length) return; const sy=scrollY; let hit=false;
+    for(const p of parts){
+      /* reach = the feather's own half-size plus a small margin: you have to actually touch it */
+      const r=R+p.s*.4, dx=p.x-x, dy=(p.y-sy)-y, d=Math.hypot(dx,dy)||1; if(d>r) continue;
+      const f=(1-d/r)*(1-d/r)*.8+.2, k=p.dot?1.2:1; hit=true;
+      const sp=Math.hypot(vx,vy), cap=Math.min(1,14/(sp||1));   /* a fast flick doesn't launch it off-screen */
+      p.vx+=(vx*cap*.32+dx/d*blow)*f*k; p.vy+=(vy*cap*.32+dy/d*blow)*f*k;
+      p.spin=Math.min(.4,(p.spin||0)+f*.1); p.dir=Math.sign(vx||dx)||1;
+      p.age=Math.max(0,p.age-260*f);   /* playing keeps them in the air */
+    }
+    if(hit && !played){ played=true; track("feathers_play"); }
+    if(hit && !raf) raf=requestAnimationFrame(tick);
+  }
+  function move(x,y){
+    const now=performance.now();
+    if(px!==null && now-pt<120){ const dt=Math.max(8,now-pt)/16.67; push(x,y,(x-px)/dt,(y-py)/dt,touchMode?50:36,.7); }
+    px=x; py=y; pt=now;
+  }
+  if(!reduce){
+    addEventListener("pointermove",e=>{ if(e.pointerType==="mouse"){ touchMode=false; move(e.clientX,e.clientY) } },{passive:true});
+    addEventListener("touchmove",e=>{ touchMode=true; for(const t of e.touches) move(t.clientX,t.clientY) },{passive:true});
+    addEventListener("touchstart",e=>{ touchMode=true; const t=e.touches[0]; px=t.clientX; py=t.clientY; pt=performance.now(); push(t.clientX,t.clientY,0,0,60,2.6) },{passive:true});
+    addEventListener("mousedown",e=>push(e.clientX,e.clientY,0,0,50,2.6),{passive:true});
+  }
+  function feather(x,y,vx,vy,z){
+    return {x,y,vx,vy,drag:.93,grav:.035+z*.02,term:.7+z*1.1,spin:0,dir:1,
+          ph:Math.random()*6.3,fs:.035+Math.random()*.04,amp:.6+Math.random()*1.4,rot:Math.random()*6.3,flip:Math.random()*6.3,flipS:.02+Math.random()*.05,
+          s:22+z*z*62,blur:z>.82?1.4:0,alpha:.8+z*.2,img:pick(imgs),age:0,life:5200+Math.random()*2600};
+  }
+  return {
+    burst(x,y,n=16,power=1){
+      if(reduce) return; y+=scrollY;
+      for(let i=0;i<n;i++){
+        const a=-Math.PI/2+(Math.random()-.5)*Math.PI*1.7, sp=(3+Math.random()*7)*power;
+        parts.push(feather(x,y,Math.cos(a)*sp,Math.sin(a)*sp,Math.random()));
+      }
+      for(let i=0;i<Math.round(n*.6);i++){
+        const a=Math.random()*Math.PI*2, sp=(2+Math.random()*6)*power;
+        parts.push({dot:true,x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-2,drag:.92,grav:.03,term:.8,ph:Math.random()*6.3,fs:.05,amp:.5,flip:0,flipS:0,rot:0,spin:0,dir:1,
+          s:3+Math.random()*7,alpha:.9,age:0,life:2600+Math.random()*1500});
+      }
+      if(!raf) raf=requestAnimationFrame(tick);
+    },
+    /* one loose feather drifting off the chick */
+    shed(x,y){
+      if(reduce || parts.length>40) return;
+      const p=feather(x,y+scrollY,(Math.random()-.5)*2,-1.5-Math.random(),Math.random()*.7); p.life=9000; parts.push(p);
+      if(!raf) raf=requestAnimationFrame(tick);
+    }
+  };
+})();
+function centerOf(el){const r=el.getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]}
+
+/* ===== Word ===== */
+function setWord(t){
+  const spans=word.querySelectorAll("span"); spans.forEach(s=>s.textContent=t);
+  const box=word.parentElement.getBoundingClientRect();
+  let fs=Math.min(box.height*.5, 54); spans.forEach(s=>s.style.fontSize=fs+"px"); word.hidden=false;
+  const whole=word.querySelector(".whole");
+  while((whole.offsetHeight>box.height*.98 || whole.scrollWidth>whole.clientWidth+1) && fs>13){fs-=2;spans.forEach(s=>s.style.fontSize=fs+"px")}
+}
+
+/* ===== The slash ===== */
+let busy=false, lastWord="";
+async function slash(raw){
+  const t=(raw||"").trim().replace(/\s+/g," ").slice(0,34);
+  if(!t){input.focus();say("Порожнечу різати нудно. Напиши щось.");wave();return}
+  if(busy) return; busy=true; btn.disabled=true; lastWord=t; chick.classList.remove("lean");
+  $("result").hidden=true; bubble.classList.add("off");
+  word.className="word"; setWord(t); void word.offsetWidth; word.classList.add("pop"); sfx("pop");
+  await wait(reduce?80:380);
+  chick.classList.add("windup","eyes"); await wait(reduce?40:220);
+  sfx("whoosh");
+  chick.classList.remove("windup","eyes"); chick.classList.add("strike"); await wait(reduce?20:90);
+  word.classList.add("cut"); sfx("cut"); buzz([18,30,40]);
+  stage.classList.remove("shake"); void stage.offsetWidth; if(!reduce) stage.classList.add("shake");
+  $("flash").classList.remove("on"); void $("flash").offsetWidth; $("flash").classList.add("on");
+  chick.classList.remove("boing"); void chick.offsetWidth; chick.classList.add("boing");
+  const [wx,wy]=centerOf(word); FX.burst(wx,wy,16,1);
+  await wait(260);
+  chick.classList.remove("strike"); eyes(900);
+  kills++; sessionCuts++; try{localStorage.setItem("kills",kills)}catch(e){} showCount();
+  track("cut",{word:t,n:sessionCuts});
+  if(sessionCuts===2){ say(BRIDGE,5200,true); $("offer").classList.add("glow"); }
+  else if(sessionCuts>=5 && sessionCuts%2===1){ say(pick(LINES_TIRED),3200); }
+  else say(pick(LINES_AFTER),3000);
+  await wait(500); word.hidden=true; chick.classList.remove("boing");
+  try{ await showResult(t); }
+  finally{ busy=false; btn.disabled=false; input.value=""; }
+}
+$("form").addEventListener("submit",e=>{e.preventDefault();slash(input.value)});
+$("againBtn").onclick=()=>{ $("result").hidden=true; input.focus({preventScroll:true}); stage.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"}); say("Давай наступне.",2000) };
+$("enoughBtn").onclick=()=>{ say("Домовились. Далі - серйозно.",2400); track("enough"); setTimeout(()=>$("offer").scrollIntoView({behavior:reduce?"auto":"smooth"}),reduce?0:350) };
+
+function wave(){chick.classList.remove("wave"); void chick.offsetWidth; chick.classList.add("wave"); setTimeout(()=>chick.classList.remove("wave"),700)}
+let taps=[];
+function tapChick(){
+  if(busy) return; sfx("pop"); buzz(12);
+  const now=Date.now(); taps=taps.filter(x=>now-x<4000); taps.push(now);
+  if(taps.length>=5){ taps=[]; chick.classList.add("sigh"); eyes(1100); setTimeout(()=>chick.classList.remove("sigh"),900); say(pick(LINES_TIRED),2800); return; }
+  wave(); chick.classList.remove("boing"); void chick.offsetWidth; chick.classList.add("boing"); setTimeout(()=>chick.classList.remove("boing"),700);
+  const r=rig.getBoundingClientRect(); FX.burst(r.left+r.width*.5, r.top+r.height*.3, 4, .6);
+  say(pick(LINES_TAP));
+}
+chick.addEventListener("click",tapChick);
+chick.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tapChick()}});
+
+/* ===== Story card 1080x1920 ===== */
+/* onload instead of decode(): decode() can stay pending forever in some browsers; a 6 s cap so nothing ever hangs */
+const load=s=>new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=s; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
+const assets=Promise.all(["v2-chick.webp","v2-knife.webp","v2-paw.webp","v2-bow.webp","v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(load));
+const fontsReady=document.fonts?Promise.race([Promise.all([document.fonts.load('900 120px Unbounded'),document.fonts.load('800 40px Manrope'),document.fonts.load('600 30px Manrope')]).catch(()=>{}),wait(3000)]):Promise.resolve();
+let cardBlob=null, cardUrl="";
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+function fitFont(g,text,weight,size,family,maxW,min){let fs=size; g.font=`${weight} ${fs}px ${family}`; while(g.measureText(text).width>maxW&&fs>min){fs-=2; g.font=`${weight} ${fs}px ${family}`} return fs}
+async function makeCard(t){
+  const [body,knife,paw,bow,...feathers]=await assets; await fontsReady;
+  const c=document.createElement("canvas"); c.width=1080;c.height=1920; const g=c.getContext("2d");
+  g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
+  g.save(); g.translate(540,960); g.rotate(-28*Math.PI/180); g.fillStyle="rgba(255,179,214,.6)"; for(let x=-1600;x<1600;x+=150) g.fillRect(x,-1600,10,3200); g.restore();
+  g.textAlign="center"; g.textBaseline="alphabetic";
+  g.fillStyle="#2A0F2B"; g.font="800 42px Manrope"; g.fillText(CONFIG.handle.toUpperCase(),540,130);
+  g.fillStyle="#6E3B62"; g.font="600 30px Manrope"; g.fillText(CONFIG.sign,540,178);
+  g.fillStyle="#E5007A"; g.font="900 66px Unbounded"; g.fillText("СЬОГОДНІ",540,320); g.fillText("ЗАРІЗАНО:",540,402);
+  g.font="900 120px Unbounded";
+  let lines=[t];
+  if(g.measureText(t).width>840 && t.includes(" ")){
+    const ws=t.split(" "); let best=null;
+    for(let i=1;i<ws.length;i++){const a=ws.slice(0,i).join(" "), b=ws.slice(i).join(" "), m=Math.max(g.measureText(a).width,g.measureText(b).width); if(!best||m<best[0]) best=[m,a,b]}
+    lines=[best[1],best[2]];
+  }
+  const longest=lines.reduce((a,b)=>g.measureText(a).width>g.measureText(b).width?a:b);
+  const fs=fitFont(g,longest,900,lines.length>1?112:140,"Unbounded",820,40);
+  const lh=fs*1.12, w=g.measureText(longest).width+fs*.7, h=lh*lines.length+fs*.42, cx=540, cy=600+(lines.length-1)*30, x0=cx-w/2, y0=cy-h/2;
+  const half=(top,dx,dy,rot)=>{g.save();g.translate(cx+dx,cy+dy);g.rotate(rot);g.translate(-cx,-cy);
+    g.beginPath(); if(top){g.moveTo(x0-20,y0-20);g.lineTo(x0+w+20,y0-20);g.lineTo(x0+w+20,y0+h*.4);g.lineTo(x0-20,y0+h*.64)}else{g.moveTo(x0-20,y0+h*.64);g.lineTo(x0+w+20,y0+h*.4);g.lineTo(x0+w+20,y0+h+30);g.lineTo(x0-20,y0+h+30)} g.clip();
+    g.fillStyle="#2A0F2B"; rr(g,x0+12,y0+12,w,h,28); g.fill(); g.fillStyle="#FFD21F"; rr(g,x0,y0,w,h,28); g.fill(); g.lineWidth=6; g.strokeStyle="#2A0F2B"; g.stroke();
+    g.fillStyle="#2A0F2B"; g.textBaseline="middle"; g.font=`900 ${fs}px Unbounded`; lines.forEach((ln,i)=>g.fillText(ln,cx,cy+fs*.04+(i-(lines.length-1)/2)*lh)); g.restore();};
+  half(true,26,-26,-0.05); half(false,-22,22,0.04);
+  g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=26;
+  g.beginPath(); g.moveTo(x0-70,cy+h*.2); g.lineTo(x0+w+70,cy-h*.2); g.stroke(); g.restore();
+  g.fillStyle="#6E3B62"; g.textBaseline="alphabetic"; g.font="800 44px Manrope"; g.fillText(pick(CARD_QUIPS),540,cy+h/2+110);
+  // feathers drifting
+  const spots=[[150,880,-.6,120],[930,840,.7,110],[110,1300,.3,90],[985,1250,-.4,100],[230,1640,1.1,70],[860,1660,-1,80]];
+  spots.forEach(([x,y,r,s],i)=>{const im=feathers[i%4]; if(!im) return; g.save(); g.translate(x,y); g.rotate(r); g.globalAlpha=.95; g.drawImage(im,-s/2,-s/2*im.naturalHeight/im.naturalWidth,s,s*im.naturalHeight/im.naturalWidth); g.restore();});
+  // chick
+  const cw=800, ch=cw*743/760, X=140, Y=920;
+  g.save(); g.fillStyle="rgba(110,20,70,.22)"; g.filter&&(g.filter="blur(18px)"); g.beginPath(); g.ellipse(X+cw/2,Y+ch*.98,cw*.38,40,0,0,7); g.fill(); g.restore();
+  if(body) g.drawImage(body,X,Y,cw,ch);
+  if(bow){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
+  if(knife){const kw=cw*.5, kh=kw*203/360, gx=X+cw*.5813+kw*.24, gy=Y+ch*.4334+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore();}
+  if(paw){const pw=cw*.2368; g.drawImage(paw,X+cw*.5829,Y+ch*.5276,pw,pw);}
+  // footer
+  g.fillStyle="#2A0F2B"; rr(g,90,1772,900,96,48); g.fill();
+  g.fillStyle="#FFF6FA"; g.textBaseline="middle"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1821);
+  return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
+}
+async function showResult(t){
+  cardBlob=null;
+  try{
+    const b=await Promise.race([makeCard(t), wait(7000).then(()=>null)]);
+    if(b){ cardBlob=b; if(cardUrl) URL.revokeObjectURL(cardUrl); cardUrl=URL.createObjectURL(b); $("cardThumb").src=cardUrl; }
+  }catch(e){}
+  $("saveBtn").disabled=!cardBlob;
+  $("resultTitle").textContent="Зарізано: «"+t+"»"; $("saveNote").hidden=true; $("result").hidden=false;
+  try{ $("result").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}) }catch(e){}
+}
+
+/* save: downloads capability, fallback to long-press sheet */
+let downloads=null;
+if(window.claude?.use) window.claude.use("downloads").then(d=>{downloads=d}).catch(()=>{});
+$("saveBtn").onclick=async()=>{
+  if(!cardBlob) return; track("save_card",{word:lastWord});
+  const name="zarizano-"+lastWord.replace(/[^\p{L}\p{N}]+/gu,"-").slice(0,24)+".png";
+  if(downloads){
+    try{ await downloads.save({filename:name,data:cardBlob}); note("Збережено. Тепер у сторіс!"); return }
+    catch(e){ if(e&&e.code==="declined"){ note("Добре, не зберігаємо."); return } }
+  }
+  $("sheetImg").src=cardUrl; $("sheet").hidden=false;
+};
+function note(t){const n=$("saveNote");n.textContent=t;n.hidden=false}
+$("sheetClose").onclick=()=>{$("sheet").hidden=true};
+$("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidden=true});
+
+/* ===== Offer: grab the knife, cut the problems ===== */
+(function(){
+  const card=$("cutCard"), grab=$("grab"), tip=$("grabTip"), fly=$("flyknife"), items=[...$("cutList").children], done=$("cutDone");
+  let running=false, cutOnce=false;
+  const fine=matchMedia("(pointer:fine)").matches;
+  if(fine){
+    addEventListener("pointermove",e=>{
+      if(running) return; const r=grab.getBoundingClientRect();
+      const d=Math.hypot(e.clientX-(r.left+r.width/2), e.clientY-(r.top+r.height/2));
+      grab.classList.toggle("near", d<110);
+    },{passive:true});
+  } else if("IntersectionObserver" in window){
+    /* no hover on phones: the hint shows once the card is on screen */
+    new IntersectionObserver(es=>es.forEach(e=>grab.classList.toggle("hint", e.isIntersecting && !cutOnce)),{threshold:.6}).observe(card);
+  }
+  const place=(x,y,rot,ms)=>{ fly.style.transition=ms?`transform ${ms}ms cubic-bezier(.5,0,.3,1)`:"none"; fly.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg)`; };
+  async function run(){
+    if(running) return; running=true; track("offer_cut");
+    items.forEach(li=>li.classList.remove("cut")); done.classList.remove("on");
+    grab.classList.remove("near","hint"); grab.classList.add("busy");
+    if(reduce){ items.forEach(li=>li.classList.add("cut")); done.classList.add("on"); finish(); return; }
+    const c=card.getBoundingClientRect(), g=grab.getBoundingClientRect();
+    place(g.left-c.left, g.top-c.top+10, -24, 0); fly.style.opacity=1; sfx("pop");
+    await wait(30);
+    for(const li of items){
+      const s=li.firstElementChild.getBoundingClientRect(), y=s.top-c.top+s.height/2-34, x0=s.left-c.left-40, x1=s.right-c.left-18;
+      place(x0, y, 16, 220); await wait(230);
+      sfx("whoosh"); li.classList.add("cut"); place(x1, y, 26, 300); await wait(290);
+      sfx("cut"); buzz(10);
+    }
+    const last=items[items.length-1].firstElementChild.getBoundingClientRect(); FX.burst(last.right, last.top, 3, .6);
+    place(g.left-c.left, g.top-c.top+10, -24, 380); await wait(390);
+    done.classList.add("on"); finish();
+  }
+  function finish(){ fly.style.opacity=0; grab.classList.remove("busy"); grab.classList.add("used"); tip.textContent="Ще раз?"; cutOnce=true; running=false; }
+  grab.addEventListener("click",run);
+})();
+
+/* analytics hooks */
+["cta","ig","th"].forEach(id=>$(id).addEventListener("click",()=>track("cta_click",{to:id})));
+$("skip").addEventListener("click",()=>track("skip_to_offer"));
+if("IntersectionObserver" in window){ let seen=false; new IntersectionObserver(es=>{ if(!seen && es.some(e=>e.isIntersecting)){ seen=true; track("offer_view",{cuts:sessionCuts}); } },{threshold:.3}).observe($("offer")); }
+
+/* greeting: first invite to play with the feathers, then ask for a word */
+if(reduce){ setTimeout(()=>say("Ну? Пиши. Я чекаю.",0),500); }
+else{
+  setTimeout(()=>{
+    const r=rig.getBoundingClientRect();
+    [.28,.5,.72].forEach((k,i)=>setTimeout(()=>FX.shed(r.left+r.width*k, r.top+r.height*.12),i*260));
+    say(HINT,0);
+  },500);
+  setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },6500);
+}
+
+/* the chick sheds a loose feather now and then, while it is on screen */
+(function shedLoop(){
+  setTimeout(()=>{
+    const r=rig.getBoundingClientRect();
+    if(!document.hidden && !busy && r.bottom>0 && r.top<innerHeight) FX.shed(r.left+r.width*(.25+Math.random()*.5), r.top+r.height*.15);
+    shedLoop();
+  }, 6000+Math.random()*6000);
+})();
+</script>
+
+</html>
