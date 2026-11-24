@@ -40,10 +40,11 @@ a{color:inherit}
 }
 
 /* ---------- Game ---------- */
-.game{position:relative;padding-block:16px 36px;display:grid;gap:16px;grid-template-areas:"top" "head" "stage" "form" "result"}
+.game{position:relative;padding-block:16px 36px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "head" "stage" "form" "result"}
 .side{display:contents}
 .result{grid-area:result}
-.top{grid-area:top;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.top{grid-area:top;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 10px}
+.top-r{margin-left:auto}
 .brand{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;line-height:1.2}
 .brand span{color:var(--hot)}
 .top-r{display:flex;gap:8px;align-items:center}
@@ -131,7 +132,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .haptic{position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none}
 
 /* Form */
-.form{grid-area:form;display:grid;gap:12px;align-content:start}
+.form{grid-area:form;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-content:start}
 .field{display:flex;gap:8px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:6px;box-shadow:5px 5px 0 var(--ink)}
 .field input{flex:1;min-width:0;border:0;background:transparent;font:700 17px var(--body);color:var(--ink);padding:10px;outline:none}
 .field input::placeholder{color:#a77897}
@@ -236,15 +237,37 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .deep svg{position:absolute;left:0;bottom:0;width:100%;height:clamp(90px,16vw,220px)}
 .decor-deep .stage::before{content:"";position:absolute;inset:-6% -14% 0;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.85),rgba(255,255,255,0));z-index:-1}
 .decor-deep .stage{isolation:isolate}
-.framec{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3}
-/* the garland frame keeps its own proportions, so in frame mode the stage turns portrait */
-.decor-frame .stage{aspect-ratio:720/1043;max-width:min(300px,82vw);margin-top:4px}
-@media (min-width:900px){.decor-frame .stage{max-width:360px}}
-.decor-frame .rig{left:19%;width:62%;bottom:13%}
-.decor-frame .target{top:25%;height:17%}
-.decor-frame .count{left:50%;transform:translateX(-50%);bottom:-2px;z-index:4;white-space:nowrap}
-.decor-frame .bow{display:none}  /* the frame's own bow takes over */
-.decor-frame .bubble{left:6%;top:44%;max-width:56%}
+/* falling snow over the whole screen, settling caps */
+.snowfall{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:28}
+.snowcap{position:absolute;pointer-events:none;overflow:visible;z-index:2;filter:drop-shadow(0 1px 1px rgba(110,40,90,.22));transform-origin:50% 100%}
+.snowcap.grow{animation:settle 26s cubic-bezier(.2,.6,.3,1) both}
+@keyframes settle{from{transform:scaleY(.08);opacity:.4}to{transform:none;opacity:1}}
+/* screen frame: size unit --s scales every piece; fur band about 18px on a phone, 30px on a big screen */
+.decor-frame{--s:.19}
+@media (min-width:760px){.decor-frame{--s:.25}}
+@media (min-width:1200px){.decor-frame{--s:.31}}
+.xframe{position:fixed;inset:0;pointer-events:none;z-index:45}
+.xframe>*{position:absolute;display:block;max-width:none}
+.xframe img{height:auto}
+.xf-top{left:calc(150px*var(--s));right:calc(150px*var(--s));top:calc(65px*var(--s));height:calc(98px*var(--s));background:url(xf-ht.webp) repeat-x 0 0/auto 100%}
+.xf-bot{left:calc(200px*var(--s));right:calc(200px*var(--s));bottom:calc(5px*var(--s));height:calc(98px*var(--s));background:url(xf-h.webp) repeat-x 0 0/auto 100%}
+.xf-left,.xf-right{top:calc(300px*var(--s));bottom:calc(150px*var(--s));width:calc(98px*var(--s));background:url(xf-v.webp) repeat-y 0 0/100% auto}
+.xf-left{left:calc(31px*var(--s))}
+.xf-right{right:calc(28px*var(--s));transform:scaleX(-1)}
+.xf-tl{left:0;top:0;width:calc(185px*var(--s))}
+.xf-tr{right:0;top:0;width:calc(180px*var(--s))}
+.xf-bl{left:0;bottom:0;width:calc(230px*var(--s))}
+.xf-br{right:0;bottom:0;width:calc(240px*var(--s))}
+.xf-bow{left:50%;top:0;width:calc(365px*var(--s));transform:translateX(-50%)}
+.xf-star1{left:calc(35px*var(--s));top:46%;width:calc(90px*var(--s))}
+.xf-puff1{left:calc(25px*var(--s));top:74%;width:calc(113px*var(--s))}
+.xf-ball{right:calc(37px*var(--s));top:58%;width:calc(80px*var(--s))}
+.xf-star2{right:calc(32px*var(--s));top:28%;width:calc(90px*var(--s));transform:rotate(18deg)}
+.xf-puff2{right:calc(22px*var(--s));top:84%;width:calc(113px*var(--s));transform:scaleX(-1)}
+/* keep content clear of the fur */
+.decor-frame .pad{padding-left:max(16px,calc(130px*var(--s) + 10px));padding-right:max(16px,calc(130px*var(--s) + 10px))}
+.decor-frame .game{padding-top:calc(255px*var(--s) + 2px)}
+.decor-frame .offer{padding-bottom:calc(120px*var(--s) + 48px)}
 @media (prefers-reduced-motion:reduce){.deep i{animation:none}}
 
 @media (min-width:760px){
@@ -609,7 +632,7 @@ function centerOf(el){const r=el.getBoundingClientRect(); return [r.left+r.width
 /* ===== New Year decor (5.12 - 7.01). The base game never changes; a layer switches on by date. =====
    Preview any variant with ?decor=snow | deep | frame | none */
 const DECOR_FROM="2026-12-05", DECOR_UNTIL="2027-01-08";  /* until = first day it is gone */
-const DECOR_CHOICE="";  /* set to "snow", "deep" or "frame" once Diana picks; "" = launch without decor */
+const DECOR_CHOICE="frame";  /* chosen 24.11: garland frame around the screen + falling, settling snow */
 const DECOR=(()=>{
   const q=new URLSearchParams(location.search).get("decor");
   if(["snow","deep","frame"].includes(q)) return q;
@@ -623,23 +646,63 @@ const DECO=(()=>{
   LINES_AFTER.push("Миколай записав тебе в чемні. Майже.","Чисто. Як перший сніг.");
   CARD_QUIPS.push("Чисто. Як перший сніг.");
   const game=document.querySelector(".game"), stage=$("stage");
-  /* two pre-built versions of Diana's frame, so the fur is never stretched: wide for the stage, tall for the story card */
+  /* the story card uses the whole garland frame in its own proportions */
   const frameImg=DECOR==="frame"?new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src="v2-frame-garland.webp"; setTimeout(()=>res(i.naturalWidth?i:null),6000)}):null;
 
-  if(DECOR==="snow"){
-    const c=document.createElement("canvas"); c.className="snow"; game.prepend(c);
-    const g=c.getContext("2d"); let W=0,H=0, flakes=[], vis=true;
-    const size=()=>{const dpr=Math.min(devicePixelRatio||1,2); W=game.clientWidth; H=game.clientHeight; c.width=W*dpr; c.height=H*dpr; g.setTransform(dpr,0,0,dpr,0,0);
-      const n=Math.round(W*H/11000); while(flakes.length<n) flakes.push({x:Math.random()*W,y:Math.random()*H,r:2+Math.random()*3.8,v:.25+Math.random()*.6,ph:Math.random()*6.3,a:.7+Math.random()*.3}); flakes.length=n; draw(0);};
-    function draw(dt){ g.clearRect(0,0,W,H);
-      for(const f of flakes){ if(dt){ f.y+=f.v*dt; f.ph+=.02*dt; f.x+=Math.sin(f.ph)*.3*dt; if(f.y>H+6){f.y=-6;f.x=Math.random()*W} }
-        /* white on blush is faint, so each flake gets a soft pink rim */
-        g.globalAlpha=f.a; g.shadowColor="rgba(229,0,122,.35)"; g.shadowBlur=4; g.fillStyle="#FFFFFF"; g.beginPath(); g.arc(f.x,f.y,f.r,0,7); g.fill(); }
-      g.shadowBlur=0; }
-    size(); addEventListener("resize",size); if("ResizeObserver" in window) new ResizeObserver(size).observe(game);
-    if("IntersectionObserver" in window) new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(game);
-    if(!reduce){ let last=0; (function loop(now){ const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now; if(vis && !document.hidden) draw(dt); requestAnimationFrame(loop); })(0); }
+  /* ---- snow: falls over the whole screen in three depths; far flakes small and crisp, near ones big and soft, a few real crystals ---- */
+  function flakeDraw(g,f){
+    if(f.crystal){
+      g.save(); g.translate(f.x,f.y); g.rotate(f.rot); g.globalAlpha=f.a; g.strokeStyle="#FFFFFF"; g.lineCap="round"; g.lineWidth=Math.max(1,f.r*.22);
+      g.shadowColor="rgba(150,40,110,.35)"; g.shadowBlur=3;
+      for(let i=0;i<6;i++){ g.rotate(Math.PI/3); g.beginPath(); g.moveTo(0,0); g.lineTo(0,-f.r); g.moveTo(0,-f.r*.55); g.lineTo(f.r*.28,-f.r*.78); g.moveTo(0,-f.r*.55); g.lineTo(-f.r*.28,-f.r*.78); g.stroke(); }
+      g.restore(); return;
+    }
+    const rg=g.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r);
+    rg.addColorStop(0,`rgba(255,255,255,${f.a})`); rg.addColorStop(f.soft,`rgba(255,255,255,${f.a*.85})`); rg.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=rg; g.beginPath(); g.arc(f.x,f.y,f.r,0,7); g.fill();
   }
+  function newFlake(W,H,anyY){
+    const z=Math.random(), crystal=z>.82 && Math.random()<.35;
+    return {x:Math.random()*W, y:anyY?Math.random()*H:-12, z, crystal,
+      r: crystal ? 6+z*7 : 1.2+z*z*6.5, v:.35+z*1.25, ph:Math.random()*6.3, sw:.15+z*.45,
+      a: crystal ? .9 : .55+z*.4, soft: z>.7 ? .25 : .6, rot:Math.random()*6.3, spin:(Math.random()-.5)*.02};
+  }
+  function startSnow(){
+    const c=document.createElement("canvas"); c.className="snowfall"; document.body.append(c);
+    const g=c.getContext("2d"); let W=0,H=0, flakes=[];
+    const size=()=>{const dpr=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; g.setTransform(dpr,0,0,dpr,0,0);
+      const n=Math.min(130,Math.round(W*H/9000)); while(flakes.length<n) flakes.push(newFlake(W,H,true)); flakes.length=n; draw(0);};
+    function draw(dt){ g.clearRect(0,0,W,H);
+      for(const f of flakes){ if(dt){ f.y+=f.v*dt; f.ph+=.015*dt; f.x+=Math.sin(f.ph)*f.sw*dt; f.rot+=f.spin*dt; if(f.y>H+14) Object.assign(f,newFlake(W,H,false)); }
+        flakeDraw(g,f); } }
+    size(); addEventListener("resize",size);
+    if(!reduce){ let last=0; (function loop(now){ const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now; if(!document.hidden) draw(dt); requestAnimationFrame(loop); })(0); }
+  }
+
+  /* ---- snow that settles: a fluffy cap grows slowly on top of chosen things ---- */
+  function cap(el,{x=.08,w=.5,h=12,top=null,grow=true}={}){
+    if(!el) return; if(getComputedStyle(el).position==="static") el.style.position="relative";
+    const W=Math.max(30,el.clientWidth*w), n=Math.max(3,Math.round(W/16));
+    let d=`M0 ${h}`; for(let i=0;i<n;i++){ const x1=W*(i+.5)/n, x2=W*(i+1)/n, y=Math.random()*h*.45; d+=` Q ${x1.toFixed(1)} ${(y-h*.25).toFixed(1)} ${x2.toFixed(1)} ${(i===n-1?h:h*.35+Math.random()*h*.3).toFixed(1)}`; }
+    d+=` L ${W} ${h} Z`;
+    const s=document.createElementNS("http://www.w3.org/2000/svg","svg"); s.setAttribute("class","snowcap"+(grow&&!reduce?" grow":"")); s.setAttribute("aria-hidden","true");
+    s.setAttribute("viewBox",`-2 -${h*.4} ${W+4} ${h*1.4+2}`); s.style.cssText=`left:${x*100}%;width:${W}px;height:${h*1.4}px;top:${top!==null?top:`-${h*1.4-3}px`};animation-delay:${(Math.random()*10).toFixed(1)}s`;
+    s.innerHTML=`<defs><linearGradient id="sg${Math.random().toString(36).slice(2,7)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#EEE7F4"/></linearGradient></defs><path d="${d}"/>`;
+    const id=s.querySelector("linearGradient").id; s.querySelector("path").setAttribute("fill",`url(#${id})`);
+    el.append(s);
+  }
+  function settle(){
+    const puff=document.querySelector(".puff");
+    cap(puff,{x:.12,w:.2,h:14,top:"13%"}); cap(puff,{x:.68,w:.17,h:12,top:"14%"});
+    cap(document.querySelector(".field"),{x:.06,w:.42,h:12});
+    const chips=[...document.querySelectorAll(".chip")]; [0,3,6].forEach(i=>cap(chips[i],{x:.15,w:.55,h:8}));
+    cap(document.querySelector(".bridge"),{x:.04,w:.3,h:12});
+    cap(document.querySelector(".card-build"),{x:.6,w:.32,h:12});
+    cap(document.querySelector(".prize"),{x:.1,w:.28,h:11});
+    cap(document.querySelector(".honest"),{x:.45,w:.45,h:11});
+  }
+
+  if(DECOR==="snow"){ startSnow(); settle(); }
 
   if(DECOR==="deep"){
     const d=document.createElement("div"); d.className="deep"; d.setAttribute("aria-hidden","true");
@@ -648,13 +711,20 @@ const DECO=(()=>{
     game.prepend(d);
   }
 
+  /* frame mode: Diana's garland frame runs around the whole screen (corners, bow and ornaments from her picture,
+     seamless fur in between so it fits any width), plus falling and settling snow */
   if(DECOR==="frame"){
-    const f=document.createElement("img"); f.className="framec"; f.src="v2-frame-garland.webp"; f.alt=""; f.width=720; f.height=1043; stage.append(f);
+    const x=document.createElement("div"); x.className="xframe"; x.setAttribute("aria-hidden","true");
+    x.innerHTML=`<i class="xf-top"></i><i class="xf-bot"></i><i class="xf-left"></i><i class="xf-right"></i>
+      <img class="xf-star1" src="xf-star.webp" alt=""><img class="xf-ball" src="xf-ball.webp" alt=""><img class="xf-puff1" src="xf-puff.webp" alt=""><img class="xf-star2" src="xf-star.webp" alt=""><img class="xf-puff2" src="xf-puff.webp" alt="">
+      <img class="xf-tl" src="xf-tl.webp" alt=""><img class="xf-tr" src="xf-tr.webp" alt=""><img class="xf-bl" src="xf-bl.webp" alt=""><img class="xf-br" src="xf-br.webp" alt=""><img class="xf-bow" src="xf-bow.webp" alt="">`;
+    document.body.append(x);
+    startSnow(); settle();
   }
 
   return {
     cardBack(g){
-      if(DECOR==="snow"){ g.shadowColor="rgba(229,0,122,.35)"; g.shadowBlur=10; g.fillStyle="#FFFFFF"; for(let i=0;i<150;i++){ const r=4+Math.random()*10; g.globalAlpha=.7+Math.random()*.3; g.beginPath(); g.arc(Math.random()*1080,Math.random()*1920,r,0,7); g.fill(); } g.globalAlpha=1; g.shadowBlur=0; }
+      if(DECOR==="snow"||DECOR==="frame"){ for(let i=0;i<120;i++){ const f=newFlake(1080,1920,true); f.r*=2.6; flakeDraw(g,f); } g.globalAlpha=1; }
       if(DECOR==="deep"){
         const gr=g.createLinearGradient(0,0,0,1920); gr.addColorStop(0,"#FFE3F1"); gr.addColorStop(1,"#FF8EC4"); g.fillStyle=gr; g.fillRect(0,0,1080,1920);
         for(let i=0;i<16;i++){ const x=Math.random()*1080, y=Math.random()*1300, r=40+Math.random()*120, col=pick(["255,210,31","255,255,255","229,0,122"]); const rg=g.createRadialGradient(x,y,0,x,y,r); rg.addColorStop(0,`rgba(${col},.45)`); rg.addColorStop(1,`rgba(${col},0)`); g.fillStyle=rg; g.fillRect(x-r,y-r,2*r,2*r); }
@@ -662,7 +732,9 @@ const DECO=(()=>{
         hill(1560,140,"#FFB3D6"); hill(1660,110,"#FFC8E2"); hill(1740,70,"#FFF6FA");
       }
     },
-    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,0,200,1080,1564); }
+    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,0,200,1080,1564); },
+    /* the result card is hidden at load, so its snow cap is added the first time it appears */
+    capResult(){ if(this.done || (DECOR!=="snow" && DECOR!=="frame")) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); }
   };
 })();
 
@@ -783,7 +855,7 @@ async function showResult(t){
     if(b){ cardBlob=b; if(cardUrl) URL.revokeObjectURL(cardUrl); cardUrl=URL.createObjectURL(b); $("cardThumb").src=cardUrl; }
   }catch(e){}
   $("saveBtn").disabled=!cardBlob;
-  $("resultTitle").textContent="Зарізано: «"+t+"»"; $("saveNote").hidden=true; $("result").hidden=false;
+  $("resultTitle").textContent="Зарізано: «"+t+"»"; $("saveNote").hidden=true; $("result").hidden=false; if(DECO) DECO.capResult();
   try{ $("result").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}) }catch(e){}
 }
 
