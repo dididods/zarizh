@@ -292,7 +292,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
     <div class="chips" id="chips"></div>
 
     <div class="result" id="result" hidden>
-      <p class="result-q">Ну що, полегшало? Чи ще когось?</p>
+      <p class="result-q">Ну що, полегшало? Чи заріжемо ще щось?</p>
       <div class="actions">
         <button class="btn hot" id="againBtn" type="button">Ще одного!</button>
         <button class="btn ghost" id="enoughBtn" type="button">Досить, полегшало</button>
@@ -301,7 +301,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
         <img id="cardThumb" alt="Картка для сторіс">
         <div>
           <h2 id="resultTitle">Зарізано</h2>
-          <p>Картка для сторіс готова. Відміть того, у кого те саме.</p>
+          <p>Картка для сторіс готова. Відміть того, кого це теж бісить.</p>
           <button class="btn" id="saveBtn" type="button">Зберегти для сторіс</button>
         </div>
       </div>
@@ -331,12 +331,12 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
         </button>
         <ul class="cut-list" id="cutList">
           <li><span>сайту немає</span></li>
-          <li><span>сайт, якому соромно давати посилання</span></li>
+          <li><span>сайт, на який соромно дати посилання</span></li>
           <li><span>ідея, що роками лежить у нотатках</span></li>
           <li><span>«зробіть красиво» без плану</span></li>
           <li><span>заявки, що губляться дорогою</span></li>
         </ul>
-        <p class="cut-done" id="cutDone">Чисто. А тепер те, що робимо →</p>
+        <p class="cut-done" id="cutDone">Чисто. А тепер про те, що робимо →</p>
         <img class="flyknife" id="flyknife" src="v2-knife.webp" alt="">
       </div>
       <div class="card card-build">
@@ -357,7 +357,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
       <div class="prize">
         <small id="prizeLabel">Безкоштовно для перших 10</small>
         <strong id="prizeTitle">Форма для твоєї ідеї</strong>
-        <p id="prizeText">Напиши свою ідею в Telegram. Я поверну: яким продуктом їй бути, що поставити на перший екран і з чого почати. Якщо сайт уже є, ще й що в ньому заріжемо.</p>
+        <p id="prizeText">Напиши свою ідею в Telegram, і я підкажу, яким продуктом їй стати, що поставити на перший екран і з чого почати. А якщо сайт у тебе вже є, покажу, що в ньому варто прибрати.</p>
       </div>
       <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span></p>
     </div>
@@ -378,7 +378,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 <div class="sheet" id="sheet" hidden>
   <div class="sheet-in">
     <img id="sheetImg" alt="Картка для сторіс">
-    <p>Затисни картинку і збережи її в галерею.</p>
+    <p>Затисни картинку і збережи в галерею.</p>
     <button class="btn" id="sheetClose" type="button">Готово</button>
   </div>
 </div>
@@ -389,7 +389,7 @@ const CONFIG = {
   handle: "@didi.ods",
   sign: "Діана · digital designer",
   tgUrl: "https://t.me/thisisdi",
-  cardFooter: "А що зарізати тобі? Шукай @didi.ods",
+  cardFooter: "А що заріжеш ти? Шукай @didi.ods",
 };
 const CHIPS = [
   "Ідея третій рік у нотатках","Сайт, за який соромно","Заявки, що губляться",
@@ -399,7 +399,7 @@ const CHIPS_LIFE = ["Голосові на 10 хвилин","Непрохані 
 const HINT = matchMedia("(pointer:coarse)").matches ? "Пір'я можна ганяти пальцем. Мене - ні." : "Пір'я можна ганяти курсором. Мене - ні.";
 const LINES_AFTER = ["Оце було особисте.","Нарешті хтось це зробив.","Так, наступний!","Я взагалі-то тут за справедливість.","Мені подобається твій підхід.","Чисто. Навіть пух не встиг злетіти."];
 const BRIDGE = "А тепер давай створимо щось, що не захочеться різати.";
-const LINES_TIRED = ["Я ж не іграшка. Ну, трохи іграшка.","Пух уже дибки. Ще одне - і перерва.","Дай хоч бантик поправити."];
+const LINES_TIRED = ["Я ж не іграшка. Ну, трохи іграшка.","Пух уже став дибки. Ще одне - і перерва.","Дай хоч бантик поправити."];
 const LINES_TAP = ["Мило? Перевір.","Не гладь. Пиши.","Я тут не для обіймів.","Пух м'який. Ніж - ні.","Ще раз торкнешся - і ти в списку."];
 const LINES_TYPE = ["Так-так…","Пиши, пиши.","Ох, знайоме.","Ніж уже наточено."];
 const CARD_QUIPS = ["Без жалю.","Пух м'який. Ніж - ні.","Чисто. Наступний?","Курча розібралося."];
