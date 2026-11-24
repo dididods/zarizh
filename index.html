@@ -98,8 +98,9 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes wave{0%,100%{transform:rotate(-18deg)}25%{transform:rotate(-55deg)}55%{transform:rotate(2deg)}80%{transform:rotate(-30deg)}}
 .chick.sigh{transform:translateY(3%) scale(1.03,.97)}
 
-.bubble{position:absolute;left:0;top:16%;max-width:46%;z-index:35;background:var(--paper);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;
-  padding:8px 12px;font-weight:800;font-size:clamp(13px,3.5vw,16px);line-height:1.25;box-shadow:4px 4px 0 var(--ink);transform-origin:0 100%;
+/* speech bubble sits up and to the right of the chick, above the knife tip, so it never covers the face */
+.bubble{position:absolute;right:-2%;left:auto;top:3%;max-width:42%;z-index:35;background:var(--paper);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;
+  padding:8px 12px;font-weight:800;font-size:clamp(12px,3.3vw,15px);line-height:1.25;box-shadow:4px 4px 0 var(--ink);transform-origin:0 100%;
   transition:opacity .2s, transform .25s cubic-bezier(.3,1.6,.5,1)}
 .bubble.off{opacity:0;transform:scale(.6)}
 .bubble.big{background:var(--yolk)}
@@ -782,7 +783,8 @@ const DECO=(()=>{
       };
       run(end,mid,W-end,mid,1); run(end,H-mid,W-end,H-mid,-1); run(side,end,side,H-end,-1); run(W-side,end,W-side,H-end,1);
     }
-    lights(); addEventListener("resize",lights);
+    /* garland along the sides switched off (24.11): it did not match the lights of Diana's reference frame */
+    const GARLAND_ON=false; if(GARLAND_ON){ lights(); addEventListener("resize",lights); }
   }
   if(NY) snowOn();
 
