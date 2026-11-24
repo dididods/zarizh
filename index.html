@@ -243,33 +243,37 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 .snowcap{position:absolute;pointer-events:none;overflow:visible;z-index:2;filter:drop-shadow(0 1px 1px rgba(110,40,90,.22));transform-origin:50% 100%}
 .snowcap.grow{animation:settle 26s cubic-bezier(.2,.6,.3,1) both}
 @keyframes settle{from{transform:scaleY(.08);opacity:.4}to{transform:none;opacity:1}}
-/* screen frame: size unit --s scales every piece; fur band about 18px on a phone, 30px on a big screen */
-.decor-frame{--s:.19}
-@media (min-width:760px){.decor-frame{--s:.25}}
-@media (min-width:1200px){.decor-frame{--s:.31}}
+/* Screen frame, built from Diana's generated parts: a corner with snow and warm lights (mirrored to all four
+   corners; the bottom ones without snow), a seamless fur strip for the sides, the bow with mistletoe on top,
+   a light garland drawn in code along the sides. --s scales every piece: fur band ~20px phone, ~32px desktop. */
+.decor-frame{--s:.115}
+@media (min-width:760px){.decor-frame{--s:.15}}
+@media (min-width:1200px){.decor-frame{--s:.18}}
 .xframe{position:fixed;inset:0;pointer-events:none;z-index:45}
 .xframe>*{position:absolute;display:block;max-width:none}
 .xframe img{height:auto}
-.xf-top{left:calc(150px*var(--s));right:calc(150px*var(--s));top:calc(65px*var(--s));height:calc(98px*var(--s));background:var(--ht) repeat-x 0 0/auto 100%}
-.xf-bot{left:calc(200px*var(--s));right:calc(200px*var(--s));bottom:calc(5px*var(--s));height:calc(98px*var(--s));background:var(--hb) repeat-x 0 0/auto 100%}
-.xf-left,.xf-right{top:calc(300px*var(--s));bottom:calc(150px*var(--s));width:calc(98px*var(--s));background:var(--hv) repeat-y 0 0/100% auto}
-.xf-left{left:calc(31px*var(--s))}
-.xf-right{right:calc(28px*var(--s));transform:scaleX(-1)}
-.xf-tl{left:0;top:0;width:calc(185px*var(--s))}
-.xf-tr{right:0;top:0;width:calc(180px*var(--s))}
-.xf-bl{left:0;bottom:0;width:calc(230px*var(--s))}
-.xf-br{right:0;bottom:0;width:calc(240px*var(--s))}
-.xf-bow{left:50%;top:0;width:calc(365px*var(--s));transform:translateX(-50%)}
-/* ornaments are cut out on their own (no fur square behind them) and sit on the fur band */
-.xf-star1{left:calc(48px*var(--s));top:46%;width:calc(65px*var(--s))}
-.xf-puff1{left:calc(26px*var(--s));top:74%;width:calc(108px*var(--s))}
-.xf-ball{right:calc(46px*var(--s));top:58%;width:calc(66px*var(--s))}
-.xf-star2{right:calc(46px*var(--s));top:28%;width:calc(65px*var(--s));transform:rotate(18deg)}
-.xf-puff2{right:calc(24px*var(--s));top:84%;width:calc(108px*var(--s));transform:scaleX(-1)}
+.f2-top,.f2-bot{left:calc(530px*var(--s));right:calc(530px*var(--s));height:calc(192px*var(--s));background:url(f2-h.webp) repeat-x 0 0/auto 100%}
+.f2-top{top:calc(52px*var(--s))}
+.f2-bot{bottom:calc(52px*var(--s));transform:scaleY(-1)}
+.f2-left,.f2-right{top:calc(560px*var(--s));bottom:calc(560px*var(--s));width:calc(192px*var(--s));background:url(f2-v.webp) repeat-y 0 0/100% auto}
+.f2-left{left:calc(38px*var(--s))}
+.f2-right{right:calc(38px*var(--s));transform:scaleX(-1)}
+.f2-tl,.f2-tr,.f2-bl,.f2-br{width:calc(610px*var(--s))}
+.f2-tl{left:0;top:0}
+.f2-tr{right:0;top:0;transform:scaleX(-1)}
+.f2-bl{left:0;bottom:0;transform:scaleY(-1)}
+.f2-br{right:0;bottom:0;transform:scale(-1,-1)}
+.f2-bow{left:50%;top:0;width:calc(630px*var(--s));transform:translateX(-50%)}
+.f2-lights{position:absolute;inset:0;width:100%;height:100%}
+/* ornaments sit on the side bands */
+.xf-star1{left:calc(77px*var(--s));top:44%;width:calc(115px*var(--s))}
+.xf-puff1{left:calc(40px*var(--s));top:73%;width:calc(190px*var(--s))}
+.xf-ball{right:calc(76px*var(--s));top:57%;width:calc(116px*var(--s))}
+.xf-star2{right:calc(77px*var(--s));top:31%;width:calc(115px*var(--s));transform:rotate(18deg)}
 /* keep content clear of the fur */
-.decor-frame .pad{padding-left:max(16px,calc(130px*var(--s) + 10px));padding-right:max(16px,calc(130px*var(--s) + 10px))}
-.decor-frame .game{padding-top:calc(255px*var(--s) + 2px)}
-.decor-frame .offer{padding-bottom:calc(120px*var(--s) + 48px)}
+.decor-frame .pad{padding-left:max(16px,calc(223px*var(--s) + 10px));padding-right:max(16px,calc(223px*var(--s) + 10px))}
+.decor-frame .game{padding-top:calc(330px*var(--s) + 4px)}
+.decor-frame .offer{padding-bottom:calc(240px*var(--s) + 48px)}
 /* New Year chick in a hat is taller: narrower box, same bottom line */
 .ny .rig{left:9%;width:76%;aspect-ratio:1000/1084}   /* same width as the base chick, so both look the same size; only the hat adds height */
 /* spin the knife round to switch the season: a grab zone over the blade and a turning dashed ring as the hint */
@@ -753,11 +757,32 @@ const DECO=(()=>{
      seamless fur in between so it fits any width), plus falling and settling snow */
   if(DECOR==="frame"){
     const x=document.createElement("div"); x.className="xframe"; x.setAttribute("aria-hidden","true");
-    x.innerHTML=`<i class="xf-top"></i><i class="xf-bot"></i><i class="xf-left"></i><i class="xf-right"></i>
-      <img class="xf-star1" src="xf-star.webp" alt=""><img class="xf-ball" src="xf-ball.webp" alt=""><img class="xf-puff1" src="xf-puff.webp" alt=""><img class="xf-star2" src="xf-star.webp" alt=""><img class="xf-puff2" src="xf-puff.webp" alt="">
-      <img class="xf-tl" src="${P}tl.webp" alt=""><img class="xf-tr" src="${P}tr.webp" alt=""><img class="xf-bl" src="${P}bl.webp" alt=""><img class="xf-br" src="${P}br.webp" alt=""><img class="xf-bow" src="${P}bow.webp" alt="">`;
-    x.style.setProperty("--ht",`url(${P}ht.webp)`); x.style.setProperty("--hb",`url(${P}h.webp)`); x.style.setProperty("--hv",`url(${P}v.webp)`);
+    x.innerHTML=`<i class="f2-top"></i><i class="f2-bot"></i><i class="f2-left"></i><i class="f2-right"></i>
+      <canvas class="f2-lights"></canvas>
+      <img class="xf-star1" src="xf-star.webp" alt=""><img class="xf-ball" src="xf-ball.webp" alt=""><img class="xf-puff1" src="xf-puff.webp" alt=""><img class="xf-star2" src="xf-star.webp" alt="">
+      <img class="f2-tl" src="f2-corner.webp" alt=""><img class="f2-tr" src="f2-corner.webp" alt=""><img class="f2-bl" src="f2-corner-plain.webp" alt=""><img class="f2-br" src="f2-corner-plain.webp" alt="">
+      <img class="f2-bow" src="f2-bow.webp" alt="">`;
     document.body.append(x);
+    /* garland: a thin warm wire waving along the middle of each side band, round glowing lights like on the corners */
+    const lc=x.querySelector(".f2-lights"), lg=lc.getContext("2d");
+    function lights(){
+      const dpr=Math.min(devicePixelRatio||1,2), W=innerWidth, H=innerHeight; lc.width=W*dpr; lc.height=H*dpr; lg.setTransform(dpr,0,0,dpr,0,0); lg.clearRect(0,0,W,H);
+      const s=parseFloat(getComputedStyle(document.body).getPropertyValue("--s"))||.15, band=174*s, mid=147*s, side=134*s, end=560*s;
+      const run=(x0,y0,x1,y1,flip)=>{
+        const L=Math.hypot(x1-x0,y1-y0); if(L<band*3) return; const ux=(x1-x0)/L, uy=(y1-y0)/L, nx=-uy*flip, ny=ux*flip;
+        const amp=band*.28, wave=band*5.2, pt=t=>{ const o=Math.sin(t/wave*Math.PI*2)*amp; return [x0+ux*t+nx*o, y0+uy*t+ny*o]; };
+        lg.strokeStyle="rgba(222,200,160,.95)"; lg.lineWidth=Math.max(1,band*.035); lg.beginPath();
+        for(let t=0;t<=L;t+=4){ const [px,py]=pt(t); t?lg.lineTo(px,py):lg.moveTo(px,py); } lg.stroke();
+        const step=band*1.7, r=band*.11;
+        for(let t=step/2;t<L;t+=step){ const [px,py]=pt(t);
+          const g=lg.createRadialGradient(px,py,0,px,py,r*4.2); g.addColorStop(0,"rgba(255,236,190,.85)"); g.addColorStop(.35,"rgba(255,214,140,.35)"); g.addColorStop(1,"rgba(255,214,140,0)");
+          lg.fillStyle=g; lg.beginPath(); lg.arc(px,py,r*4.2,0,7); lg.fill();
+          const c=lg.createRadialGradient(px-r*.3,py-r*.3,0,px,py,r); c.addColorStop(0,"#FFFFFF"); c.addColorStop(.6,"#FFF3D2"); c.addColorStop(1,"#F6D79A");
+          lg.fillStyle=c; lg.beginPath(); lg.arc(px,py,r,0,7); lg.fill(); }
+      };
+      run(end,mid,W-end,mid,1); run(end,H-mid,W-end,H-mid,-1); run(side,end,side,H-end,-1); run(W-side,end,W-side,H-end,1);
+    }
+    lights(); addEventListener("resize",lights);
   }
   if(NY) snowOn();
 
