@@ -266,6 +266,8 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 .f2-br{right:0;bottom:0;transform:scale(-1,-1)}
 .f2-bow{left:50%;top:0;width:calc(630px*var(--s));transform:translateX(-50%)}
 .f2-lights{position:absolute;inset:0;width:100%;height:100%}
+/* review-only button (?review=1) to flip the garland while comparing */
+.review-chip{position:fixed;left:50%;bottom:calc(240px*var(--s,.15) + 10px);transform:translateX(-50%);z-index:70;font:800 13px var(--body);color:var(--paper);background:var(--ink);border:0;border-radius:999px;padding:9px 16px;box-shadow:0 6px 18px -6px rgba(42,15,43,.5);cursor:pointer}
 /* ornaments sit on the side bands */
 .xf-star1{left:calc(77px*var(--s));top:44%;width:calc(115px*var(--s))}
 .xf-puff1{left:calc(40px*var(--s));top:73%;width:calc(190px*var(--s))}
@@ -794,8 +796,17 @@ const DECO=(()=>{
       };
       run(end,mid,W-end,mid,1); run(end,H-mid,W-end,H-mid,-1); run(side,end,side,H-end,-1); run(W-side,end,W-side,H-end,1);
     }
-    /* garland redrawn in the reference style (24.11) */
-    const GARLAND_ON=true; if(GARLAND_ON){ lights(); addEventListener("resize",lights); }
+    /* garland in the reference style (24.11). Review switch for Diana: ?garland=0 hides it in both seasons,
+       ?review=1 shows a small button to flip it on the spot. The choice is remembered in this browser. */
+    let garlandOn = QS.get("garland")==="0" ? false : QS.get("garland")==="1" ? true : (()=>{ try{ return localStorage.getItem("garland")!=="0" }catch(e){ return true } })();
+    lights(); addEventListener("resize",lights);
+    const setGarland=on=>{ garlandOn=on; lc.style.display=on?"":"none"; try{ localStorage.setItem("garland",on?"1":"0") }catch(e){} };
+    setGarland(garlandOn);
+    if(QS.get("review")==="1"){
+      const b=document.createElement("button"); b.type="button"; b.className="review-chip";
+      const label=()=>{ b.textContent = garlandOn ? "Гірлянда: є" : "Гірлянда: немає"; };
+      b.onclick=()=>{ setGarland(!garlandOn); label(); }; label(); document.body.append(b);
+    }
   }
   if(NY) snowOn();
 
