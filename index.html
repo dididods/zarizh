@@ -250,7 +250,10 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 .decor-frame{--s:.115}
 @media (min-width:760px){.decor-frame{--s:.15}}
 @media (min-width:1200px){.decor-frame{--s:.18}}
-.xframe{position:fixed;inset:0;pointer-events:none;z-index:45}
+/* iPhone Safari draws the page under the status bar and the floating toolbar but keeps fixed boxes out of them,
+   so the frame is stretched up by the top safe area and down to the full (large) viewport height: edge to edge */
+.xframe{position:fixed;left:0;right:0;top:calc(-1 * env(safe-area-inset-top,0px));height:calc(100vh + env(safe-area-inset-top,0px));pointer-events:none;z-index:45}
+@supports (height:100lvh){.xframe{height:calc(100lvh + env(safe-area-inset-top,0px))}}
 .xframe>*{position:absolute;display:block;max-width:none}
 .xframe img{height:auto}
 .f2-top,.f2-bot{left:calc(530px*var(--s));right:calc(530px*var(--s));height:calc(192px*var(--s));background:url(f2-h.webp) repeat-x 0 0/auto 100%}
@@ -769,7 +772,7 @@ const DECO=(()=>{
     /* garland: a thin warm wire waving along the middle of each side band, round glowing lights like on the corners */
     const lc=x.querySelector(".f2-lights"), lg=lc.getContext("2d");
     function lights(){
-      const dpr=Math.min(devicePixelRatio||1,2), W=innerWidth, H=innerHeight; lc.width=W*dpr; lc.height=H*dpr; lg.setTransform(dpr,0,0,dpr,0,0); lg.clearRect(0,0,W,H);
+      const dpr=Math.min(devicePixelRatio||1,2), W=x.clientWidth||innerWidth, H=x.clientHeight||innerHeight; lc.width=W*dpr; lc.height=H*dpr; lg.setTransform(dpr,0,0,dpr,0,0); lg.clearRect(0,0,W,H);
       const s=parseFloat(getComputedStyle(document.body).getPropertyValue("--s"))||.15, band=174*s, mid=147*s, side=134*s, end=560*s;
       /* Like the garland on Diana's reference frame: a twisted beige cord crossing the fur from edge to edge
          in long soft S-curves, big pearly lights sitting on the edges of the band where the cord turns. */
