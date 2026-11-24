@@ -805,7 +805,8 @@ const DECO=(()=>{
     lights(); addEventListener("resize",lights);
     /* Review switch for Diana (24.11): the whole screen frame (with its garland) on, or no frame at all,
        in both seasons. ?frame=0 / ?frame=1, or ?review=1 for a button. The choice is remembered in this browser. */
-    let frameOn = QS.get("frame")==="0" ? false : QS.get("frame")==="1" ? true : (()=>{ try{ return localStorage.getItem("frame")!=="0" }catch(e){ return true } })();
+    /* 24.11: Diana removed the screen frame for now (a better place for it is to be found); it shows only with ?frame=1 */
+    let frameOn = QS.get("frame")==="1";
     const setFrame=on=>{ frameOn=on; x.style.display=on?"":"none"; document.body.classList.toggle("decor-frame",on); try{ localStorage.setItem("frame",on?"1":"0") }catch(e){} };
     setFrame(frameOn);
     if(QS.get("review")==="1"){
