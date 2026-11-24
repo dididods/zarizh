@@ -235,6 +235,18 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
   .side{grid-area:side;display:flex;flex-direction:column;align-items:center;gap:8px;align-self:start}
   .stage{max-width:470px;margin-top:0}
   .result{width:100%}
+  /* offer, option C: every block uses the full width, one even rhythm */
+  .offer{padding-block:4px 56px}
+  .offer-in{gap:32px}
+  .bridge{max-width:none;padding:14px 22px;transform:rotate(-.5deg)}
+  .bridge p{font-size:20px}
+  .bridge p b{display:inline;margin-right:.35em}
+  .o-head{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);column-gap:40px;align-items:end;grid-template-areas:"eye eye" "h2 sub"}
+  .o-head .eyebrow{grid-area:eye}
+  .o-head h2{grid-area:h2;font-size:clamp(40px,4.6vw,60px)}
+  .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
+  .extras{grid-template-columns:1.3fr 1fr;align-items:stretch}
+  .honest{justify-self:stretch;max-width:none;display:flex;flex-direction:column;justify-content:center;transform:rotate(-.6deg);font-size:19px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
