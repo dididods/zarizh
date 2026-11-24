@@ -796,16 +796,16 @@ const DECO=(()=>{
       };
       run(end,mid,W-end,mid,1); run(end,H-mid,W-end,H-mid,-1); run(side,end,side,H-end,-1); run(W-side,end,W-side,H-end,1);
     }
-    /* garland in the reference style (24.11). Review switch for Diana: ?garland=0 hides it in both seasons,
-       ?review=1 shows a small button to flip it on the spot. The choice is remembered in this browser. */
-    let garlandOn = QS.get("garland")==="0" ? false : QS.get("garland")==="1" ? true : (()=>{ try{ return localStorage.getItem("garland")!=="0" }catch(e){ return true } })();
     lights(); addEventListener("resize",lights);
-    const setGarland=on=>{ garlandOn=on; lc.style.display=on?"":"none"; try{ localStorage.setItem("garland",on?"1":"0") }catch(e){} };
-    setGarland(garlandOn);
+    /* Review switch for Diana (24.11): the whole screen frame (with its garland) on, or no frame at all,
+       in both seasons. ?frame=0 / ?frame=1, or ?review=1 for a button. The choice is remembered in this browser. */
+    let frameOn = QS.get("frame")==="0" ? false : QS.get("frame")==="1" ? true : (()=>{ try{ return localStorage.getItem("frame")!=="0" }catch(e){ return true } })();
+    const setFrame=on=>{ frameOn=on; x.style.display=on?"":"none"; document.body.classList.toggle("decor-frame",on); try{ localStorage.setItem("frame",on?"1":"0") }catch(e){} };
+    setFrame(frameOn);
     if(QS.get("review")==="1"){
       const b=document.createElement("button"); b.type="button"; b.className="review-chip";
-      const label=()=>{ b.textContent = garlandOn ? "Гірлянда: є" : "Гірлянда: немає"; };
-      b.onclick=()=>{ setGarland(!garlandOn); label(); }; label(); document.body.append(b);
+      const label=()=>{ b.textContent = frameOn ? "Рамка: є" : "Рамка: немає"; };
+      b.onclick=()=>{ setFrame(!frameOn); label(); }; label(); document.body.append(b);
     }
   }
   if(NY) snowOn();
