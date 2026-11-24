@@ -40,7 +40,7 @@ a{color:inherit}
 }
 
 /* ---------- Game ---------- */
-.game{padding-block:16px 36px;display:grid;gap:16px;grid-template-areas:"top" "head" "stage" "form" "result"}
+.game{position:relative;padding-block:16px 36px;display:grid;gap:16px;grid-template-areas:"top" "head" "stage" "form" "result"}
 .side{display:contents}
 .result{grid-area:result}
 .top{grid-area:top;display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -127,7 +127,8 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .flash.on{animation:flash .35s ease-out}
 @keyframes flash{0%{opacity:1}100%{opacity:0}}
 .count{position:absolute;left:0;bottom:0;z-index:3;font-weight:800;font-size:12px;background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 11px}
-.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
+.fx{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:30}
+.haptic{position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none}
 
 /* Form */
 .form{grid-area:form;display:grid;gap:12px;align-content:start}
@@ -224,6 +225,24 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .sheet-in{background:var(--paper);border-radius:20px;padding:16px;display:grid;gap:12px;max-width:340px;width:100%;justify-items:center;text-align:center}
 .sheet img{width:100%;max-width:260px;border-radius:12px;border:2px solid var(--ink)}
 .sheet p{margin:0;font-weight:700}
+
+/* ---------- New Year decor layers (switched on by date, see DECOR in the script) ---------- */
+.decor .game{isolation:isolate}
+.snow{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:-1}
+.deep{position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;overflow:hidden;
+  background:linear-gradient(180deg,#FFE3F1 0%,#FFC2DF 62%,#FF9FCF 100%)}
+.deep i{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(var(--c),.55),rgba(var(--c),0));filter:blur(2px);animation:bokeh 9s ease-in-out infinite alternate}
+@keyframes bokeh{from{transform:translateY(0) scale(1)}to{transform:translateY(-26px) scale(1.12)}}
+.deep svg{position:absolute;left:0;bottom:0;width:100%;height:clamp(90px,16vw,220px)}
+.decor-deep .stage::before{content:"";position:absolute;inset:-6% -14% 0;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.85),rgba(255,255,255,0));z-index:-1}
+.decor-deep .stage{isolation:isolate}
+.framec{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.decor-frame .rig{left:19%;width:62%;bottom:10%}
+.decor-frame .target{top:13%;height:22%}
+.decor-frame .count{left:9%;bottom:2%;z-index:4}
+.decor-frame .bow{display:none}  /* the frame's own bow takes over */
+.decor-frame .bubble{left:3%;top:30%}
+@media (prefers-reduced-motion:reduce){.deep i{animation:none}}
 
 @media (min-width:760px){
   .pair{grid-template-columns:1fr 1fr;gap:24px}
@@ -457,7 +476,13 @@ function sfx(kind){
     s.connect(f).connect(g).connect(ac.destination); s.start(t);
   }catch(e){}
 }
-function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+/* Android: Vibration API. iPhone has no Vibration API; on iOS 18+ toggling a native switch
+   gives a light haptic tick, so a hidden switch stands in for it. */
+const haptic=(()=>{ if(navigator.vibrate) return null;
+  const l=document.createElement("label"); l.className="haptic"; l.setAttribute("aria-hidden","true");
+  const i=document.createElement("input"); i.type="checkbox"; i.setAttribute("switch",""); i.tabIndex=-1;
+  l.append(i); document.body.append(l); return l; })();
+function buzz(p){try{ if(navigator.vibrate) navigator.vibrate(p); else if(haptic) haptic.click(); }catch(e){}}
 
 /* speech */
 let bubbleT;
@@ -483,18 +508,22 @@ input.addEventListener("input",()=>{
 input.addEventListener("blur",()=>chick.classList.remove("lean"));
 
 /* ===== Feathers ===== */
+/* The canvas lives inside the game section and scrolls with the page natively,
+   so feathers never "hang" on screen while a phone scrolls (rAF pauses during momentum scroll). */
 const FX=(()=>{
-  const c=document.createElement("canvas"); c.className="fx"; document.body.append(c);
-  const g=c.getContext("2d"); let parts=[], raf=0, last=0;
+  const host=document.querySelector(".game");
+  const c=document.createElement("canvas"); c.className="fx"; host.append(c);
+  const g=c.getContext("2d"); let parts=[], raf=0, last=0, W=0, H=0;
   const canBlur="filter" in g;
   const imgs=["v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(s=>{const i=new Image(); i.src=s; return i});
-  const size=()=>{const d=Math.min(devicePixelRatio||1,2); c.width=innerWidth*d; c.height=innerHeight*d; g.setTransform(d,0,0,d,0,0)};
-  size(); addEventListener("resize",size);
+  const size=()=>{const d=Math.min(devicePixelRatio||1,2); W=host.clientWidth; H=host.clientHeight; c.width=W*d; c.height=H*d; g.setTransform(d,0,0,d,0,0)};
+  size(); addEventListener("resize",size); if("ResizeObserver" in window) new ResizeObserver(size).observe(host);
+  const toHost=(x,y)=>{const r=host.getBoundingClientRect(); return [x-r.left, y-r.top]};
   function tick(now){
     const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now;
-    g.clearRect(0,0,innerWidth,innerHeight);
-    const sy=scrollY;
-    parts=parts.filter(p=>p.age<p.life && p.y-sy<innerHeight+80);
+    g.clearRect(0,0,W,H);
+    const sy=0;
+    parts=parts.filter(p=>p.age<p.life && p.y<H+80 && p.x>-200 && p.x<W+200);
     for(const p of parts){
       p.age+=dt*16.67;
       const drag=Math.pow(p.drag,dt); p.vx*=drag; p.vy*=drag;
@@ -519,7 +548,7 @@ const FX=(()=>{
   /* wind: cursor or finger pushes feathers; a tap or click blows a gust */
   let px=null, py=null, pt=0, played=false, touchMode=false;
   function push(x,y,vx,vy,R,blow){
-    if(!parts.length) return; const sy=scrollY; let hit=false;
+    if(!parts.length) return; const sy=0; let hit=false; [x,y]=toHost(x,y);
     for(const p of parts){
       /* reach = the feather's own half-size plus a small margin: you have to actually touch it */
       const r=R+p.s*.4, dx=p.x-x, dy=(p.y-sy)-y, d=Math.hypot(dx,dy)||1; if(d>r) continue;
@@ -534,13 +563,14 @@ const FX=(()=>{
   }
   function move(x,y){
     const now=performance.now();
-    if(px!==null && now-pt<120){ const dt=Math.max(8,now-pt)/16.67; push(x,y,(x-px)/dt,(y-py)/dt,touchMode?50:36,.7); }
+    /* a finger is fat and imprecise: wider reach and a firmer push than the cursor */
+    if(px!==null && now-pt<120){ const dt=Math.max(8,now-pt)/16.67; push(x,y,(x-px)/dt,(y-py)/dt,touchMode?78:36,touchMode?1.4:.7); }
     px=x; py=y; pt=now;
   }
   if(!reduce){
     addEventListener("pointermove",e=>{ if(e.pointerType==="mouse"){ touchMode=false; move(e.clientX,e.clientY) } },{passive:true});
     addEventListener("touchmove",e=>{ touchMode=true; for(const t of e.touches) move(t.clientX,t.clientY) },{passive:true});
-    addEventListener("touchstart",e=>{ touchMode=true; const t=e.touches[0]; px=t.clientX; py=t.clientY; pt=performance.now(); push(t.clientX,t.clientY,0,0,60,2.6) },{passive:true});
+    addEventListener("touchstart",e=>{ touchMode=true; const t=e.touches[0]; px=t.clientX; py=t.clientY; pt=performance.now(); push(t.clientX,t.clientY,0,0,120,4.5) },{passive:true});
     addEventListener("mousedown",e=>push(e.clientX,e.clientY,0,0,50,2.6),{passive:true});
   }
   function feather(x,y,vx,vy,z){
@@ -550,7 +580,7 @@ const FX=(()=>{
   }
   return {
     burst(x,y,n=16,power=1){
-      if(reduce) return; y+=scrollY;
+      if(reduce) return; [x,y]=toHost(x,y);
       for(let i=0;i<n;i++){
         const a=-Math.PI/2+(Math.random()-.5)*Math.PI*1.7, sp=(3+Math.random()*7)*power;
         parts.push(feather(x,y,Math.cos(a)*sp,Math.sin(a)*sp,Math.random()));
@@ -565,12 +595,73 @@ const FX=(()=>{
     /* one loose feather drifting off the chick */
     shed(x,y){
       if(reduce || parts.length>40) return;
-      const p=feather(x,y+scrollY,(Math.random()-.5)*2,-1.5-Math.random(),Math.random()*.7); p.life=9000; parts.push(p);
+      [x,y]=toHost(x,y);
+      const p=feather(x,y,(Math.random()-.5)*2,-1.5-Math.random(),Math.random()*.7); p.life=9000; parts.push(p);
       if(!raf) raf=requestAnimationFrame(tick);
     }
   };
 })();
 function centerOf(el){const r=el.getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]}
+
+/* ===== New Year decor (5.12 - 7.01). The base game never changes; a layer switches on by date. =====
+   Preview any variant with ?decor=snow | deep | frame | none */
+const DECOR_FROM="2026-12-05", DECOR_UNTIL="2027-01-08";  /* until = first day it is gone */
+const DECOR_CHOICE="";  /* set to "snow", "deep" or "frame" once Diana picks; "" = launch without decor */
+const DECOR=(()=>{
+  const q=new URLSearchParams(location.search).get("decor");
+  if(["snow","deep","frame"].includes(q)) return q;
+  if(q==="none") return "";
+  const now=new Date();
+  return (now>=new Date(DECOR_FROM+"T00:00:00") && now<new Date(DECOR_UNTIL+"T00:00:00")) ? DECOR_CHOICE : "";
+})();
+const DECO=(()=>{
+  if(!DECOR) return null;
+  document.body.classList.add("decor","decor-"+DECOR);
+  LINES_AFTER.push("Миколай записав тебе в чемні. Майже.","Чисто. Як перший сніг.");
+  CARD_QUIPS.push("Чисто. Як перший сніг.");
+  const game=document.querySelector(".game"), stage=$("stage");
+  /* two pre-built versions of Diana's frame, so the fur is never stretched: wide for the stage, tall for the story card */
+  const frameTall=DECOR==="frame"?new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src="v2-frame-tall.webp"; setTimeout(()=>res(i.naturalWidth?i:null),6000)}):null;
+
+  if(DECOR==="snow"){
+    const c=document.createElement("canvas"); c.className="snow"; game.prepend(c);
+    const g=c.getContext("2d"); let W=0,H=0, flakes=[], vis=true;
+    const size=()=>{const dpr=Math.min(devicePixelRatio||1,2); W=game.clientWidth; H=game.clientHeight; c.width=W*dpr; c.height=H*dpr; g.setTransform(dpr,0,0,dpr,0,0);
+      const n=Math.round(W*H/11000); while(flakes.length<n) flakes.push({x:Math.random()*W,y:Math.random()*H,r:2+Math.random()*3.8,v:.25+Math.random()*.6,ph:Math.random()*6.3,a:.7+Math.random()*.3}); flakes.length=n; draw(0);};
+    function draw(dt){ g.clearRect(0,0,W,H);
+      for(const f of flakes){ if(dt){ f.y+=f.v*dt; f.ph+=.02*dt; f.x+=Math.sin(f.ph)*.3*dt; if(f.y>H+6){f.y=-6;f.x=Math.random()*W} }
+        /* white on blush is faint, so each flake gets a soft pink rim */
+        g.globalAlpha=f.a; g.shadowColor="rgba(229,0,122,.35)"; g.shadowBlur=4; g.fillStyle="#FFFFFF"; g.beginPath(); g.arc(f.x,f.y,f.r,0,7); g.fill(); }
+      g.shadowBlur=0; }
+    size(); addEventListener("resize",size); if("ResizeObserver" in window) new ResizeObserver(size).observe(game);
+    if("IntersectionObserver" in window) new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(game);
+    if(!reduce){ let last=0; (function loop(now){ const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now; if(vis && !document.hidden) draw(dt); requestAnimationFrame(loop); })(0); }
+  }
+
+  if(DECOR==="deep"){
+    const d=document.createElement("div"); d.className="deep"; d.setAttribute("aria-hidden","true");
+    let dots=""; for(let i=0;i<12;i++){ const s=30+Math.random()*90; dots+=`<i style="left:${Math.random()*100}%;top:${Math.random()*70}%;width:${s}px;height:${s}px;--c:${pick(["255,210,31","255,255,255","229,0,122","255,170,210"])};animation-delay:-${(Math.random()*9).toFixed(1)}s"></i>`; }
+    d.innerHTML=dots+`<svg viewBox="0 0 1440 260" preserveAspectRatio="none"><path d="M0 150 C 240 60 420 70 640 130 S 1060 40 1440 110 V260 H0Z" fill="#FFB3D6"/><path d="M0 190 C 300 120 520 150 760 185 S 1180 120 1440 170 V260 H0Z" fill="#FFC8E2"/><path d="M0 222 C 360 180 700 214 980 205 S 1300 190 1440 210 V260 H0Z" fill="#FFF6FA"/></svg>`;
+    game.prepend(d);
+  }
+
+  if(DECOR==="frame"){
+    const f=document.createElement("img"); f.className="framec"; f.src="v2-frame-wide.webp"; f.alt=""; f.width=720; f.height=648; stage.append(f);
+  }
+
+  return {
+    cardBack(g){
+      if(DECOR==="snow"){ g.shadowColor="rgba(229,0,122,.35)"; g.shadowBlur=10; g.fillStyle="#FFFFFF"; for(let i=0;i<150;i++){ const r=4+Math.random()*10; g.globalAlpha=.7+Math.random()*.3; g.beginPath(); g.arc(Math.random()*1080,Math.random()*1920,r,0,7); g.fill(); } g.globalAlpha=1; g.shadowBlur=0; }
+      if(DECOR==="deep"){
+        const gr=g.createLinearGradient(0,0,0,1920); gr.addColorStop(0,"#FFE3F1"); gr.addColorStop(1,"#FF8EC4"); g.fillStyle=gr; g.fillRect(0,0,1080,1920);
+        for(let i=0;i<16;i++){ const x=Math.random()*1080, y=Math.random()*1300, r=40+Math.random()*120, col=pick(["255,210,31","255,255,255","229,0,122"]); const rg=g.createRadialGradient(x,y,0,x,y,r); rg.addColorStop(0,`rgba(${col},.45)`); rg.addColorStop(1,`rgba(${col},0)`); g.fillStyle=rg; g.fillRect(x-r,y-r,2*r,2*r); }
+        const hill=(y0,amp,col)=>{ g.fillStyle=col; g.beginPath(); g.moveTo(0,y0); g.bezierCurveTo(300,y0-amp,600,y0+amp*.4,1080,y0-amp*.6); g.lineTo(1080,1920); g.lineTo(0,1920); g.closePath(); g.fill(); };
+        hill(1560,140,"#FFB3D6"); hill(1660,110,"#FFC8E2"); hill(1740,70,"#FFF6FA");
+      }
+    },
+    async cardFrame(g){ const img=await frameTall; if(img) g.drawImage(img,0,0,1080,1920); }
+  };
+})();
 
 /* ===== Word ===== */
 function setWord(t){
@@ -639,6 +730,8 @@ async function makeCard(t){
   const c=document.createElement("canvas"); c.width=1080;c.height=1920; const g=c.getContext("2d");
   g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
   g.save(); g.translate(540,960); g.rotate(-28*Math.PI/180); g.fillStyle="rgba(255,179,214,.6)"; for(let x=-1600;x<1600;x+=150) g.fillRect(x,-1600,10,3200); g.restore();
+  if(DECOR) DECO.cardBack(g);
+  if(DECOR==="frame"){ g.save(); g.translate(540,1020); g.scale(.76,.76); g.translate(-540,-960); }  /* content shrinks to sit inside the fur, below the bow */
   g.textAlign="center"; g.textBaseline="alphabetic";
   g.fillStyle="#2A0F2B"; g.font="800 42px Manrope"; g.fillText(CONFIG.handle.toUpperCase(),540,130);
   g.fillStyle="#6E3B62"; g.font="600 30px Manrope"; g.fillText(CONFIG.sign,540,178);
@@ -668,12 +761,13 @@ async function makeCard(t){
   const cw=800, ch=cw*743/760, X=140, Y=920;
   g.save(); g.fillStyle="rgba(110,20,70,.22)"; g.filter&&(g.filter="blur(18px)"); g.beginPath(); g.ellipse(X+cw/2,Y+ch*.98,cw*.38,40,0,0,7); g.fill(); g.restore();
   if(body) g.drawImage(body,X,Y,cw,ch);
-  if(bow){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
+  if(bow && DECOR!=="frame"){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
   if(knife){const kw=cw*.5, kh=kw*203/360, gx=X+cw*.5813+kw*.24, gy=Y+ch*.4334+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore();}
   if(paw){const pw=cw*.2368; g.drawImage(paw,X+cw*.5829,Y+ch*.5276,pw,pw);}
   // footer
   g.fillStyle="#2A0F2B"; rr(g,90,1772,900,96,48); g.fill();
   g.fillStyle="#FFF6FA"; g.textBaseline="middle"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1821);
+  if(DECOR==="frame"){ g.restore(); await DECO.cardFrame(g); }
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
 async function showResult(t){
@@ -733,7 +827,6 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidd
       sfx("whoosh"); li.classList.add("cut"); place(x1, y, 26, 300); await wait(290);
       sfx("cut"); buzz(10);
     }
-    const last=items[items.length-1].firstElementChild.getBoundingClientRect(); FX.burst(last.right, last.top, 3, .6);
     place(g.left-c.left, g.top-c.top+10, -24, 380); await wait(390);
     done.classList.add("on"); finish();
   }
