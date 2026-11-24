@@ -254,6 +254,9 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
    so the frame is stretched up by the top safe area and down to the full (large) viewport height: edge to edge */
 .xframe{position:fixed;left:0;right:0;top:calc(-1 * env(safe-area-inset-top,0px));height:calc(100vh + env(safe-area-inset-top,0px));pointer-events:none;z-index:45}
 @supports (height:100lvh){.xframe{height:calc(100lvh + env(safe-area-inset-top,0px))}}
+/* iPhone/iPad only (-webkit-touch-callout exists only in iOS Safari): the safe-area value can read 0 there,
+   so lift the frame by a fixed 70px under the clock instead; desktop and Android are untouched */
+@supports (-webkit-touch-callout:none){.xframe{top:-70px;height:calc(100lvh + 70px)}}
 .xframe>*{position:absolute;display:block;max-width:none}
 .xframe img{height:auto}
 .f2-top,.f2-bot{left:calc(530px*var(--s));right:calc(530px*var(--s));height:calc(192px*var(--s));background:url(f2-h.webp) repeat-x 0 0/auto 100%}
