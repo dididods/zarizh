@@ -268,6 +268,8 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .decor-frame .pad{padding-left:max(16px,calc(130px*var(--s) + 10px));padding-right:max(16px,calc(130px*var(--s) + 10px))}
 .decor-frame .game{padding-top:calc(255px*var(--s) + 2px)}
 .decor-frame .offer{padding-bottom:calc(120px*var(--s) + 48px)}
+/* New Year chick in a hat is taller: narrower box, same bottom line */
+.ny .rig{left:18%;width:64%;aspect-ratio:760/922}
 @media (prefers-reduced-motion:reduce){.deep i{animation:none}}
 
 @media (min-width:760px){
@@ -640,6 +642,23 @@ const DECOR=(()=>{
   const now=new Date();
   return (now>=new Date(DECOR_FROM+"T00:00:00") && now<new Date(DECOR_UNTIL+"T00:00:00")) ? DECOR_CHOICE : "";
 })();
+/* Which chick: the base one, or the New Year one in a hat and scarf (any decor on). Positions are % of the chick image. */
+const CHICK = DECOR
+  ? {ny:true, src:"ny-chick.webp", blink:"ny-blink.webp", paw:"ny-paw.webp", ar:922/760, bow:false,
+     knife:{l:55.6,t:47.5,w:48}, pawPos:{l:57.37,t:55.97,w:19.47}, blinkPos:{l:29.61,t:39.05,w:41.97}}
+  : {ny:false, src:"v2-chick.webp", blink:"v2-blink.webp", paw:"v2-paw.webp", ar:743/760, bow:true,
+     knife:{l:58.13,t:43.34,w:50}, pawPos:{l:58.29,t:52.76,w:23.68}, blinkPos:{l:32.43,t:36.3,w:41.13}};
+if(CHICK.ny){
+  const q=s=>document.querySelector(s), pct=(el,o)=>{ el.style.left=o.l+"%"; el.style.top=o.t+"%"; el.style.width=o.w+"%"; };
+  q(".puff .body").src=CHICK.src; q(".puff .body").height=922;
+  const bl=q(".puff .blink"); bl.src=CHICK.blink; pct(bl,CHICK.blinkPos);
+  const pw=q(".puff .paw"); pw.src=CHICK.paw; pct(pw,CHICK.pawPos);
+  pct(q(".puff .knife"),CHICK.knife);
+  q(".puff .bow").style.display="none";        /* the hat has its own bow */
+  document.body.classList.add("ny");
+  document.querySelector(".bridge img").src=CHICK.src;
+}
+
 const DECO=(()=>{
   if(!DECOR) return null;
   document.body.classList.add("decor","decor-"+DECOR);
@@ -693,7 +712,8 @@ const DECO=(()=>{
   }
   function settle(){
     const puff=document.querySelector(".puff");
-    cap(puff,{x:.12,w:.2,h:14,top:"13%"}); cap(puff,{x:.68,w:.17,h:12,top:"14%"});
+    if(CHICK.ny){ cap(puff,{x:.08,w:.2,h:13,top:"18.5%"}); cap(puff,{x:.72,w:.18,h:12,top:"18.5%"}); cap(puff,{x:.33,w:.16,h:10,top:"12.5%"}); }
+    else { cap(puff,{x:.12,w:.2,h:14,top:"13%"}); cap(puff,{x:.68,w:.17,h:12,top:"14%"}); }
     cap(document.querySelector(".field"),{x:.06,w:.42,h:12});
     const chips=[...document.querySelectorAll(".chip")]; [0,3,6].forEach(i=>cap(chips[i],{x:.15,w:.55,h:8}));
     cap(document.querySelector(".bridge"),{x:.04,w:.3,h:12});
@@ -795,7 +815,7 @@ chick.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventD
 /* ===== Story card 1080x1920 ===== */
 /* onload instead of decode(): decode() can stay pending forever in some browsers; a 6 s cap so nothing ever hangs */
 const load=s=>new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=s; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
-const assets=Promise.all(["v2-chick.webp","v2-knife.webp","v2-paw.webp","v2-bow.webp","v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(load));
+const assets=Promise.all([CHICK.src,"v2-knife.webp",CHICK.paw,"v2-bow.webp","v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(load));
 const fontsReady=document.fonts?Promise.race([Promise.all([document.fonts.load('900 120px Unbounded'),document.fonts.load('800 40px Manrope'),document.fonts.load('600 30px Manrope')]).catch(()=>{}),wait(3000)]):Promise.resolve();
 let cardBlob=null, cardUrl="";
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
@@ -838,12 +858,12 @@ async function makeCard(t){
   const spots=[[150,880,-.6,120],[930,840,.7,110],[110,1300,.3,90],[985,1250,-.4,100],[230,1640,1.1,70],[860,1660,-1,80]];
   spots.forEach(([x,y,r,s],i)=>{const im=feathers[i%4]; if(!im) return; g.save(); g.translate(x,y); g.rotate(r); g.globalAlpha=.95; g.drawImage(im,-s/2,-s/2*im.naturalHeight/im.naturalWidth,s,s*im.naturalHeight/im.naturalWidth); g.restore();});
   // chick
-  const cw=800, ch=cw*743/760, X=140, Y=920;
+  const cw=CHICK.ny?700:800, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=CHICK.ny?870:920;
   g.save(); g.fillStyle="rgba(110,20,70,.22)"; g.filter&&(g.filter="blur(18px)"); g.beginPath(); g.ellipse(X+cw/2,Y+ch*.98,cw*.38,40,0,0,7); g.fill(); g.restore();
   if(body) g.drawImage(body,X,Y,cw,ch);
-  if(bow && DECOR!=="frame"){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
-  if(knife){const kw=cw*.5, kh=kw*203/360, gx=X+cw*.5813+kw*.24, gy=Y+ch*.4334+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore();}
-  if(paw){const pw=cw*.2368; g.drawImage(paw,X+cw*.5829,Y+ch*.5276,pw,pw);}
+  if(bow && CHICK.bow){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
+  if(knife){const K=CHICK.knife, kw=cw*K.w/100, kh=kw*203/360, gx=X+cw*K.l/100+kw*.24, gy=Y+ch*K.t/100+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore();}
+  if(paw){const P=CHICK.pawPos, pw=cw*P.w/100; g.drawImage(paw,X+cw*P.l/100,Y+ch*P.t/100,pw,pw);}
   if(FR){ g.restore(); await DECO.cardFrame(g); head(80,124); }
   foot();
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
