@@ -769,22 +769,33 @@ const DECO=(()=>{
     function lights(){
       const dpr=Math.min(devicePixelRatio||1,2), W=innerWidth, H=innerHeight; lc.width=W*dpr; lc.height=H*dpr; lg.setTransform(dpr,0,0,dpr,0,0); lg.clearRect(0,0,W,H);
       const s=parseFloat(getComputedStyle(document.body).getPropertyValue("--s"))||.15, band=174*s, mid=147*s, side=134*s, end=560*s;
+      /* Like the garland on Diana's reference frame: a twisted beige cord crossing the fur from edge to edge
+         in long soft S-curves, big pearly lights sitting on the edges of the band where the cord turns. */
       const run=(x0,y0,x1,y1,flip)=>{
-        const L=Math.hypot(x1-x0,y1-y0); if(L<band*3) return; const ux=(x1-x0)/L, uy=(y1-y0)/L, nx=-uy*flip, ny=ux*flip;
-        const amp=band*.28, wave=band*5.2, pt=t=>{ const o=Math.sin(t/wave*Math.PI*2)*amp; return [x0+ux*t+nx*o, y0+uy*t+ny*o]; };
-        lg.strokeStyle="rgba(222,200,160,.95)"; lg.lineWidth=Math.max(1,band*.035); lg.beginPath();
-        for(let t=0;t<=L;t+=4){ const [px,py]=pt(t); t?lg.lineTo(px,py):lg.moveTo(px,py); } lg.stroke();
-        const step=band*1.7, r=band*.11;
-        for(let t=step/2;t<L;t+=step){ const [px,py]=pt(t);
-          const g=lg.createRadialGradient(px,py,0,px,py,r*4.2); g.addColorStop(0,"rgba(255,236,190,.85)"); g.addColorStop(.35,"rgba(255,214,140,.35)"); g.addColorStop(1,"rgba(255,214,140,0)");
-          lg.fillStyle=g; lg.beginPath(); lg.arc(px,py,r*4.2,0,7); lg.fill();
-          const c=lg.createRadialGradient(px-r*.3,py-r*.3,0,px,py,r); c.addColorStop(0,"#FFFFFF"); c.addColorStop(.6,"#FFF3D2"); c.addColorStop(1,"#F6D79A");
-          lg.fillStyle=c; lg.beginPath(); lg.arc(px,py,r,0,7); lg.fill(); }
+        const L=Math.hypot(x1-x0,y1-y0); if(L<band*2.5) return; const ux=(x1-x0)/L, uy=(y1-y0)/L, nx=-uy*flip, ny=ux*flip;
+        const P=(t,o)=>[x0+ux*t+nx*o, y0+uy*t+ny*o];
+        const edge=band*.40, step=band*1.35, n=Math.max(2,Math.round(L/step)), d=L/n;
+        const pts=[]; for(let i=0;i<=n;i++){ pts.push(P(i*d, (i%2?1:-1)*edge*(.85+.15*Math.sin(i*1.7)))); }
+        /* cord: S-curve between neighbouring lights (control points along the band), drawn as shadow, body, highlight */
+        const cord=(w,col,dy)=>{ lg.strokeStyle=col; lg.lineWidth=w; lg.lineCap="round"; lg.beginPath();
+          for(let i=0;i<n;i++){ const [ax,ay]=pts[i], [bx,by]=pts[i+1];
+            const c1=[ax+ux*d*.55, ay+uy*d*.55], c2=[bx-ux*d*.55, by-uy*d*.55];
+            if(!i) lg.moveTo(ax,ay+dy); lg.bezierCurveTo(c1[0],c1[1]+dy,c2[0],c2[1]+dy,bx,by+dy); }
+          lg.stroke(); };
+        const cw=Math.max(1.6,band*.055);
+        cord(cw*1.6,"rgba(120,85,40,.28)",cw*.5); cord(cw,"#E6D3AE",0); cord(cw*.38,"rgba(255,255,255,.55)",-cw*.18);
+        /* lights */
+        const r=band*.135;
+        pts.forEach(([px,py],i)=>{ if(i===0||i===n) return;
+          const g=lg.createRadialGradient(px,py,r*.6,px,py,r*2.8); g.addColorStop(0,"rgba(255,232,175,.75)"); g.addColorStop(.45,"rgba(255,220,150,.30)"); g.addColorStop(1,"rgba(255,220,150,0)");
+          lg.fillStyle=g; lg.beginPath(); lg.arc(px,py,r*2.8,0,7); lg.fill();
+          const c=lg.createRadialGradient(px-r*.35,py-r*.35,r*.1,px,py,r); c.addColorStop(0,"#FFFFFF"); c.addColorStop(.55,"#FFF6DE"); c.addColorStop(1,"#F2D59B");
+          lg.fillStyle=c; lg.beginPath(); lg.arc(px,py,r,0,7); lg.fill(); });
       };
       run(end,mid,W-end,mid,1); run(end,H-mid,W-end,H-mid,-1); run(side,end,side,H-end,-1); run(W-side,end,W-side,H-end,1);
     }
-    /* garland along the sides switched off (24.11): it did not match the lights of Diana's reference frame */
-    const GARLAND_ON=false; if(GARLAND_ON){ lights(); addEventListener("resize",lights); }
+    /* garland redrawn in the reference style (24.11) */
+    const GARLAND_ON=true; if(GARLAND_ON){ lights(); addEventListener("resize",lights); }
   }
   if(NY) snowOn();
 
