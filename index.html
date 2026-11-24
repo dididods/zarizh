@@ -237,11 +237,14 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .decor-deep .stage::before{content:"";position:absolute;inset:-6% -14% 0;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.85),rgba(255,255,255,0));z-index:-1}
 .decor-deep .stage{isolation:isolate}
 .framec{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3}
-.decor-frame .rig{left:19%;width:62%;bottom:10%}
-.decor-frame .target{top:13%;height:22%}
-.decor-frame .count{left:9%;bottom:2%;z-index:4}
+/* the garland frame keeps its own proportions, so in frame mode the stage turns portrait */
+.decor-frame .stage{aspect-ratio:720/1043;max-width:min(300px,82vw);margin-top:4px}
+@media (min-width:900px){.decor-frame .stage{max-width:360px}}
+.decor-frame .rig{left:19%;width:62%;bottom:13%}
+.decor-frame .target{top:25%;height:17%}
+.decor-frame .count{left:50%;transform:translateX(-50%);bottom:-2px;z-index:4;white-space:nowrap}
 .decor-frame .bow{display:none}  /* the frame's own bow takes over */
-.decor-frame .bubble{left:3%;top:30%}
+.decor-frame .bubble{left:6%;top:44%;max-width:56%}
 @media (prefers-reduced-motion:reduce){.deep i{animation:none}}
 
 @media (min-width:760px){
@@ -621,7 +624,7 @@ const DECO=(()=>{
   CARD_QUIPS.push("Чисто. Як перший сніг.");
   const game=document.querySelector(".game"), stage=$("stage");
   /* two pre-built versions of Diana's frame, so the fur is never stretched: wide for the stage, tall for the story card */
-  const frameTall=DECOR==="frame"?new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src="v2-frame-tall.webp"; setTimeout(()=>res(i.naturalWidth?i:null),6000)}):null;
+  const frameImg=DECOR==="frame"?new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src="v2-frame-garland.webp"; setTimeout(()=>res(i.naturalWidth?i:null),6000)}):null;
 
   if(DECOR==="snow"){
     const c=document.createElement("canvas"); c.className="snow"; game.prepend(c);
@@ -646,7 +649,7 @@ const DECO=(()=>{
   }
 
   if(DECOR==="frame"){
-    const f=document.createElement("img"); f.className="framec"; f.src="v2-frame-wide.webp"; f.alt=""; f.width=720; f.height=648; stage.append(f);
+    const f=document.createElement("img"); f.className="framec"; f.src="v2-frame-garland.webp"; f.alt=""; f.width=720; f.height=1043; stage.append(f);
   }
 
   return {
@@ -659,7 +662,7 @@ const DECO=(()=>{
         hill(1560,140,"#FFB3D6"); hill(1660,110,"#FFC8E2"); hill(1740,70,"#FFF6FA");
       }
     },
-    async cardFrame(g){ const img=await frameTall; if(img) g.drawImage(img,0,0,1080,1920); }
+    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,0,200,1080,1564); }
   };
 })();
 
@@ -731,10 +734,15 @@ async function makeCard(t){
   g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
   g.save(); g.translate(540,960); g.rotate(-28*Math.PI/180); g.fillStyle="rgba(255,179,214,.6)"; for(let x=-1600;x<1600;x+=150) g.fillRect(x,-1600,10,3200); g.restore();
   if(DECOR) DECO.cardBack(g);
-  if(DECOR==="frame"){ g.save(); g.translate(540,1020); g.scale(.76,.76); g.translate(-540,-960); }  /* content shrinks to sit inside the fur, below the bow */
+  /* frame mode: the frame keeps its own proportions (1080x1564 from y=200); the title, word and chick shrink to fit inside it,
+     the handle sits above the bow and the footer below the frame */
+  const FR=DECOR==="frame";
+  const head=(y1,y2)=>{ g.textAlign="center"; g.textBaseline="alphabetic"; g.fillStyle="#2A0F2B"; g.font="800 42px Manrope"; g.fillText(CONFIG.handle.toUpperCase(),540,y1);
+    g.fillStyle="#6E3B62"; g.font="600 30px Manrope"; g.fillText(CONFIG.sign,540,y2); };
+  const foot=()=>{ g.fillStyle="#2A0F2B"; rr(g,90,1772,900,96,48); g.fill();
+    g.fillStyle="#FFF6FA"; g.textBaseline="middle"; g.textAlign="center"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1821); };
+  if(FR){ g.save(); g.translate(540,1122); g.scale(.69,.69); g.translate(-540,-980); } else head(130,178);
   g.textAlign="center"; g.textBaseline="alphabetic";
-  g.fillStyle="#2A0F2B"; g.font="800 42px Manrope"; g.fillText(CONFIG.handle.toUpperCase(),540,130);
-  g.fillStyle="#6E3B62"; g.font="600 30px Manrope"; g.fillText(CONFIG.sign,540,178);
   g.fillStyle="#E5007A"; g.font="900 66px Unbounded"; g.fillText("СЬОГОДНІ",540,320); g.fillText("ЗАРІЗАНО:",540,402);
   g.font="900 120px Unbounded";
   let lines=[t];
@@ -764,10 +772,8 @@ async function makeCard(t){
   if(bow && DECOR!=="frame"){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
   if(knife){const kw=cw*.5, kh=kw*203/360, gx=X+cw*.5813+kw*.24, gy=Y+ch*.4334+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore();}
   if(paw){const pw=cw*.2368; g.drawImage(paw,X+cw*.5829,Y+ch*.5276,pw,pw);}
-  // footer
-  g.fillStyle="#2A0F2B"; rr(g,90,1772,900,96,48); g.fill();
-  g.fillStyle="#FFF6FA"; g.textBaseline="middle"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1821);
-  if(DECOR==="frame"){ g.restore(); await DECO.cardFrame(g); }
+  if(FR){ g.restore(); await DECO.cardFrame(g); head(80,124); }
+  foot();
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
 async function showResult(t){
