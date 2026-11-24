@@ -648,7 +648,7 @@ function centerOf(el){const r=el.getBoundingClientRect(); return [r.left+r.width
    The garland frame is always on (?decor=none hides it). The New Year layer (chick in a hat and scarf, falling and
    settling snow, festive lines) is on from 7.12 to 7.01 by date; before that anyone can switch it by spinning the
    knife round in a circle, and spinning again switches back. Preview: ?ny=1 / ?ny=0 */
-const FRAME_COLOR="blue";                                  /* "yellow" or "blue" */
+const FRAME_COLOR="yellow";                                /* "yellow" or "blue"; Diana chose yellow back (24.11) */
 const NY_FROM="2026-12-07", NY_UNTIL="2027-01-08";        /* until = first day it is gone */
 const QS=new URLSearchParams(location.search);
 const DECOR=(()=>{ const q=QS.get("decor"); if(["snow","deep","frame"].includes(q)) return q; return q==="none" ? "" : "frame"; })();
