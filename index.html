@@ -40,7 +40,9 @@ a{color:inherit}
 }
 
 /* ---------- Game ---------- */
-.game{padding-block:16px 36px;display:grid;gap:16px;grid-template-areas:"top" "head" "stage" "form"}
+.game{padding-block:16px 36px;display:grid;gap:16px;grid-template-areas:"top" "head" "stage" "form" "result"}
+.side{display:contents}
+.result{grid-area:result}
 .top{grid-area:top;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .brand{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;line-height:1.2}
 .brand span{color:var(--hot)}
@@ -228,8 +230,11 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
   .extras{grid-template-columns:1.3fr 1fr;gap:24px}
 }
 @media (min-width:900px){
-  .game{grid-template-columns:1fr 1fr;column-gap:48px;align-items:start;padding-block:28px 48px;grid-template-areas:"top top" "head stage" "form stage"}
-  .stage{grid-row:2 / span 2;align-self:center}
+  .game{grid-template-columns:1fr 1fr;column-gap:48px;align-items:start;padding-block:28px 40px;grid-template-areas:"top top" "head side" "form side"}
+  /* right column: chick level with the headline and the input, the result card right under it, level with the chips */
+  .side{grid-area:side;display:flex;flex-direction:column;align-items:center;gap:8px;align-self:start}
+  .stage{max-width:470px;margin-top:0}
+  .result{width:100%}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -256,6 +261,8 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
     <p class="sub">Напиши, що тебе бісить. Курча розбереться за секунду, а ти забереш картку для сторіс.</p>
   </header>
 
+  <!-- phone: stage and result sit in the main column (display:contents); desktop: they stack in the right column -->
+  <div class="side">
   <div class="stage" id="stage">
     <div class="flash" id="flash"></div>
     <div class="bubble off" id="bubble" role="status"></div>
@@ -282,15 +289,6 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
     <div class="count" id="count" hidden></div>
   </div>
 
-  <section class="form" aria-label="Що різати">
-    <form class="field" id="form" autocomplete="off">
-      <label for="pain" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Що тебе бісить</label>
-      <input id="pain" name="pain" maxlength="34" placeholder="що тебе бісить?" enterkeyhint="go">
-      <button class="cut-btn" id="cutBtn" type="submit">Заріж!</button>
-    </form>
-    <div class="chips-label">або обери готове:</div>
-    <div class="chips" id="chips"></div>
-
     <div class="result" id="result" hidden>
       <p class="result-q">Ну що, полегшало? Чи заріжемо ще щось?</p>
       <div class="actions">
@@ -307,6 +305,16 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
       </div>
       <p class="note" id="saveNote" hidden></p>
     </div>
+  </div>
+
+  <section class="form" aria-label="Що різати">
+    <form class="field" id="form" autocomplete="off">
+      <label for="pain" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Що тебе бісить</label>
+      <input id="pain" name="pain" maxlength="34" placeholder="що тебе бісить?" enterkeyhint="go">
+      <button class="cut-btn" id="cutBtn" type="submit">Заріж!</button>
+    </form>
+    <div class="chips-label">або обери готове:</div>
+    <div class="chips" id="chips"></div>
   </section>
 </div>
 
