@@ -239,6 +239,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .decor-deep .stage{isolation:isolate}
 /* falling snow over the whole screen, settling caps */
 .snowfall{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:28}
+body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs to the New Year layer only */
 .snowcap{position:absolute;pointer-events:none;overflow:visible;z-index:2;filter:drop-shadow(0 1px 1px rgba(110,40,90,.22));transform-origin:50% 100%}
 .snowcap.grow{animation:settle 26s cubic-bezier(.2,.6,.3,1) both}
 @keyframes settle{from{transform:scaleY(.08);opacity:.4}to{transform:none;opacity:1}}
@@ -249,9 +250,9 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .xframe{position:fixed;inset:0;pointer-events:none;z-index:45}
 .xframe>*{position:absolute;display:block;max-width:none}
 .xframe img{height:auto}
-.xf-top{left:calc(150px*var(--s));right:calc(150px*var(--s));top:calc(65px*var(--s));height:calc(98px*var(--s));background:url(xf-ht.webp) repeat-x 0 0/auto 100%}
-.xf-bot{left:calc(200px*var(--s));right:calc(200px*var(--s));bottom:calc(5px*var(--s));height:calc(98px*var(--s));background:url(xf-h.webp) repeat-x 0 0/auto 100%}
-.xf-left,.xf-right{top:calc(300px*var(--s));bottom:calc(150px*var(--s));width:calc(98px*var(--s));background:url(xf-v.webp) repeat-y 0 0/100% auto}
+.xf-top{left:calc(150px*var(--s));right:calc(150px*var(--s));top:calc(65px*var(--s));height:calc(98px*var(--s));background:var(--ht) repeat-x 0 0/auto 100%}
+.xf-bot{left:calc(200px*var(--s));right:calc(200px*var(--s));bottom:calc(5px*var(--s));height:calc(98px*var(--s));background:var(--hb) repeat-x 0 0/auto 100%}
+.xf-left,.xf-right{top:calc(300px*var(--s));bottom:calc(150px*var(--s));width:calc(98px*var(--s));background:var(--hv) repeat-y 0 0/100% auto}
 .xf-left{left:calc(31px*var(--s))}
 .xf-right{right:calc(28px*var(--s));transform:scaleX(-1)}
 .xf-tl{left:0;top:0;width:calc(185px*var(--s))}
@@ -270,7 +271,18 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .decor-frame .game{padding-top:calc(255px*var(--s) + 2px)}
 .decor-frame .offer{padding-bottom:calc(120px*var(--s) + 48px)}
 /* New Year chick in a hat is taller: narrower box, same bottom line */
-.ny .rig{left:18%;width:64%;aspect-ratio:760/922}
+.ny .rig{left:18%;width:64%;aspect-ratio:1000/1213}
+/* spin the knife round to switch the season: a grab zone over the blade and a turning dashed ring as the hint */
+.knife-hit{position:absolute;left:50%;top:18%;width:52%;height:52%;z-index:6;border-radius:50%;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent}
+.knife-hit:active{cursor:grabbing}
+.knife-hit:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.spin-hint{position:absolute;left:var(--gx,70%);top:var(--gy,60%);width:44%;aspect-ratio:1;pointer-events:none;z-index:5;transform:translate(-50%,-50%);transition:opacity .4s}
+.spin-hint svg{width:100%;height:100%;animation:spinHint 3.2s linear infinite;overflow:visible}
+@keyframes spinHint{to{transform:rotate(360deg)}}
+.spin-hint.off,.busy-chick .spin-hint{opacity:0}
+.season-flash{position:fixed;inset:0;z-index:60;pointer-events:none;background:radial-gradient(circle at var(--fx,50%) var(--fy,50%),rgba(255,255,255,.95),rgba(255,255,255,0) 60%);animation:seasonFlash .7s ease-out forwards}
+@keyframes seasonFlash{from{opacity:1}to{opacity:0}}
+@media (prefers-reduced-motion:reduce){.spin-hint svg{animation:none}}
 @media (prefers-reduced-motion:reduce){.deep i{animation:none}}
 
 @media (min-width:760px){
@@ -632,42 +644,47 @@ const FX=(()=>{
 })();
 function centerOf(el){const r=el.getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]}
 
-/* ===== New Year decor (5.12 - 7.01). The base game never changes; a layer switches on by date. =====
-   Preview any variant with ?decor=snow | deep | frame | none */
-const DECOR_FROM="2026-12-05", DECOR_UNTIL="2027-01-08";  /* until = first day it is gone */
-const DECOR_CHOICE="frame";  /* chosen 24.11: garland frame around the screen + falling, settling snow */
-const DECOR=(()=>{
-  const q=new URLSearchParams(location.search).get("decor");
-  if(["snow","deep","frame"].includes(q)) return q;
-  if(q==="none") return "";
-  const now=new Date();
-  return (now>=new Date(DECOR_FROM+"T00:00:00") && now<new Date(DECOR_UNTIL+"T00:00:00")) ? DECOR_CHOICE : "";
-})();
-/* Which chick: the base one, or the New Year one in a hat and scarf (any decor on). Positions are % of the chick image. */
-const CHICK = DECOR
-  ? {ny:true, src:"ny-chick.webp", blink:"ny-blink.webp", paw:"ny-paw.webp", ar:1213/1000, bow:false,
-     knife:{l:55.6,t:47.5,w:48}, pawPos:{l:57.3,t:55.89,w:19.6}, blinkPos:{l:29.7,t:39.08,w:42}}
-  : {ny:false, src:"v2-chick.webp", blink:"v2-blink.webp", paw:"v2-paw.webp", ar:743/760, bow:true,
-     knife:{l:58.13,t:43.34,w:50}, pawPos:{l:58.29,t:52.76,w:23.68}, blinkPos:{l:32.43,t:36.3,w:41.13}};
-if(CHICK.ny){
+/* ===== Season =====
+   The garland frame is always on (?decor=none hides it). The New Year layer (chick in a hat and scarf, falling and
+   settling snow, festive lines) is on from 7.12 to 7.01 by date; before that anyone can switch it by spinning the
+   knife round in a circle, and spinning again switches back. Preview: ?ny=1 / ?ny=0 */
+const FRAME_COLOR="blue";                                  /* "yellow" or "blue" */
+const NY_FROM="2026-12-07", NY_UNTIL="2027-01-08";        /* until = first day it is gone */
+const QS=new URLSearchParams(location.search);
+const DECOR=(()=>{ const q=QS.get("decor"); if(["snow","deep","frame"].includes(q)) return q; return q==="none" ? "" : "frame"; })();
+const NY_BY_DATE=(()=>{ const n=new Date(); return n>=new Date(NY_FROM+"T00:00:00") && n<new Date(NY_UNTIL+"T00:00:00"); })();
+let NY = QS.get("ny")==="1" ? true : QS.get("ny")==="0" ? false : NY_BY_DATE;
+/* Positions are % of each chick image */
+const CHICKS={
+  ny:  {ny:true, src:"ny-chick.webp", blink:"ny-blink.webp", paw:"ny-paw.webp", ar:1213/1000, w:1000, h:1213, bow:false,
+        knife:{l:55.6,t:47.5,w:48}, pawPos:{l:57.3,t:55.89,w:19.6}, blinkPos:{l:29.7,t:39.08,w:42}},
+  base:{ny:false, src:"v2-chick.webp", blink:"v2-blink.webp", paw:"v2-paw.webp", ar:743/760, w:760, h:743, bow:true,
+        knife:{l:58.13,t:43.34,w:50}, pawPos:{l:58.29,t:52.76,w:23.68}, blinkPos:{l:32.43,t:36.3,w:41.13}}
+};
+let CHICK=CHICKS.base;
+const FESTIVE_LINES=["Миколай записав тебе в чемні. Майже.","Чисто. Як перший сніг."];
+function applyChick(){
+  CHICK = NY ? CHICKS.ny : CHICKS.base;
   const q=s=>document.querySelector(s), pct=(el,o)=>{ el.style.left=o.l+"%"; el.style.top=o.t+"%"; el.style.width=o.w+"%"; };
-  q(".puff .body").src=CHICK.src; q(".puff .body").width=1000; q(".puff .body").height=1213;
+  const b=q(".puff .body"); b.src=CHICK.src; b.width=CHICK.w; b.height=CHICK.h;
   const bl=q(".puff .blink"); bl.src=CHICK.blink; pct(bl,CHICK.blinkPos);
   const pw=q(".puff .paw"); pw.src=CHICK.paw; pct(pw,CHICK.pawPos);
   pct(q(".puff .knife"),CHICK.knife);
-  q(".puff .bow").style.display="none";        /* the hat has its own bow */
-  document.body.classList.add("ny");
-  document.querySelector(".bridge img").src=CHICK.src;
+  q(".puff .bow").style.display = CHICK.bow ? "" : "none";   /* the hat has its own bow */
+  document.body.classList.toggle("ny",NY);
+  q(".bridge img").src=CHICK.src;
+  FESTIVE_LINES.forEach(l=>{ const i=LINES_AFTER.indexOf(l); if(NY && i<0) LINES_AFTER.push(l); if(!NY && i>=0) LINES_AFTER.splice(i,1); });
+  const iq=CARD_QUIPS.indexOf(FESTIVE_LINES[1]); if(NY && iq<0) CARD_QUIPS.push(FESTIVE_LINES[1]); if(!NY && iq>=0) CARD_QUIPS.splice(iq,1);
 }
+applyChick();
 
 const DECO=(()=>{
   if(!DECOR) return null;
   document.body.classList.add("decor","decor-"+DECOR);
-  LINES_AFTER.push("Миколай записав тебе в чемні. Майже.","Чисто. Як перший сніг.");
-  CARD_QUIPS.push("Чисто. Як перший сніг.");
   const game=document.querySelector(".game"), stage=$("stage");
+  const P = FRAME_COLOR==="blue" ? "xfb-" : "xf-";
   /* the story card uses the whole garland frame in its own proportions */
-  const frameImg=DECOR==="frame"?new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src="v2-frame-garland.webp"; setTimeout(()=>res(i.naturalWidth?i:null),6000)}):null;
+  const frameImg=new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=FRAME_COLOR==="blue"?"v2-frame-garland-blue.webp":"v2-frame-garland.webp"; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
 
   /* ---- snow: falls over the whole screen in three depths; far flakes small and crisp, near ones big and soft, a few real crystals ---- */
   function flakeDraw(g,f){
@@ -696,8 +713,10 @@ const DECO=(()=>{
       for(const f of flakes){ if(dt){ f.y+=f.v*dt; f.ph+=.015*dt; f.x+=Math.sin(f.ph)*f.sw*dt; f.rot+=f.spin*dt; if(f.y>H+14) Object.assign(f,newFlake(W,H,false)); }
         flakeDraw(g,f); } }
     size(); addEventListener("resize",size);
-    if(!reduce){ let last=0; (function loop(now){ const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now; if(!document.hidden) draw(dt); requestAnimationFrame(loop); })(0); }
+    if(!reduce){ let last=0; (function loop(now){ const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now; if(!document.hidden && NY) draw(dt); requestAnimationFrame(loop); })(0); }
   }
+  let snowReady=false;
+  function snowOn(){ if(snowReady) return; snowReady=true; startSnow(); settle(); }
 
   /* ---- snow that settles: a fluffy cap grows slowly on top of chosen things ---- */
   function cap(el,{x=.08,w=.5,h=12,top=null,grow=true}={}){
@@ -721,7 +740,7 @@ const DECO=(()=>{
     cap(document.querySelector(".honest"),{x:.45,w:.45,h:11});
   }
 
-  if(DECOR==="snow"){ startSnow(); settle(); }
+  if(DECOR==="snow"){ snowOn(); }
 
   if(DECOR==="deep"){
     const d=document.createElement("div"); d.className="deep"; d.setAttribute("aria-hidden","true");
@@ -736,14 +755,15 @@ const DECO=(()=>{
     const x=document.createElement("div"); x.className="xframe"; x.setAttribute("aria-hidden","true");
     x.innerHTML=`<i class="xf-top"></i><i class="xf-bot"></i><i class="xf-left"></i><i class="xf-right"></i>
       <img class="xf-star1" src="xf-star.webp" alt=""><img class="xf-ball" src="xf-ball.webp" alt=""><img class="xf-puff1" src="xf-puff.webp" alt=""><img class="xf-star2" src="xf-star.webp" alt=""><img class="xf-puff2" src="xf-puff.webp" alt="">
-      <img class="xf-tl" src="xf-tl.webp" alt=""><img class="xf-tr" src="xf-tr.webp" alt=""><img class="xf-bl" src="xf-bl.webp" alt=""><img class="xf-br" src="xf-br.webp" alt=""><img class="xf-bow" src="xf-bow.webp" alt="">`;
+      <img class="xf-tl" src="${P}tl.webp" alt=""><img class="xf-tr" src="${P}tr.webp" alt=""><img class="xf-bl" src="${P}bl.webp" alt=""><img class="xf-br" src="${P}br.webp" alt=""><img class="xf-bow" src="${P}bow.webp" alt="">`;
+    x.style.setProperty("--ht",`url(${P}ht.webp)`); x.style.setProperty("--hb",`url(${P}h.webp)`); x.style.setProperty("--hv",`url(${P}v.webp)`);
     document.body.append(x);
-    startSnow(); settle();
   }
+  if(NY) snowOn();
 
   return {
     cardBack(g){
-      if(DECOR==="snow"||DECOR==="frame"){ for(let i=0;i<120;i++){ const f=newFlake(1080,1920,true); f.r*=2.6; flakeDraw(g,f); } g.globalAlpha=1; }
+      if(NY){ for(let i=0;i<120;i++){ const f=newFlake(1080,1920,true); f.r*=2.6; flakeDraw(g,f); } g.globalAlpha=1; }
       if(DECOR==="deep"){
         const gr=g.createLinearGradient(0,0,0,1920); gr.addColorStop(0,"#FFE3F1"); gr.addColorStop(1,"#FF8EC4"); g.fillStyle=gr; g.fillRect(0,0,1080,1920);
         for(let i=0;i<16;i++){ const x=Math.random()*1080, y=Math.random()*1300, r=40+Math.random()*120, col=pick(["255,210,31","255,255,255","229,0,122"]); const rg=g.createRadialGradient(x,y,0,x,y,r); rg.addColorStop(0,`rgba(${col},.45)`); rg.addColorStop(1,`rgba(${col},0)`); g.fillStyle=rg; g.fillRect(x-r,y-r,2*r,2*r); }
@@ -753,7 +773,8 @@ const DECO=(()=>{
     },
     async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,0,200,1080,1564); },
     /* the result card is hidden at load, so its snow cap is added the first time it appears */
-    capResult(){ if(this.done || (DECOR!=="snow" && DECOR!=="frame")) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); }
+    capResult(){ if(this.done || !NY) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); },
+    snowOn
   };
 })();
 
@@ -811,16 +832,66 @@ function tapChick(){
 chick.addEventListener("click",tapChick);
 chick.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tapChick()}});
 
+/* ===== Season switch: grab the knife and spin it a full circle ===== */
+const SEASON=(()=>{
+  const knifeEl=document.querySelector(".puff .knife");
+  const hit=document.createElement("div"); hit.className="knife-hit"; hit.tabIndex=0; hit.setAttribute("role","button");
+  hit.setAttribute("aria-label","Покрутити ніж по колу: новорічне курча"); rig.append(hit);
+  const hint=document.createElement("div"); hint.className="spin-hint"; hint.setAttribute("aria-hidden","true");
+  hint.innerHTML=`<svg viewBox="-60 -60 120 120"><circle r="50" fill="none" stroke="rgba(255,255,255,.95)" stroke-width="4" stroke-dasharray="10 9" stroke-linecap="round"/><path d="M50 -14 L50 10 L36 -2 Z" fill="#E5007A" transform="rotate(-30)"/></svg>`;
+  rig.append(hint);
+  let used=false; try{ used=sessionStorage.getItem("spun")==="1" }catch(e){}
+  if(used) hint.classList.add("off");
+  /* the knife turns around its grip; the grip point in % of the chick box */
+  const grip=()=>{ const K=CHICK.knife; return [K.l+.24*K.w, K.t+.70*(K.w*203/360/CHICK.ar)]; };
+  const placeHint=()=>{ const [x,y]=grip(); hint.style.setProperty("--gx",x+"%"); hint.style.setProperty("--gy",y+"%"); };
+  placeHint();
+  const angle=e=>{ const r=rig.getBoundingClientRect(), [gx,gy]=grip(); return Math.atan2(e.clientY-(r.top+r.height*gy/100), e.clientX-(r.left+r.width*gx/100))*180/Math.PI; };
+  let drag=false, acc=0, last=0;
+  function switchSeason(e){
+    NY=!NY; applyChick(); placeHint(); if(NY && DECO) DECO.snowOn();
+    const f=document.createElement("div"); f.className="season-flash";
+    if(e){ f.style.setProperty("--fx",e.clientX+"px"); f.style.setProperty("--fy",e.clientY+"px"); }
+    document.body.append(f); setTimeout(()=>f.remove(),800);
+    const r=rig.getBoundingClientRect(); FX.burst(r.left+r.width/2, r.top+r.height*.35, 14, 1);
+    sfx("whoosh"); setTimeout(()=>sfx("pop"),180); buzz([15,40,25]);
+    chick.classList.remove("boing"); void chick.offsetWidth; chick.classList.add("boing"); setTimeout(()=>chick.classList.remove("boing"),700);
+    say(NY ? "Новорічний режим увімкнено. Сніг за мій рахунок." : "Повертаюсь у звичайне. Сніг почекає.", 3200);
+    used=true; hint.classList.add("off"); try{ sessionStorage.setItem("spun","1") }catch(_){}
+    track("season_switch",{ny:NY});
+  }
+  hit.addEventListener("pointerdown",e=>{
+    if(busy) return; e.preventDefault(); drag=true; acc=0; last=angle(e);
+    try{ hit.setPointerCapture(e.pointerId) }catch(_){}
+    knifeEl.style.transition="none"; chick.classList.add("busy-chick");
+  });
+  hit.addEventListener("pointermove",e=>{
+    if(!drag) return; const a=angle(e); let d=a-last; if(d>180) d-=360; if(d<-180) d+=360; acc+=d; last=a;
+    knifeEl.style.transform=`rotate(${-18+acc}deg)`;
+    if(Math.abs(acc)>=330){ end(e,true); }
+  });
+  function end(e,done){
+    if(!drag) return; drag=false; knifeEl.style.transition=""; knifeEl.style.transform=""; chick.classList.remove("busy-chick");
+    if(done) switchSeason(e); else if(Math.abs(acc)<8) tapChick();   /* a plain tap on the knife is just a tap */
+  }
+  hit.addEventListener("pointerup",e=>end(e,false)); hit.addEventListener("pointercancel",e=>end(e,false));
+  hit.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); switchSeason(null); } });
+  return { get used(){ return used; } };
+})();
+
 /* ===== Story card 1080x1920 ===== */
 /* onload instead of decode(): decode() can stay pending forever in some browsers; a 6 s cap so nothing ever hangs */
 const load=s=>new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=s; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
-const assets=Promise.all([CHICK.src,"v2-knife.webp",CHICK.paw,"v2-bow.webp","v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(load));
+/* images are loaded once and reused; the chick set depends on the season the card is made in */
+const imgCache={}; const loadC=s=>imgCache[s]||(imgCache[s]=load(s));
+const cardAssets=()=>Promise.all([CHICK.src,"v2-knife.webp",CHICK.paw,"v2-bow.webp","v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(loadC));
+cardAssets();
 const fontsReady=document.fonts?Promise.race([Promise.all([document.fonts.load('900 120px Unbounded'),document.fonts.load('800 40px Manrope'),document.fonts.load('600 30px Manrope')]).catch(()=>{}),wait(3000)]):Promise.resolve();
 let cardBlob=null, cardUrl="";
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
 function fitFont(g,text,weight,size,family,maxW,min){let fs=size; g.font=`${weight} ${fs}px ${family}`; while(g.measureText(text).width>maxW&&fs>min){fs-=2; g.font=`${weight} ${fs}px ${family}`} return fs}
 async function makeCard(t){
-  const [body,knife,paw,bow,...feathers]=await assets; await fontsReady;
+  const [body,knife,paw,bow,...feathers]=await cardAssets(); await fontsReady;
   const c=document.createElement("canvas"); c.width=1080;c.height=1920; const g=c.getContext("2d");
   g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
   g.save(); g.translate(540,960); g.rotate(-28*Math.PI/180); g.fillStyle="rgba(255,179,214,.6)"; for(let x=-1600;x<1600;x+=150) g.fillRect(x,-1600,10,3200); g.restore();
@@ -945,6 +1016,8 @@ else{
     say(HINT,0);
   },500);
   setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },6500);
+  /* the season secret: a nudge after a while, if nobody has found it */
+  setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Покрути мій ніж по колу, якщо зими забагато." : "Покрути мій ніж по колу. Буде сюрприз.",5000); },15000);
 }
 
 /* the chick sheds a loose feather now and then, while it is on screen */
