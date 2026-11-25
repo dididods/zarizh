@@ -1163,7 +1163,11 @@ async function makePoster(t){
     g.save(); g.shadowColor="rgba(214,90,150,.28)"; g.shadowBlur=w*.12; g.shadowOffsetY=w*.06; g.fillStyle="#FFF4F9";
     g.beginPath(); bumps.forEach(([bx,by,r])=>{ g.moveTo(bx+r,by); g.arc(bx,by,r,0,7); }); g.rect(x-w/2,y-w*.06,w,w*.12); g.fill(); g.restore();
     bumps.forEach(([bx,by,r])=>{ const rg=g.createRadialGradient(bx-r*.35,by-r*.45,r*.1,bx,by,r); rg.addColorStop(0,"#FFFFFF"); rg.addColorStop(.65,"#FFF7FB"); rg.addColorStop(1,"#FFDCEC"); g.fillStyle=rg; g.beginPath(); g.arc(bx,by,r,0,7); g.fill(); }); };
-  cloud(220,470,330); cloud(880,380,280); cloud(170,1330,300); cloud(930,1290,320); cloud(540,1720,620);
+  /* Diana's plush clouds (from her reference), the hand-drawn ones stay as a fallback */
+  const cl=await Promise.all(["cloud-c2.webp","cloud-c3.webp","cloud-c4.webp","cloud-c5.webp"].map(loadC));
+  const put=(im,x,y,w,flip)=>{ if(!im) return false; const h=w*im.naturalHeight/im.naturalWidth; g.save(); if(flip){ g.translate(x+w,y); g.scale(-1,1); g.drawImage(im,0,0,w,h); } else g.drawImage(im,x,y,w,h); g.restore(); return true; };
+  if(!put(cl[0],-50,300,430)) { cloud(220,470,330); cloud(880,380,280); cloud(170,1330,300); cloud(930,1290,320); cloud(540,1720,620); }
+  else { put(cl[0],1080-360,210,400,true); put(cl[1],1080-290,1130,300); put(cl[2],-70,1220,440); put(cl[3],80,1500,920); }
   if(DECOR && NY) DECO.cardBack(g);
   g.textBaseline="alphabetic";
   g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.textAlign="center"; g.fillText(CONFIG.sign,540,188);
