@@ -47,11 +47,15 @@ a{color:inherit}
 .top-r{margin-left:auto}
 .top{position:relative}
 .mistle{display:none}
+.sk-s{display:none}
+@media (max-width:400px){.sk-l{display:none}.sk-s{display:inline}}   /* one line on small phones */
 .ny .mistle{display:block;position:absolute;left:50%;top:50%;width:clamp(78px,9vw,112px);height:auto;transform:translate(-50%,-50%) rotate(-3deg);pointer-events:none;z-index:2;filter:drop-shadow(0 4px 6px rgba(110,20,70,.22))}
 /* phone: the top line is full (it wraps), so the mistletoe hangs above it and the line moves down */
-@media (max-width:640px){.ny .top{padding-top:50px}.ny .mistle{top:-8px;width:76px;transform:translateX(-50%) rotate(-3deg)}}
-.brand{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;line-height:1.2}
-.brand span{color:var(--hot)}
+@media (max-width:640px){.top{flex-wrap:nowrap}.brand b{font-size:16px}.brand small{font-size:8px;letter-spacing:.14em}.skip{font-size:12px}.sound{padding:5px 8px}.top-r{gap:6px}
+  .ny .top{padding-top:50px}.ny .mistle{top:-8px;width:76px;transform:translateX(-50%) rotate(-3deg)}}
+.brand{display:grid;line-height:1;white-space:nowrap;flex:none}
+.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em}
+.brand small{font:700 9.5px var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px}
 .top-r{display:flex;gap:8px;align-items:center}
 .skip{font-weight:800;font-size:13px;text-decoration:none;border-bottom:2px solid var(--hot);white-space:nowrap}
 .sound{font:700 12px var(--body);color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:5px 10px;cursor:pointer;white-space:nowrap}
@@ -209,24 +213,22 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .build li{list-style:none;font-weight:700;font-size:15px;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,246,250,.35)}
 .build li.main{background:var(--hot);border-color:var(--hot);color:#fff}
 .build-note{margin:14px 0 0;font-size:14px;color:rgba(255,246,250,.75);max-width:44ch}
-.extras{display:grid;gap:16px;align-items:start}
+.extras{display:grid;justify-items:center}
 .prize{background:var(--paper);border:2.5px dashed var(--hot);border-radius:22px;padding:18px 20px;display:grid;gap:6px}
 .prize small{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--hot)}
 .prize strong{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.2}
 .prize p{margin:0;color:var(--ink-soft);font-weight:600;font-size:15px}
-.gift{display:contents}
-.ny .prize{background:none;border:0;padding:0;gap:10px}
-.ny .gift{display:grid;align-content:center;justify-items:center;gap:4px;text-align:center;aspect-ratio:1100/805;margin-inline:-3%;background:url(ny-gift-frame.webp) center/100% 100% no-repeat;padding:31% 17% 21%}
-.ny .gift strong{font-size:clamp(17px,2.4vw,24px)}
-.ny .prize{justify-items:center}
-.ny .gift{width:min(106%,540px)}
-.ny .prize p{padding-inline:4px;text-align:center;max-width:46ch}
 /* New Year: a light garland with ornaments runs round the bridge and both offer cards (drawn in code) */
 .offer-in{position:relative}
 .garland{position:absolute;pointer-events:none;z-index:3}
 body:not(.ny) .garland{display:none}
 .honest{justify-self:start;max-width:440px;background:var(--yolk);border-radius:4px 18px 18px 18px;padding:16px 20px;font-weight:800;font-size:17px;line-height:1.35;transform:rotate(-1.2deg);box-shadow:4px 4px 0 var(--ink);margin:0}
 .honest span{display:block;font-weight:600;font-size:14px;margin-top:4px;opacity:.85}
+.honest{position:relative;z-index:4}
+.toy{display:none}
+.ny .toy{display:block;position:absolute;right:-3px;top:10px;width:2px;height:24px;background:#C9A45C;transform-origin:50% 0;animation:toy 3.2s ease-in-out infinite}
+.ny .toy img{position:absolute;left:50%;top:100%;width:30px;height:auto;transform:translate(-50%,-4px)}
+@keyframes toy{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
 .cta{background:var(--ink);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
 .cta::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(229,0,122,.7), transparent 70%);pointer-events:none}
 .slogan{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(26px,5.4vw,46px);line-height:1.05;text-wrap:balance;position:relative;z-index:1}
@@ -234,9 +236,14 @@ body:not(.ny) .garland{display:none}
 .cta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:relative;z-index:1}
 .cta .btn-main{display:inline-flex;text-decoration:none;font:800 17px var(--body);padding:15px 22px;border-radius:999px;background:var(--hot);color:#fff;transition:transform .15s, box-shadow .15s}
 .cta .btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px var(--hot)}
-.cta .btn-sec{text-decoration:none;font:800 15px var(--body);padding:12px 18px;border-radius:999px;border:2px solid rgba(255,246,250,.4);color:var(--paper)}
-.cta .btn-sec:hover{border-color:var(--paper)}
-.cta-note{margin:0;font-size:14px;color:rgba(255,246,250,.7);position:relative;z-index:1}
+.cta-row{gap:16px 18px}
+.cta .btn-main{gap:0 .32em;flex-wrap:wrap}
+.socials{display:flex;gap:10px}
+.soc{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,246,250,.35);color:var(--paper);transition:border-color .15s,background .15s,transform .15s}
+.soc svg{width:22px;height:22px}
+.soc:hover{border-color:var(--paper);background:rgba(255,246,250,.08);transform:translateY(-2px)}
+/* phone: the button text breaks after the question, so it doesn't read as one glued line */
+@media (max-width:640px){.cta .btn-main{display:inline-grid;line-height:1.25;padding:14px 22px}.cta .btn-main span{display:block}.cta .btn-main span+span{font-weight:700;opacity:.95}}
 
 /* Save sheet fallback */
 .sheet{position:fixed;inset:0;z-index:40;background:rgba(42,15,43,.72);display:grid;place-items:center;padding:20px}
@@ -316,7 +323,6 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 
 @media (min-width:760px){
   .pair{grid-template-columns:1fr 1fr;gap:24px}
-  .extras{grid-template-columns:1.3fr 1fr;gap:24px}
 }
 @media (min-width:900px){
   .game{grid-template-columns:1fr 1fr;column-gap:48px;align-items:start;padding-block:28px 40px;grid-template-areas:"top top" "head side" "form side"}
@@ -334,8 +340,14 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   .o-head .eyebrow{grid-area:eye}
   .o-head h2{grid-area:h2;font-size:clamp(40px,4.6vw,60px)}
   .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
-  .extras{grid-template-columns:1.3fr 1fr;align-items:center}
-  .honest{justify-self:center;max-width:380px;transform:rotate(-1.5deg);font-size:18px}
+  /* the prize card sits in the middle, as wide as its longest sentence; one sentence per line */
+  .prize{width:fit-content;max-width:100%;text-align:center;padding:24px 40px;gap:8px}
+  .prize strong{font-size:27px}
+  .prize p{font-size:17px}
+  .prize p span{display:block}
+  /* «Беру тільки те…» is stuck on the top right corner of the dark slogan block */
+  .honest{justify-self:end;position:relative;z-index:4;max-width:360px;margin:0 32px -84px 0;transform:rotate(2.5deg);font-size:18px}
+  .slogan{max-width:62%}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -349,10 +361,10 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 <main>
 <div class="game pad">
   <div class="top">
-    <div class="brand" id="brand">Діана <span>·</span> digital designer</div>
+    <div class="brand" id="brand"><b>didi.ods</b><small>digital designer</small></div>
     <img class="mistle" src="ny-mistletoe.webp" alt="" width="629" height="447">
     <div class="top-r">
-      <a class="skip" href="#offer" id="skip">Одразу до справи ↓</a>
+      <a class="skip" href="#offer" id="skip"><span class="sk-l">Одразу до справи ↓</span><span class="sk-s">До справи ↓</span></a>
       <button class="sound" id="sound" type="button" aria-pressed="true">Звук увімк.</button>
     </div>
   </div>
@@ -465,23 +477,24 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 
     <div class="extras">
       <div class="prize">
-        <div class="gift">
-          <small id="prizeLabel">Безкоштовно для перших 10</small>
-          <strong id="prizeTitle">Форма для твоєї ідеї</strong>
-        </div>
-        <p id="prizeText">Напиши свою ідею в Telegram, і я підкажу, яким продуктом їй стати, що поставити на перший екран і з чого почати. А якщо сайт у тебе вже є, покажу, що в ньому варто прибрати.</p>
+        <small id="prizeLabel">Безкоштовно для перших 10</small>
+        <strong id="prizeTitle">Форма для твоєї ідеї</strong>
+        <p id="prizeText"><span>Напиши свою ідею в Telegram, і я підкажу, яким продуктом їй стати, що поставити на перший екран і з чого почати.</span> <span>А якщо сайт у тебе вже є, покажу, що в ньому варто прибрати.</span></p>
       </div>
-      <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span></p>
     </div>
+
+    <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span><i class="toy" aria-hidden="true"><img src="xf-ball.webp" alt=""></i></p>
 
     <div class="cta">
       <p class="slogan">Ідеям потрібна форма. <span>Тобі&nbsp;-&nbsp;одна&nbsp;я.</span></p>
       <div class="cta-row">
-        <a class="btn-main" id="cta" href="https://t.me/thisisdi" target="_blank" rel="noopener">Маєш ідею? Давай надамо їй форму →</a>
-        <a class="btn-sec" id="ig" href="https://instagram.com/didi.ods" target="_blank" rel="noopener">Instagram</a>
-        <a class="btn-sec" id="th" href="https://www.threads.net/@didi.ods" target="_blank" rel="noopener">Threads</a>
+        <a class="btn-main" id="cta" href="https://t.me/thisisdi" target="_blank" rel="noopener"><span>Маєш ідею?</span> <span>Давай надамо їй форму →</span></a>
+        <div class="socials">
+          <a class="soc" id="tg" href="https://t.me/thisisdi" target="_blank" rel="noopener" aria-label="Telegram @thisisdi" title="Telegram @thisisdi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.4 3.6 2.9 10.8c-1 .4-1 1.8 0 2.1l4.5 1.5 1.7 5.3c.3.9 1.4 1.1 2 .4l2.5-2.6 4.6 3.4c.8.6 1.9.1 2.1-.9l3-14.6c.3-1.3-.9-2.3-1.9-1.8ZM9.6 14l7.6-6.4-6 7.2-.3 3.1Z"/></svg></a>
+          <a class="soc" id="ig" href="https://instagram.com/didi.ods" target="_blank" rel="noopener" aria-label="Instagram @didi.ods" title="Instagram @didi.ods"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a class="soc" id="th" href="https://www.threads.net/@didi.ods" target="_blank" rel="noopener" aria-label="Threads @didi.ods" title="Threads @didi.ods"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16.6 11.4c-.4-2.6-2-3.9-4.5-3.9-2.7 0-4.4 1.9-4.4 4.6 0 2.8 1.7 4.6 4.3 4.6 2.4 0 3.9-1.4 3.9-3.6 0-1.7-1.2-2.7-3-2.7-1.6 0-2.8.9-2.8 2.2 0 1.2.9 1.9 2.1 1.9"/><path d="M19.9 8.6C18.9 5 15.9 3 12 3 6.9 3 3.5 6.6 3.5 12S6.9 21 12 21c3.7 0 6.6-1.9 7.6-5"/></svg></a>
+        </div>
       </div>
-      <p class="cta-note">Telegram @thisisdi · Instagram і Threads @didi.ods</p>
     </div>
   </div>
 </section>
@@ -499,15 +512,15 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 /* ===== Дані: міняти тут ===== */
 const CONFIG = {
   handle: "@didi.ods",
-  sign: "Діана · digital designer",
+  sign: "didi.ods · digital designer",
   tgUrl: "https://t.me/thisisdi",
-  cardAsk: "А що заріжеш ти?",
+  cardFooter: "А що заріжеш ти? Шукай @didi.ods",
 };
 const CHIPS = [
   "Ідея третій рік у нотатках","Графіки відключень","Заявки, що губляться",
   "Клієнти не розуміють, що я продаю","Відключення не по графіку",
 ];
-const CHIPS_LIFE = ["Голосові на 10 хвилин","Непрохані поради","Будильник"];
+const CHIPS_LIFE = ["Голосові на 10 хвилин","«Є хвилинка?»","Будильник"];
 const HINT = matchMedia("(pointer:coarse)").matches ? "Пір'я можна ганяти пальцем. Мене - ні." : "Пір'я можна ганяти курсором. Мене - ні.";
 const LINES_AFTER = ["Оце було особисте.","Нарешті хтось це зробив.","Так, наступний!","Я взагалі-то тут за справедливість.","Мені подобається твій підхід.","Чисто. Навіть пух не встиг злетіти."];
 const BRIDGE = "А тепер давай створимо щось, що не захочеться різати.";
@@ -843,7 +856,7 @@ const DECO=(()=>{
      warm pearl lights where it turns, a few ornaments hanging off it (no fur, Diana 25.11) ---- */
   const orn={ball:loadC("xf-ball.webp"), star:loadC("xf-star.webp")};
   const offerIn=document.querySelector(".offer-in"), garlands=[];
-  function garland(el, hang){
+  function garland(el, hang, lit=true){
     if(!el) return;
     const c=document.createElement("canvas"); c.className="garland"; c.setAttribute("aria-hidden","true"); offerIn.append(c);
     const g=c.getContext("2d"), M=46;
@@ -865,11 +878,14 @@ const DECO=(()=>{
       const cw=2.2, cord=(lw,col,dy)=>{ g.strokeStyle=col; g.lineWidth=lw; g.lineCap="round"; g.lineJoin="round"; g.beginPath();
         for(let i=0;i<=N;i++){ const [x,y]=at(i); i?g.lineTo(x,y+dy):g.moveTo(x,y+dy); } g.stroke(); };
       cord(cw*1.7,"rgba(110,60,40,.28)",cw*.6); cord(cw,"#E6D3AE",0); cord(cw*.4,"rgba(255,255,255,.6)",-cw*.2);
-      const r=4.6;
+      const r=lit?4.6:4;
       for(let k=0;k<waves;k++){ const [px,py]=at(Math.round((k+.5)*N/waves));
-        const gl=g.createRadialGradient(px,py,r*.5,px,py,r*3.4); gl.addColorStop(0,"rgba(255,232,175,.8)"); gl.addColorStop(.45,"rgba(255,220,150,.32)"); gl.addColorStop(1,"rgba(255,220,150,0)");
-        g.fillStyle=gl; g.beginPath(); g.arc(px,py,r*3.4,0,7); g.fill();
-        const b=g.createRadialGradient(px-r*.35,py-r*.35,r*.1,px,py,r); b.addColorStop(0,"#FFFFFF"); b.addColorStop(.55,"#FFF6DE"); b.addColorStop(1,"#F2D59B");
+        if(lit){ const gl=g.createRadialGradient(px,py,r*.5,px,py,r*3.4); gl.addColorStop(0,"rgba(255,232,175,.8)"); gl.addColorStop(.45,"rgba(255,220,150,.32)"); gl.addColorStop(1,"rgba(255,220,150,0)");
+          g.fillStyle=gl; g.beginPath(); g.arc(px,py,r*3.4,0,7); g.fill(); }
+        /* unlit: a plain glass bead, no glow */
+        const b=g.createRadialGradient(px-r*.35,py-r*.35,r*.1,px,py,r);
+        if(lit){ b.addColorStop(0,"#FFFFFF"); b.addColorStop(.55,"#FFF6DE"); b.addColorStop(1,"#F2D59B"); }
+        else { b.addColorStop(0,"#FFFFFF"); b.addColorStop(.5,"#F1ECE6"); b.addColorStop(1,"#C9BCB0"); }
         g.fillStyle=b; g.beginPath(); g.arc(px,py,r,0,7); g.fill(); }
       /* ornaments: [x, y as a share of the box (the nearest point of the border is used), kind, size px, tilt] */
       const [ball,star]=await Promise.all([orn.ball,orn.star]);
@@ -889,8 +905,9 @@ const DECO=(()=>{
   /* positions picked to stay clear of the knife button (top right of «Ріжемо») and of the text */
   /* ornaments sit on the side edges, so nothing hangs over the text below on a phone */
   garland(document.querySelector(".bridge"), [[0,0,"star",30,-.3],[1,.62,"ball",30,0]]);
-  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]]);
-  garland(document.querySelector(".card-build"), [[1,0,"star",30,.3],[1,.66,"ball",30,0]]);
+  /* «Ріжемо»: the garland is off (no light), «Робимо»: it glows, so the pair differs without getting busy (Diana 25.11) */
+  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]], false);
+  garland(document.querySelector(".card-build"), [[1,0,"star",30,.3],[1,.66,"ball",30,0],[0,.36,"ball",26,0],[.38,1,"star",26,-.2],[.8,1,"star",22,.35]]);
   const redraw=()=>garlands.forEach(f=>f());
   addEventListener("resize",redraw); if(document.fonts) document.fonts.ready.then(redraw);
 
@@ -904,7 +921,7 @@ const DECO=(()=>{
         hill(1560,140,"#FFB3D6"); hill(1660,110,"#FFC8E2"); hill(1740,70,"#FFF6FA");
       }
     },
-    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,40,96,1000,1448); },
+    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,-10,140,1100,1604); },   /* a touch wider than the card, so the frame fills it */
     /* the result card is hidden at load, so its snow cap is added the first time it appears */
     capResult(){ if(this.done || !NY) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); },
     snowOn, redraw
@@ -1029,11 +1046,12 @@ async function makeCard(t){
      the title, word and chick shrink to fit inside it. No big handle on top any more: one quiet line at the bottom,
      above the Instagram reply bar, so the card is worth posting even for people who never need a site. */
   const FR=NY && !!DECOR;
-  const foot=y=>{ const q=CONFIG.cardAsk+"   ", h=CONFIG.handle; g.textBaseline="middle"; g.textAlign="left";
-    g.font="800 40px Manrope"; const w1=g.measureText(q).width; g.font="700 34px Manrope"; const w2=g.measureText(h).width;
-    const x=540-(w1+w2)/2; g.fillStyle="#2A0F2B"; g.font="800 40px Manrope"; g.fillText(q,x,y);
-    g.fillStyle="#E5007A"; g.font="700 34px Manrope"; g.fillText(h,x+w1,y+1); g.textAlign="center"; };
-  if(FR){ g.save(); g.translate(540,964); g.scale(.639,.639); g.translate(-540,-980); }
+  /* top: a thin, quiet signature; bottom: the dark banner with the question (Diana liked it, 25.11) */
+  const head=()=>{ g.textAlign="center"; g.textBaseline="alphabetic"; g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.fillText(CONFIG.sign,540,104); };
+  const foot=()=>{ g.fillStyle="#2A0F2B"; rr(g,90,1784,900,96,48); g.fill();
+    g.fillStyle="#FFF6FA"; g.textBaseline="middle"; g.textAlign="center"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1833); };
+  head();
+  if(FR){ g.save(); g.translate(540,1086); g.scale(.70,.70); g.translate(-540,-980); }
   g.textAlign="center"; g.textBaseline="alphabetic";
   g.fillStyle="#E5007A"; g.font="900 66px Unbounded"; g.fillText("СЬОГОДНІ",540,320); g.fillText("ЗАРІЗАНО:",540,402);
   g.font="900 120px Unbounded";
@@ -1065,7 +1083,7 @@ async function makeCard(t){
   if(knife){const K=CHICK.knife, kw=cw*K.w/100, kh=kw*203/360, gx=X+cw*K.l/100+kw*.24, gy=Y+ch*K.t/100+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore();}
   if(paw){const P=CHICK.pawPos, pw=cw*P.w/100; g.drawImage(paw,X+cw*P.l/100,Y+ch*P.t/100,pw,pw);}
   if(FR){ g.restore(); await DECO.cardFrame(g); }
-  foot(FR?1640:1730);
+  foot();
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
 async function showResult(t){
@@ -1134,7 +1152,7 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidd
 })();
 
 /* analytics hooks */
-["cta","ig","th"].forEach(id=>$(id).addEventListener("click",()=>track("cta_click",{to:id})));
+["cta","tg","ig","th"].forEach(id=>$(id).addEventListener("click",()=>track("cta_click",{to:id})));
 $("skip").addEventListener("click",()=>track("skip_to_offer"));
 if("IntersectionObserver" in window){ let seen=false; new IntersectionObserver(es=>{ if(!seen && es.some(e=>e.isIntersecting)){ seen=true; track("offer_view",{cuts:sessionCuts}); } },{threshold:.3}).observe($("offer")); }
 
