@@ -10,16 +10,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;700;800;900&family=Manrope:wght@500;600;700;800&display=swap">
 <style>
-/* v2. One bubblegum page: game first screen (headline, live chick, input, chips, result), then the offer as the next chapter.
-   Deliberately single-theme (a pink toy world), every colour set explicitly. */
 :root{
-  --blush:#FFD9EC;      /* page ground */
-  --blush-deep:#FFB3D6; /* streaks, borders */
-  --hot:#E5007A;        /* the one loud accent */
-  --yolk:#FFD21F;       /* chick yellow */
-  --ink:#2A0F2B;        /* text, dark blocks */
+  --blush:#FFD9EC;
+  --blush-deep:#FFB3D6;
+  --hot:#E5007A;
+  --yolk:#FFD21F;
+  --ink:#2A0F2B;
   --ink-soft:#6E3B62;
-  --paper:#FFF6FA;      /* cards, fields */
+  --paper:#FFF6FA;
   --display:"Unbounded","Arial Black",system-ui,sans-serif;
   --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light;
@@ -41,8 +39,6 @@ a{color:inherit}
   padding-left:max(16px, env(safe-area-inset-left, 0px));
   padding-right:max(16px, env(safe-area-inset-right, 0px));
 }
-
-/* ---------- Game ---------- */
 .game{position:relative;padding-block:16px 36px;display:grid;gap:16px;grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "head" "stage" "form" "result"}
 .side{display:contents}
 .result{grid-area:result}
@@ -51,7 +47,6 @@ a{color:inherit}
 .top{position:relative}
 .mistle{display:none}
 .ny .mistle{display:block;position:absolute;left:50%;top:50%;width:clamp(78px,9vw,112px);height:auto;transform:translate(-50%,-50%) rotate(-3deg);pointer-events:none;z-index:2;filter:drop-shadow(0 4px 6px rgba(110,20,70,.22))}
-/* phone: the top line is full (it wraps), so the mistletoe hangs above it and the line moves down */
 .brand{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;line-height:1.2;white-space:nowrap}
 .brand b,.brand small{font:inherit}
 .brand span{color:var(--hot)}
@@ -61,7 +56,6 @@ a{color:inherit}
 .sw::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(42,15,43,.3);transition:transform .2s}
 .sound[aria-pressed="true"] .sw{background:var(--hot)}
 .sound[aria-pressed="true"] .sw::after{transform:translateX(11px)}
-/* phone: one row - the name stacked small, the mistletoe in the middle, the arrow and the sound switch as round icon buttons */
 @media (max-width:640px){.top{flex-wrap:nowrap;min-height:40px}
   .brand{display:grid;font-size:12px;line-height:1.05}.brand span{display:none}.brand small{font:700 8px var(--body);letter-spacing:.16em;color:var(--ink-soft);margin-top:2px}
   .sk-l,.snd-t{display:none}.ico{display:block}.top-r{gap:8px}
@@ -75,10 +69,8 @@ a{color:inherit}
 .eyebrow{margin:0;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--hot)}
 h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-spacing:-.02em;font-size:clamp(36px, 10.5vw, 80px);text-wrap:balance}
 .knife-word{color:var(--hot);position:relative;display:inline-block}
-.knife-word::after{content:"";position:absolute;left:-3%;right:-3%;top:57%;height:.09em;background:var(--ink);transform:rotate(-2.2deg);transform-origin:100% 50%;border-radius:4px}   /* lower at the left end, so the «з» reads (25.11) */
+.knife-word::after{content:"";position:absolute;left:-3%;right:-3%;top:57%;height:.09em;background:var(--ink);transform:rotate(-2.2deg);transform-origin:100% 50%;border-radius:4px}
 .sub{margin:0;color:var(--ink-soft);font-weight:600;max-width:36ch}
-
-/* Stage */
 .stage{grid-area:stage;position:relative;width:100%;max-width:500px;justify-self:center;aspect-ratio:1/.9;margin-top:-6px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .stage::before{content:"";position:absolute;inset:6% 0 0;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,0));pointer-events:none}
 .stage.shake{animation:shake .32s linear}
@@ -109,7 +101,6 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .chick.strike .glint{animation:glintNow .3s ease-out}
 @keyframes glintNow{from{background-position:130% 0}to{background-position:-60% 0}}
 .paw{left:58.29%;top:52.76%;width:23.68%}
-/* states */
 .chick.lean{transform:translateY(2%) rotate(-3deg) scale(1.02)}
 .chick.lean .knife{transform:rotate(-30deg)}
 .chick.windup{transform:translateY(3%) rotate(5deg)}
@@ -119,14 +110,11 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .chick.wave .knife{animation:wave .7s ease-in-out}
 @keyframes wave{0%,100%{transform:rotate(-18deg)}25%{transform:rotate(-55deg)}55%{transform:rotate(2deg)}80%{transform:rotate(-30deg)}}
 .chick.sigh{transform:translateY(3%) scale(1.03,.97)}
-
-/* speech bubble sits up and to the right of the chick, above the knife tip, so it never covers the face */
 .bubble{position:absolute;right:-2%;left:auto;top:3%;max-width:42%;z-index:35;background:var(--paper);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;
   padding:8px 12px;font-weight:800;font-size:clamp(12px,3.3vw,15px);line-height:1.25;box-shadow:4px 4px 0 var(--ink);transform-origin:0 100%;
   transition:opacity .2s, transform .25s cubic-bezier(.3,1.6,.5,1)}
 .bubble.off{opacity:0;transform:scale(.6)}
 .bubble.big{background:var(--yolk)}
-
 .target{position:absolute;left:0;right:0;top:0;height:24%;z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center}
 .word{position:relative;display:inline-block;max-width:94%}
 .word span{display:block;text-align:center;text-wrap:balance;font-family:var(--display);font-weight:900;line-height:1;color:var(--ink);padding:.1em .24em;
@@ -152,7 +140,6 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes flash{0%{opacity:1}100%{opacity:0}}
 .count{position:absolute;left:0;bottom:0;z-index:3;font-weight:800;font-size:12px;background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 11px}
 .fx{position:absolute;left:50%;top:0;width:100vw;height:100%;transform:translateX(-50%);pointer-events:none;z-index:30}
-/* season switch: a snow globe with the New Year chick inside (what you get), a snowball to go back */
 .season-btn{position:absolute;right:0;bottom:2%;width:clamp(64px,17%,92px);aspect-ratio:300/365;z-index:7;border:0;padding:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 90%}
 .season-btn img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(110,20,70,.28));pointer-events:none}
 .season-btn .tag{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-4px);white-space:nowrap;font:800 12px var(--body);background:var(--ink);color:var(--paper);padding:4px 9px;border-radius:999px;pointer-events:none}
@@ -167,7 +154,6 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes throwBall{0%{transform:none}100%{transform:translate(-30vw,-30vh) scale(5);opacity:.95}}
 .splat{position:fixed;inset:0;z-index:61;pointer-events:none;background:radial-gradient(circle at var(--fx,50%) var(--fy,40%),#fff 0,#fff 18%,rgba(255,255,255,.85) 30%,rgba(255,255,255,0) 62%);animation:splat 1.1s ease-out forwards}
 @keyframes splat{0%{opacity:0;transform:scale(.6)}15%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.15)}}
-/* loading screen on the way to the offer, a nod to game loading tips */
 .loader{position:fixed;inset:0;z-index:90;display:grid;place-content:center;justify-items:center;gap:18px;padding:24px;text-align:center;background:radial-gradient(70% 60% at 50% 40%,#FFF3F9,var(--blush));transition:opacity .35s}
 .loader.out{opacity:0;pointer-events:none}
 .loader img{width:120px;height:auto;animation:breathe 1.2s ease-in-out infinite}
@@ -176,8 +162,6 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .loader .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yolk),var(--hot));transition:width var(--t,1.8s) cubic-bezier(.3,.1,.3,1)}
 .loader p{margin:0;max-width:34ch;font-weight:700;color:var(--ink-soft);font-size:15px}
 .haptic{position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none}
-
-/* Form */
 .form{grid-area:form;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-content:start}
 .field{display:flex;gap:8px;background:linear-gradient(180deg,#FFFFFF,var(--paper));border:3px solid var(--ink);border-radius:18px;padding:6px;box-shadow:5px 5px 0 var(--ink)}
 .field input{flex:1;min-width:0;border:0;background:transparent;font:700 17px var(--body);color:var(--ink);padding:10px;outline:none}
@@ -190,8 +174,6 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .chip{font:700 14px var(--body);color:var(--ink);background:rgba(255,246,250,.8);border:2px solid var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer;transition:transform .12s, background .12s}
 .chip:hover{background:var(--yolk);transform:rotate(-2deg)}
 .chip.life{border-style:dashed}
-
-/* Result */
 .result{display:grid;gap:14px;background:linear-gradient(160deg,#FFFFFF,#FFEFF7);border:3px solid var(--ink);border-radius:20px;padding:16px;box-shadow:5px 5px 0 var(--ink)}
 .result-q{margin:0;font-family:var(--display);font-weight:800;font-size:19px;line-height:1.2}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -207,9 +189,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .card-row h2{font-family:var(--display);font-weight:800;font-size:16px;margin:0 0 4px;line-height:1.2}
 .card-row p{margin:0 0 10px;font-size:14px;color:var(--ink-soft);font-weight:600}
 .note{font-size:13px;color:var(--ink-soft);font-weight:700;margin:0}
-
-/* ---------- Offer ---------- */
-.offer{padding-block:8px 48px;overflow-x:clip}   /* the garlands reach past the cards; keep them off the page width */
+.offer{padding-block:8px 48px;overflow-x:clip}
 .offer-in{display:grid;gap:clamp(22px,4vw,36px)}
 .bridge{display:flex;gap:12px;align-items:center;max-width:620px;background:linear-gradient(172deg,#FFE878 0%,var(--yolk) 50%,#F7C400 100%);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;padding:12px 16px;box-shadow:4px 4px 0 var(--ink),inset 0 2px 0 rgba(255,255,255,.65);transform:rotate(-1deg)}
 .bridge img{width:58px;height:58px;flex:none;object-fit:contain;padding:4px;background:var(--paper);border:2px solid var(--ink);border-radius:50%}
@@ -229,13 +209,11 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .card-cut h3{padding-right:74px}
 .cut-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .cut-list li{justify-self:start;font-weight:700;font-size:17px;color:var(--ink);transition:color .3s}
-/* the strike is a background on an inline span, so it follows every wrapped line */
 .cut-list li span{padding-inline:2px;background:linear-gradient(var(--hot),var(--hot)) no-repeat 0 58%/0% 3px;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .32s cubic-bezier(.6,0,.3,1)}
 .cut-list li.cut{color:var(--ink-soft)}
 .cut-list li.cut span{background-size:100% 3px}
 .cut-done{margin:14px 0 0;font-weight:800;font-size:14px;color:var(--hot);opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s}
 .cut-done.on{opacity:1;transform:none}
-/* grab-the-knife control */
 .grab{position:absolute;top:10px;right:10px;width:64px;height:64px;border:0;padding:0;background:none;cursor:grab;z-index:2;touch-action:manipulation}
 .grab img{position:absolute;left:4px;top:16px;width:56px;height:auto;transform:rotate(-24deg);transition:transform .25s cubic-bezier(.3,1.8,.5,1);pointer-events:none}
 .grab .ring{position:absolute;inset:4px;border-radius:50%;border:2.5px solid var(--hot);animation:ring 1.6s ease-out infinite;pointer-events:none}
@@ -253,10 +231,9 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .build li{list-style:none;font-weight:700;font-size:15px;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,246,250,.35)}
 .build li.main{background:var(--hot);border-color:var(--hot);color:#fff}
 .build-note{margin:14px 0 0;font-size:14px;color:rgba(255,246,250,.75);max-width:44ch}
-.extras{display:grid;justify-items:center}
-/* Gift ticket: a torn-off coupon with round notches at the perforation, a hot stub with the «10», the Telegram button inside.
-   The notches are a mask, so the outline shadow comes from a drop-shadow on the wrapper. */
-.extras{filter:drop-shadow(5px 5px 0 var(--ink))}
+.extras{display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:22px}
+.prize-wrap{width:min(100%,860px);filter:drop-shadow(5px 5px 0 var(--ink))}
+.prize-wrap .prize{width:100%}
 .prize{--n:13px;--stub:150px;position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--stub);width:min(100%,860px);border-radius:22px;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .1 0 0 0 0 .3 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(120% 140% at 0 0,#FFFFFF 0%,#FFF2F8 45%,#FFDDEE 100%);background-size:160px,auto;
   -webkit-mask:radial-gradient(circle var(--n) at calc(100% - var(--stub)) 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle var(--n) at calc(100% - var(--stub)) 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
@@ -278,21 +255,18 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
   .ticket{border:2.5px solid var(--ink);border-top:0;border-radius:0 0 22px 22px;padding:20px 20px 22px}
   .ticket .btn-main{justify-self:stretch;justify-content:center;text-align:center}
 }
-/* New Year: a light garland with ornaments runs round the bridge and both offer cards (drawn in code) */
 .offer-in{position:relative}
 .garland{position:absolute;pointer-events:none;z-index:3}
 body:not(.ny) .garland{display:none}
-.honest{justify-self:start;max-width:440px;background:linear-gradient(172deg,#FFE878 0%,var(--yolk) 55%,#F7C400 100%);border-radius:4px 18px 18px 18px;padding:16px 20px;font-weight:800;font-size:17px;line-height:1.35;transform:rotate(-1.2deg);box-shadow:4px 4px 0 var(--ink);margin:0}
-.honest span{display:block;font-weight:600;font-size:14px;margin-top:4px;opacity:.85}
-.honest{position:relative;z-index:4}
-.toy{display:none}
-.fur{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);z-index:2;pointer-events:none}
-.fur-tag{position:absolute;left:14px;top:-14px;z-index:3;font:800 12px var(--body);background:var(--ink);color:var(--paper);padding:5px 10px;border-radius:999px;pointer-events:none;transition:opacity .4s}
-.honest.combed .fur-tag{opacity:0}
-.ny .toy{display:block;position:absolute;right:-3px;top:10px;width:2px;height:24px;background:#C9A45C;transform-origin:50% 0;animation:toy 3.2s ease-in-out infinite}
-.ny .toy svg{position:absolute;left:50%;top:100%;transform:translate(-50%,-4px);overflow:visible}
-.toy{z-index:3}
-@keyframes toy{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+.honest{--fr:url(fur-frame.webp);--ar:760/420;--hole:21.9% 10.2% 18% 11.4%;--pad:23% 13% 19%;
+  position:relative;z-index:4;width:min(100%,380px);aspect-ratio:var(--ar);margin:0;display:grid;place-content:center;text-align:center;padding:var(--pad);
+  font-size:16px;line-height:1.3;transform:rotate(-1.5deg);filter:drop-shadow(0 8px 10px rgba(120,60,0,.22))}
+.ny .honest{--fr:url(ny-fur-frame.webp);--ar:760/556;--hole:33.8% 14.4% 19.2% 14.5%;--pad:41% 17% 20%}
+.honest::before{content:"";position:absolute;inset:var(--hole);background:linear-gradient(170deg,#FFFFFF,#FFF0F7);border-radius:14px}
+.honest::after{content:"";position:absolute;inset:0;background:var(--fr) center/100% 100% no-repeat;pointer-events:none;z-index:1}
+.h-in{position:relative;z-index:2;display:grid;gap:3px}
+.h-in b{font-weight:800;font-size:1em}
+.h-in>span{font-weight:600;font-size:.84em;color:var(--ink-soft)}
 .cta{background:radial-gradient(60% 70% at 0 100%,rgba(255,210,31,.14),transparent 70%),linear-gradient(160deg,#3B1741 0%,var(--ink) 60%,#1C0720 100%);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
 .cta::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(229,0,122,.7), transparent 70%);pointer-events:none}
 .slogan{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(26px,5.4vw,46px);line-height:1.05;text-wrap:balance;position:relative;z-index:1}
@@ -306,16 +280,11 @@ body:not(.ny) .garland{display:none}
 .soc{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,246,250,.35);color:var(--paper);transition:border-color .15s,background .15s,transform .15s}
 .soc svg{width:22px;height:22px}
 .soc:hover{border-color:var(--paper);background:rgba(255,246,250,.08);transform:translateY(-2px)}
-/* phone: the button text breaks after the question, so it doesn't read as one glued line */
 @media (max-width:640px){.btn-main{display:inline-grid;line-height:1.25;padding:14px 22px}.btn-main span{display:block;white-space:nowrap}.btn-main span+span{font-weight:700;opacity:.95}}
-
-/* Save sheet fallback */
 .sheet{position:fixed;inset:0;z-index:40;background:rgba(42,15,43,.72);display:grid;place-items:center;padding:20px}
 .sheet-in{background:var(--paper);border-radius:20px;padding:16px;display:grid;gap:12px;max-width:340px;width:100%;justify-items:center;text-align:center}
 .sheet img{width:100%;max-width:260px;border-radius:12px;border:2px solid var(--ink)}
 .sheet p{margin:0;font-weight:700}
-
-/* ---------- New Year decor layers (switched on by date, see DECOR in the script) ---------- */
 .decor .game{isolation:isolate}
 .snow{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:-1}
 .deep{position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;overflow:hidden;
@@ -325,24 +294,16 @@ body:not(.ny) .garland{display:none}
 .deep svg{position:absolute;left:0;bottom:0;width:100%;height:clamp(90px,16vw,220px)}
 .decor-deep .stage::before{content:"";position:absolute;inset:-6% -14% 0;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.85),rgba(255,255,255,0));z-index:-1}
 .decor-deep .stage{isolation:isolate}
-/* falling snow over the whole screen, settling caps */
 .snowfall{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:28}
-body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs to the New Year layer only */
+body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}
 .snowcap{position:absolute;pointer-events:none;overflow:visible;z-index:2;filter:drop-shadow(0 1px 1px rgba(110,40,90,.22));transform-origin:50% 100%}
 .snowcap.grow{animation:settle 26s cubic-bezier(.2,.6,.3,1) both}
 @keyframes settle{from{transform:scaleY(.08);opacity:.4}to{transform:none;opacity:1}}
-/* Screen frame, built from Diana's generated parts: a corner with snow and warm lights (mirrored to all four
-   corners; the bottom ones without snow), a seamless fur strip for the sides, the bow with mistletoe on top,
-   a light garland drawn in code along the sides. --s scales every piece: fur band ~20px phone, ~32px desktop. */
 .decor-frame{--s:.115}
 @media (min-width:760px){.decor-frame{--s:.15}}
 @media (min-width:1200px){.decor-frame{--s:.18}}
-/* iPhone Safari draws the page under the status bar and the floating toolbar but keeps fixed boxes out of them,
-   so the frame is stretched up by the top safe area and down to the full (large) viewport height: edge to edge */
 .xframe{position:fixed;left:0;right:0;top:calc(-1 * env(safe-area-inset-top,0px));height:calc(100vh + env(safe-area-inset-top,0px));pointer-events:none;z-index:45}
 @supports (height:100lvh){.xframe{height:calc(100lvh + env(safe-area-inset-top,0px))}}
-/* iPhone/iPad only (-webkit-touch-callout exists only in iOS Safari): the safe-area value can read 0 there,
-   so lift the frame by a fixed 70px under the clock instead; desktop and Android are untouched */
 @supports (-webkit-touch-callout:none){.xframe{top:-70px;height:calc(100lvh + 70px)}}
 .xframe>*{position:absolute;display:block;max-width:none}
 .xframe img{height:auto}
@@ -359,20 +320,15 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 .f2-br{right:0;bottom:0;transform:scale(-1,-1)}
 .f2-bow{left:50%;top:0;width:calc(630px*var(--s));transform:translateX(-50%)}
 .f2-lights{position:absolute;inset:0;width:100%;height:100%}
-/* review-only button (?review=1) to flip the garland while comparing */
 .review-chip{position:fixed;left:50%;bottom:calc(240px*var(--s,.15) + 10px);transform:translateX(-50%);z-index:70;font:800 13px var(--body);color:var(--paper);background:var(--ink);border:0;border-radius:999px;padding:9px 16px;box-shadow:0 6px 18px -6px rgba(42,15,43,.5);cursor:pointer}
-/* ornaments sit on the side bands */
 .xf-star1{left:calc(77px*var(--s));top:44%;width:calc(115px*var(--s))}
 .xf-puff1{left:calc(40px*var(--s));top:73%;width:calc(190px*var(--s))}
 .xf-ball{right:calc(76px*var(--s));top:57%;width:calc(116px*var(--s))}
 .xf-star2{right:calc(77px*var(--s));top:31%;width:calc(115px*var(--s));transform:rotate(18deg)}
-/* keep content clear of the fur */
 .decor-frame .pad{padding-left:max(16px,calc(223px*var(--s) + 10px));padding-right:max(16px,calc(223px*var(--s) + 10px))}
 .decor-frame .game{padding-top:calc(330px*var(--s) + 4px)}
 .decor-frame .offer{padding-bottom:calc(240px*var(--s) + 48px)}
-/* New Year chick in a hat is taller: narrower box, same bottom line */
-.ny .rig{left:12%;width:70%;aspect-ratio:768/1024}   /* same width as the base chick, so both look the same size; only the hat adds height */
-/* spin the knife round to switch the season: a grab zone over the blade and a turning dashed ring as the hint */
+.ny .rig{left:12%;width:70%;aspect-ratio:768/1024}
 .knife-hit{position:absolute;left:50%;top:18%;width:52%;height:52%;z-index:6;border-radius:50%;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent}
 .knife-hit:active{cursor:grabbing}
 .knife-hit:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
@@ -384,17 +340,14 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 @keyframes seasonFlash{from{opacity:1}to{opacity:0}}
 @media (prefers-reduced-motion:reduce){.spin-hint svg{animation:none}}
 @media (prefers-reduced-motion:reduce){.deep i{animation:none}}
-
 @media (min-width:760px){
   .pair{grid-template-columns:1fr 1fr;gap:24px}
 }
 @media (min-width:900px){
   .game{grid-template-columns:1fr 1fr;column-gap:48px;align-items:start;padding-block:28px 40px;grid-template-areas:"top top" "head side" "form side"}
-  /* right column: chick level with the headline and the input, the result card right under it, level with the chips */
   .side{grid-area:side;display:flex;flex-direction:column;align-items:center;gap:8px;align-self:start}
   .stage{max-width:470px;margin-top:0}
   .result{width:100%}
-  /* offer, option C: every block uses the full width, one even rhythm */
   .offer{padding-block:4px 56px}
   .offer-in{gap:32px}
   .bridge{max-width:none;padding:14px 22px;transform:rotate(-.5deg)}
@@ -404,10 +357,10 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   .o-head .eyebrow{grid-area:eye}
   .o-head h2{grid-area:h2;font-size:clamp(40px,4.3vw,56px)}
   .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
-  /* the prize card sits in the middle, as wide as its longest sentence; one sentence per line */
-  /* «Беру тільки те…» is stuck on the top right corner of the dark slogan block */
-  .honest{justify-self:end;position:relative;z-index:4;max-width:360px;margin:0 32px -84px 0;transform:rotate(2.5deg);font-size:18px}
-  .cta{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:32px;padding-top:56px}
+  .extras{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:28px}
+  .prize-wrap{justify-self:stretch;width:auto}
+  .honest{width:330px;font-size:15px}
+  .cta{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:32px}
   .slogan{max-width:none}
   .cta-row{align-self:end;justify-self:end}
 }
@@ -419,7 +372,6 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   .rig{transition:none}
 }
 </style>
-
 <main>
 <div class="game pad">
   <div class="top">
@@ -430,14 +382,11 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
       <button class="sound" id="sound" type="button" aria-pressed="true" aria-label="Звук"><span class="snd-t">Звук увімк.</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path class="on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg><span class="sw" aria-hidden="true"></span></button>
     </div>
   </div>
-
   <header class="head">
     <p class="eyebrow">Мило. Пухнасто. Небезпечно.</p>
     <h1>Кого сьогодні <span style="white-space:nowrap"><span class="knife-word">заріжемо</span>?</span></h1>
     <p class="sub">Напиши, що тебе бісить. Курча розбереться за секунду, а ти забереш картку для сторіс.</p>
   </header>
-
-  <!-- phone: stage and result sit in the main column (display:contents); desktop: they stack in the right column -->
   <div class="side">
   <div class="stage" id="stage">
     <div class="flash" id="flash"></div>
@@ -464,7 +413,6 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
     </div>
     <div class="count" id="count" hidden></div>
   </div>
-
     <div class="result" id="result" hidden>
       <p class="result-q">Ну що, полегшало? Чи заріжемо ще щось?</p>
       <div class="actions">
@@ -485,7 +433,6 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
       <p class="note" id="saveNote" hidden></p>
     </div>
   </div>
-
   <section class="form" aria-label="Що різати">
     <form class="field" id="form" autocomplete="off">
       <label for="pain" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Що тебе бісить</label>
@@ -496,20 +443,17 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
     <div class="chips" id="chips"></div>
   </section>
 </div>
-
 <section class="offer pad" id="offer" aria-label="Пропозиція">
   <div class="offer-in">
     <div class="bridge">
       <img src="v2-chick.webp" alt="" width="760" height="743">
       <p id="bridgeText"><b>Зайве прибрали.</b>А тепер давай створимо щось, що не захочеться різати.</p>
     </div>
-
     <div class="o-head">
       <p class="eyebrow">Сайти · UX/UI · цифрові продукти</p>
       <h2>Решту проблем <span class="knife-word">заріжемо</span> разом.</h2>
       <p class="o-sub">Роблю сайти й цифрові продукти: <em>від ідеї до запуску.</em></p>
     </div>
-
     <div class="pair">
       <div class="card card-cut" id="cutCard">
         <h3>Ріжемо <span class="tag">без жалю</span></h3>
@@ -539,9 +483,8 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
         <p class="build-note">Від першої думки до запуску: структура, дизайн, розробка і налаштування.</p>
       </div>
     </div>
-
     <div class="extras">
-      <div class="prize">
+      <div class="prize-wrap"><div class="prize">
         <div class="ticket">
           <small>Подарунок · безкоштовно</small>
           <strong>Форма для твоєї ідеї</strong>
@@ -549,11 +492,9 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
           <a class="btn-main" id="cta" href="https://t.me/thisisdi" target="_blank" rel="noopener"><span>Маєш ідею?</span> <span>Давай надамо їй форму →</span></a>
         </div>
         <div class="stub"><span>для перших</span><b>10</b><span>місць</span></div>
-      </div>
+      </div></div>
+      <p class="honest"><span class="h-in"><b>Беру тільки те, що зроблю добре.</b><span>Якщо задача не моя, скажу одразу і чесно.</span></span></p>
     </div>
-
-    <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span><i class="toy" aria-hidden="true"><svg viewBox="-20 -24 40 46" width="30" height="34"><defs><radialGradient id="tb" cx=".35" cy=".35" r=".75"><stop offset="0" stop-color="#FF8CC4"/><stop offset=".45" stop-color="#E5007A"/><stop offset="1" stop-color="#7E0042"/></radialGradient><linearGradient id="tc"><stop offset="0" stop-color="#B8893A"/><stop offset=".5" stop-color="#F6DC8C"/><stop offset="1" stop-color="#A87A2E"/></linearGradient></defs><rect x="-5" y="-22" width="10" height="5" fill="url(#tc)"/><circle r="18" fill="url(#tb)"/><ellipse cx="-7" cy="-8" rx="4" ry="2.4" fill="#fff" opacity=".75" transform="rotate(-35 -7 -8)"/></svg></i></p>
-
     <div class="cta">
       <p class="slogan">Ідеям потрібна форма. <span>Тобі&nbsp;-&nbsp;одна&nbsp;я.</span></p>
       <div class="cta-row">
@@ -567,7 +508,6 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   </div>
 </section>
 </main>
-
 <div class="sheet" id="sheet" hidden>
   <div class="sheet-in">
     <img id="sheetImg" alt="Картка для сторіс">
@@ -575,9 +515,7 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
     <button class="btn" id="sheetClose" type="button">Готово</button>
   </div>
 </div>
-
 <script>
-/* ===== Дані: міняти тут ===== */
 const CONFIG = {
   handle: "@didi.ods",
   sign: "Діана · digital designer",
@@ -596,28 +534,20 @@ const LINES_TIRED = ["Я ж не іграшка. Ну, трохи іграшка
 const LINES_TAP = ["Мило? Перевір.","Не гладь. Пиши.","Я тут не для обіймів.","Пух м'який. Ніж - ні.","Ще раз торкнешся - і ти в списку."];
 const LINES_TYPE = ["Так-так…","Пиши, пиши.","Ох, знайоме.","Ніж уже наточено."];
 const CARD_QUIPS = ["Без жалю.","Пух м'який. Ніж - ні.","Чисто. Наступний?","Курча розібралося."];
-
-/* ===== Helpers ===== */
 const $ = id => document.getElementById(id);
 const stage=$("stage"), chick=$("chick"), rig=$("rig"), word=$("word"), bubble=$("bubble"), input=$("pain"), btn=$("cutBtn");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-/* weaker phones: fewer flakes, lower canvas resolution, snow at half the frame rate */
 const LOW = (navigator.hardwareConcurrency||8)<=4 || (navigator.deviceMemory||8)<=4;
 const DPR = Math.min(devicePixelRatio||1, LOW?1.25:1.75);
 const pick = a => a[Math.floor(Math.random()*a.length)];
 const wait = ms => new Promise(r=>setTimeout(r,ms));
 function track(event, data={}){ try{ (window.dataLayer=window.dataLayer||[]).push({event, ...data}); }catch(e){} }
-
 $("cta").href=CONFIG.tgUrl;
 function addChip(t,cls){const b=document.createElement("button");b.type="button";b.className="chip"+(cls?" "+cls:"");b.textContent=t;b.onclick=()=>{input.value=t;slash(t)};$("chips").append(b)}
 CHIPS.forEach(t=>addChip(t)); CHIPS_LIFE.forEach(t=>addChip(t,"life"));
-
-/* counter */
 let kills=0, sessionCuts=0; try{kills=+localStorage.getItem("kills")||0}catch(e){}
 function showCount(){ if(!kills) return; const c=$("count"); c.hidden=false; c.textContent="Зарізано тобою: "+kills; }
 showCount();
-
-/* sound */
 let soundOn=true, ac=null;
 $("sound").onclick=()=>{soundOn=!soundOn;$("sound").querySelector(".snd-t").textContent=soundOn?"Звук увімк.":"Звук вимк.";$("sound").setAttribute("aria-pressed",soundOn)};
 function sfx(kind){
@@ -633,19 +563,13 @@ function sfx(kind){
     s.connect(f).connect(g).connect(ac.destination); s.start(t);
   }catch(e){}
 }
-/* Android: Vibration API. iPhone has no Vibration API; on iOS 18+ toggling a native switch
-   gives a light haptic tick, so a hidden switch stands in for it. */
 const haptic=(()=>{ if(navigator.vibrate) return null;
   const l=document.createElement("label"); l.className="haptic"; l.setAttribute("aria-hidden","true");
   const i=document.createElement("input"); i.type="checkbox"; i.setAttribute("switch",""); i.tabIndex=-1;
   l.append(i); document.body.append(l); return l; })();
 function buzz(p){try{ if(navigator.vibrate) navigator.vibrate(p); else if(haptic) haptic.click(); }catch(e){}}
-
-/* speech */
 let bubbleT;
 function say(t,ms=2600,big=false){clearTimeout(bubbleT);bubble.textContent=t;bubble.classList.toggle("big",big);bubble.classList.remove("off");if(ms)bubbleT=setTimeout(()=>bubble.classList.add("off"),ms)}
-
-/* ===== Live chick: blink, look, lean, taps ===== */
 function eyes(ms){chick.classList.add("eyes"); setTimeout(()=>chick.classList.remove("eyes"),ms)}
 (function blinkLoop(){
   setTimeout(()=>{ if(!busy){ eyes(130); if(Math.random()<.25) setTimeout(()=>eyes(110),260); } blinkLoop(); }, 2200+Math.random()*3400);
@@ -663,17 +587,13 @@ input.addEventListener("input",()=>{
   if(!typedOnce && input.value.trim()){ typedOnce=true; say(pick(LINES_TYPE),1800); }
 });
 input.addEventListener("blur",()=>chick.classList.remove("lean"));
-
-/* ===== Feathers ===== */
-/* The canvas lives inside the game section and scrolls with the page natively,
-   so feathers never "hang" on screen while a phone scrolls (rAF pauses during momentum scroll). */
 const FX=(()=>{
   const host=document.querySelector(".game");
   const c=document.createElement("canvas"); c.className="fx"; host.append(c);
   const g=c.getContext("2d"); let parts=[], raf=0, last=0, W=0, H=0;
   const canBlur="filter" in g;
   const imgs=["v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(s=>{const i=new Image(); i.src=s; return i});
-  const size=()=>{const d=DPR; c.style.width=document.documentElement.clientWidth+"px"; W=c.clientWidth||host.clientWidth;   /* the window width without the scrollbar */ H=host.clientHeight; c.width=W*d; c.height=H*d; g.setTransform(d,0,0,d,0,0)};
+  const size=()=>{const d=DPR; c.style.width=document.documentElement.clientWidth+"px"; W=c.clientWidth||host.clientWidth;    H=host.clientHeight; c.width=W*d; c.height=H*d; g.setTransform(d,0,0,d,0,0)};
   size(); addEventListener("resize",size); if("ResizeObserver" in window) new ResizeObserver(size).observe(host);
   const toHost=(x,y)=>{const r=c.getBoundingClientRect(); return [x-r.left, y-r.top]};
   function tick(now){
@@ -702,25 +622,22 @@ const FX=(()=>{
     }
     raf=parts.length?requestAnimationFrame(tick):0; if(!raf) last=0;
   }
-  /* wind: cursor or finger pushes feathers; a tap or click blows a gust */
   let px=null, py=null, pt=0, played=false, touchMode=false;
   function push(x,y,vx,vy,R,blow){
     if(!parts.length) return; const sy=0; let hit=false; [x,y]=toHost(x,y);
     for(const p of parts){
-      /* reach = the feather's own half-size plus a small margin: you have to actually touch it */
       const r=R+p.s*.4, dx=p.x-x, dy=(p.y-sy)-y, d=Math.hypot(dx,dy)||1; if(d>r) continue;
       const f=(1-d/r)*(1-d/r)*.8+.2, k=p.dot?1.2:1; hit=true;
-      const sp=Math.hypot(vx,vy), cap=Math.min(1,14/(sp||1));   /* a fast flick doesn't launch it off-screen */
+      const sp=Math.hypot(vx,vy), cap=Math.min(1,14/(sp||1));
       p.vx+=(vx*cap*.32+dx/d*blow)*f*k; p.vy+=(vy*cap*.32+dy/d*blow)*f*k;
       p.spin=Math.min(.4,(p.spin||0)+f*.1); p.dir=Math.sign(vx||dx)||1;
-      p.age=Math.max(0,p.age-260*f);   /* playing keeps them in the air */
+      p.age=Math.max(0,p.age-260*f);
     }
     if(hit && !played){ played=true; track("feathers_play"); }
     if(hit && !raf) raf=requestAnimationFrame(tick);
   }
   function move(x,y){
     const now=performance.now();
-    /* a finger is fat and imprecise: wider reach and a firmer push than the cursor */
     if(px!==null && now-pt<120){ const dt=Math.max(8,now-pt)/16.67; push(x,y,(x-px)/dt,(y-py)/dt,touchMode?78:36,touchMode?1.4:.7); }
     px=x; py=y; pt=now;
   }
@@ -749,7 +666,6 @@ const FX=(()=>{
       }
       if(!raf) raf=requestAnimationFrame(tick);
     },
-    /* one loose feather drifting off the chick */
     shed(x,y){
       if(reduce || parts.length>40) return;
       [x,y]=toHost(x,y);
@@ -759,21 +675,15 @@ const FX=(()=>{
   };
 })();
 function centerOf(el){const r=el.getBoundingClientRect(); return [r.left+r.width/2, r.top+r.height/2]}
-
-/* ===== Season =====
-   The garland frame is always on (?decor=none hides it). The New Year layer (chick in a hat and scarf, falling and
-   settling snow, festive lines) is on from 7.12 to 7.01 by date; before that anyone can switch it by spinning the
-   knife round in a circle, and spinning again switches back. Preview: ?ny=1 / ?ny=0 */
-const FRAME_COLOR="yellow";                                /* "yellow" or "blue"; Diana chose yellow back (24.11) */
-const NY_FROM="2026-12-07", NY_UNTIL="2027-01-08";        /* until = first day it is gone */
+const FRAME_COLOR="yellow";
+const NY_FROM="2026-12-07", NY_UNTIL="2027-01-08";
 const QS=new URLSearchParams(location.search);
 const DECOR=(()=>{ const q=QS.get("decor"); if(["snow","deep","frame"].includes(q)) return q; return q==="none" ? "" : "frame"; })();
 const NY_BY_DATE=(()=>{ const n=new Date(); return n>=new Date(NY_FROM+"T00:00:00") && n<new Date(NY_UNTIL+"T00:00:00"); })();
 let NY = QS.get("ny")==="1" ? true : QS.get("ny")==="0" ? false : NY_BY_DATE;
-/* Positions are % of each chick image */
 const CHICKS={
   ny:  {ny:true, src:"ny-chick.webp", blink:"ny-blink.webp", paw:"ny-paw.webp", ar:1024/768, w:768, h:1024, bow:false,
-        knife:{l:58,t:54.8,w:46}, pawPos:{l:68.49-10.16,t:68.36-7.62,w:20.31}, blinkPos:{l:0,t:0,w:100}},
+        knife:{l:58,t:54.8,w:46}, pawPos:{l:68.49-10.16,t:68.36-7.62,w:20.31}, blinkPos:{l:32.55,t:45.12,w:37.76}},
   base:{ny:false, src:"v2-chick.webp", blink:"v2-blink.webp", paw:"v2-paw.webp", ar:743/760, w:760, h:743, bow:true,
         knife:{l:58.13,t:43.34,w:50}, pawPos:{l:58.29,t:52.76,w:23.68}, blinkPos:{l:32.43,t:36.3,w:41.13}}
 };
@@ -786,28 +696,21 @@ function applyChick(){
   const bl=q(".puff .blink"); bl.src=CHICK.blink; pct(bl,CHICK.blinkPos);
   const pw=q(".puff .paw"); pw.src=CHICK.paw; pct(pw,CHICK.pawPos);
   pct(q(".puff .knife"),CHICK.knife);
-  q(".puff .bow").style.display = CHICK.bow ? "" : "none";   /* the hat has its own bow */
+  q(".puff .bow").style.display = CHICK.bow ? "" : "none";
   document.body.classList.toggle("ny",NY);
   q(".bridge img").src=CHICK.src;
   FESTIVE_LINES.forEach(l=>{ const i=LINES_AFTER.indexOf(l); if(NY && i<0) LINES_AFTER.push(l); if(!NY && i>=0) LINES_AFTER.splice(i,1); });
   const iq=CARD_QUIPS.indexOf(FESTIVE_LINES[1]); if(NY && iq<0) CARD_QUIPS.push(FESTIVE_LINES[1]); if(!NY && iq>=0) CARD_QUIPS.splice(iq,1);
 }
 applyChick();
-
-/* onload instead of decode(): decode() can stay pending forever in some browsers; a 6 s cap so nothing ever hangs */
 const load=s=>new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=s; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
-/* images are loaded once and reused; the chick set depends on the season the card is made in */
 const imgCache={}; const loadC=s=>imgCache[s]||(imgCache[s]=load(s));
-
 const DECO=(()=>{
   if(!DECOR) return null;
   document.body.classList.add("decor","decor-"+DECOR);
   const game=document.querySelector(".game"), stage=$("stage");
   const P = FRAME_COLOR==="blue" ? "xfb-" : "xf-";
-  /* the story card uses the whole garland frame in its own proportions */
   const frameImg=()=>loadC(FRAME_COLOR==="blue"?"v2-frame-garland-blue.webp":"v2-frame-garland.webp");
-
-  /* ---- snow: falls over the whole screen in three depths; far flakes small and crisp, near ones big and soft, a few real crystals ---- */
   function flakeDraw(g,f){
     if(f.crystal){
       g.save(); g.translate(f.x,f.y); g.rotate(f.rot); g.globalAlpha=f.a; g.strokeStyle="#FFFFFF"; g.lineCap="round"; g.lineWidth=Math.max(1,f.r*.22);
@@ -840,8 +743,6 @@ const DECO=(()=>{
   }
   let snowReady=false;
   function snowOn(){ if(snowReady) return; snowReady=true; startSnow(); settle(); frameImg(); }
-
-  /* ---- snow that settles: a fluffy cap grows slowly on top of chosen things ---- */
   function cap(el,{x=.08,w=.5,h=12,top=null,grow=true}={}){
     if(!el) return; if(getComputedStyle(el).position==="static") el.style.position="relative";
     const W=Math.max(30,el.clientWidth*w), n=Math.max(3,Math.round(W/16));
@@ -854,24 +755,16 @@ const DECO=(()=>{
     el.append(s);
   }
   function settle(){
-    /* no snow on the chick itself: it sits wrong on the round fur (Diana, 24.11) */
     cap(document.querySelector(".field"),{x:.06,w:.42,h:12});
     const chips=[...document.querySelectorAll(".chip")]; [0,3,6].forEach(i=>cap(chips[i],{x:.15,w:.55,h:8}));
-    /* the bridge and the two cards wear a garland instead, the gift block has its fluffy frame */
-    cap(document.querySelector(".honest"),{x:.45,w:.45,h:11});
   }
-
   if(DECOR==="snow"){ snowOn(); }
-
   if(DECOR==="deep"){
     const d=document.createElement("div"); d.className="deep"; d.setAttribute("aria-hidden","true");
     let dots=""; for(let i=0;i<12;i++){ const s=30+Math.random()*90; dots+=`<i style="left:${Math.random()*100}%;top:${Math.random()*70}%;width:${s}px;height:${s}px;--c:${pick(["255,210,31","255,255,255","229,0,122","255,170,210"])};animation-delay:-${(Math.random()*9).toFixed(1)}s"></i>`; }
     d.innerHTML=dots+`<svg viewBox="0 0 1440 260" preserveAspectRatio="none"><path d="M0 150 C 240 60 420 70 640 130 S 1060 40 1440 110 V260 H0Z" fill="#FFB3D6"/><path d="M0 190 C 300 120 520 150 760 185 S 1180 120 1440 170 V260 H0Z" fill="#FFC8E2"/><path d="M0 222 C 360 180 700 214 980 205 S 1300 190 1440 210 V260 H0Z" fill="#FFF6FA"/></svg>`;
     game.prepend(d);
   }
-
-  /* frame mode: Diana's garland frame runs around the whole screen (corners, bow and ornaments from her picture,
-     seamless fur in between so it fits any width), plus falling and settling snow */
   if(DECOR==="frame" && (QS.get("frame")==="1" || QS.get("review")==="1")){
     const x=document.createElement("div"); x.className="xframe"; x.setAttribute("aria-hidden","true");
     x.innerHTML=`<i class="f2-top"></i><i class="f2-bot"></i><i class="f2-left"></i><i class="f2-right"></i>
@@ -880,19 +773,15 @@ const DECO=(()=>{
       <img class="f2-tl" src="f2-corner.webp" alt=""><img class="f2-tr" src="f2-corner.webp" alt=""><img class="f2-bl" src="f2-corner-plain.webp" alt=""><img class="f2-br" src="f2-corner-plain.webp" alt="">
       <img class="f2-bow" src="f2-bow.webp" alt="">`;
     document.body.append(x);
-    /* garland: a thin warm wire waving along the middle of each side band, round glowing lights like on the corners */
     const lc=x.querySelector(".f2-lights"), lg=lc.getContext("2d");
     function lights(){
       const dpr=DPR, W=x.clientWidth||innerWidth, H=x.clientHeight||innerHeight; lc.width=W*dpr; lc.height=H*dpr; lg.setTransform(dpr,0,0,dpr,0,0); lg.clearRect(0,0,W,H);
       const s=parseFloat(getComputedStyle(document.body).getPropertyValue("--s"))||.15, band=174*s, mid=147*s, side=134*s, end=560*s;
-      /* Like the garland on Diana's reference frame: a twisted beige cord crossing the fur from edge to edge
-         in long soft S-curves, big pearly lights sitting on the edges of the band where the cord turns. */
       const run=(x0,y0,x1,y1,flip)=>{
         const L=Math.hypot(x1-x0,y1-y0); if(L<band*2.5) return; const ux=(x1-x0)/L, uy=(y1-y0)/L, nx=-uy*flip, ny=ux*flip;
         const P=(t,o)=>[x0+ux*t+nx*o, y0+uy*t+ny*o];
         const edge=band*.40, step=band*1.35, n=Math.max(2,Math.round(L/step)), d=L/n;
         const pts=[]; for(let i=0;i<=n;i++){ pts.push(P(i*d, (i%2?1:-1)*edge*(.85+.15*Math.sin(i*1.7)))); }
-        /* cord: S-curve between neighbouring lights (control points along the band), drawn as shadow, body, highlight */
         const cord=(w,col,dy)=>{ lg.strokeStyle=col; lg.lineWidth=w; lg.lineCap="round"; lg.beginPath();
           for(let i=0;i<n;i++){ const [ax,ay]=pts[i], [bx,by]=pts[i+1];
             const c1=[ax+ux*d*.55, ay+uy*d*.55], c2=[bx-ux*d*.55, by-uy*d*.55];
@@ -900,7 +789,6 @@ const DECO=(()=>{
           lg.stroke(); };
         const cw=Math.max(1.6,band*.055);
         cord(cw*1.6,"rgba(120,85,40,.28)",cw*.5); cord(cw,"#E6D3AE",0); cord(cw*.38,"rgba(255,255,255,.55)",-cw*.18);
-        /* lights */
         const r=band*.135;
         pts.forEach(([px,py],i)=>{ if(i===0||i===n) return;
           const g=lg.createRadialGradient(px,py,r*.6,px,py,r*2.8); g.addColorStop(0,"rgba(255,232,175,.75)"); g.addColorStop(.45,"rgba(255,220,150,.30)"); g.addColorStop(1,"rgba(255,220,150,0)");
@@ -911,9 +799,6 @@ const DECO=(()=>{
       run(end,mid,W-end,mid,1); run(end,H-mid,W-end,H-mid,-1); run(side,end,side,H-end,-1); run(W-side,end,W-side,H-end,1);
     }
     lights(); addEventListener("resize",lights);
-    /* Review switch for Diana (24.11): the whole screen frame (with its garland) on, or no frame at all,
-       in both seasons. ?frame=0 / ?frame=1, or ?review=1 for a button. The choice is remembered in this browser. */
-    /* 24.11: Diana removed the screen frame for now (a better place for it is to be found); it shows only with ?frame=1 */
     let frameOn = QS.get("frame")==="1";
     const setFrame=on=>{ frameOn=on; x.style.display=on?"":"none"; document.body.classList.toggle("decor-frame",on); try{ localStorage.setItem("frame",on?"1":"0") }catch(e){} };
     setFrame(frameOn);
@@ -924,10 +809,6 @@ const DECO=(()=>{
     }
   }
   if(NY) snowOn();
-
-  /* ---- garland round the bridge and both offer cards: a twisted cord waving across the border,
-     warm pearl lights where it turns, a few ornaments hanging off it (no fur, Diana 25.11) ---- */
-  /* glossy ball with a gold cap and a felt star, drawn in code */
   const drawOrn=(g,kind,sz)=>{
     if(kind==="ball"){ const r=sz/2;
       const b=g.createRadialGradient(-r*.35,-r*.35,r*.1,0,0,r); b.addColorStop(0,"#FF8CC4"); b.addColorStop(.45,"#E5007A"); b.addColorStop(1,"#7E0042");
@@ -952,13 +833,12 @@ const DECO=(()=>{
       const tf=getComputedStyle(el).transform;
       Object.assign(c.style,{left:(el.offsetLeft-M)+"px", top:(el.offsetTop-M)+"px", width:(w+2*M)+"px", height:(h+2*M)+"px", transform: tf==="none"?"":tf});
       const d=DPR; c.width=(w+2*M)*d; c.height=(h+2*M)*d; g.setTransform(d,0,0,d,0,0);
-      /* the border as a list of points with outward normals, every ~2px */
       const R=Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius)||20, h/2, w/2), x0=M, y0=M, x1=M+w, y1=M+h, pts=[];
       const line=(ax,ay,bx,by,nx,ny)=>{ const L=Math.hypot(bx-ax,by-ay), n=Math.max(1,Math.round(L/2)); for(let i=0;i<n;i++){ const t=i/n; pts.push([ax+(bx-ax)*t, ay+(by-ay)*t, nx, ny]); } };
       const arc=(cx,cy,a0)=>{ const n=Math.max(2,Math.round(R*1.57/2)); for(let i=0;i<n;i++){ const a=a0+Math.PI/2*i/n; pts.push([cx+Math.cos(a)*R, cy+Math.sin(a)*R, Math.cos(a), Math.sin(a)]); } };
       line(x0+R,y0,x1-R,y0,0,-1); arc(x1-R,y0+R,-Math.PI/2); line(x1,y0+R,x1,y1-R,1,0); arc(x1-R,y1-R,0);
       line(x1-R,y1,x0+R,y1,0,1); arc(x0+R,y1-R,Math.PI/2); line(x0,y1-R,x0,y0+R,-1,0); arc(x0+R,y0+R,Math.PI);
-      const N=pts.length, waves=Math.max(4, Math.round(N*2/44/2)*2), A=7;   /* a light every ~44px, an even count so the loop closes */
+      const N=pts.length, waves=Math.max(4, Math.round(N*2/44/2)*2), A=7;
       const at=i=>{ const p=pts[((i%N)+N)%N], o=A*Math.sin(Math.PI*waves*i/N); return [p[0]+p[2]*o, p[1]+p[3]*o]; };
       g.clearRect(0,0,w+2*M,h+2*M);
       const cw=2.2, cord=(lw,col,dy)=>{ g.strokeStyle=col; g.lineWidth=lw; g.lineCap="round"; g.lineJoin="round"; g.beginPath();
@@ -968,14 +848,11 @@ const DECO=(()=>{
       for(let k=0;k<waves;k++){ const [px,py]=at(Math.round((k+.5)*N/waves));
         if(L){ const gl=g.createRadialGradient(px,py,r*.5,px,py,r*3.4); gl.addColorStop(0,"rgba(255,232,175,.8)"); gl.addColorStop(.45,"rgba(255,220,150,.32)"); gl.addColorStop(1,"rgba(255,220,150,0)");
           g.fillStyle=gl; g.beginPath(); g.arc(px,py,r*3.4,0,7); g.fill(); }
-        /* unlit: a plain glass bead, no glow */
         const b=g.createRadialGradient(px-r*.35,py-r*.35,r*.1,px,py,r);
         if(L){ b.addColorStop(0,"#FFFFFF"); b.addColorStop(.55,"#FFF6DE"); b.addColorStop(1,"#F2D59B"); }
         else { b.addColorStop(0,"#FFFFFF"); b.addColorStop(.5,"#F1ECE6"); b.addColorStop(1,"#C9BCB0"); }
         g.fillStyle=b; g.beginPath(); g.arc(px,py,r,0,7); g.fill(); }
-      /* ornaments: [x, y as a share of the box (the nearest point of the border is used), kind, size px, tilt] */
       for(const [fx,fy,kind,sz,rot] of hang){
-
         const tx=M+fx*w, ty=M+fy*h; let i=0, best=1e9; pts.forEach((p,j)=>{ const dd=(p[0]-tx)**2+(p[1]-ty)**2; if(dd<best){ best=dd; i=j; } });
         const [px,py]=at(i), nrm=pts[i];
         const ih=sz;
@@ -987,15 +864,11 @@ const DECO=(()=>{
     garlands.push(draw);
     if("ResizeObserver" in window) new ResizeObserver(()=>draw()).observe(el);
   }
-  /* positions picked to stay clear of the knife button (top right of «Ріжемо») and of the text */
-  /* ornaments sit on the side edges, so nothing hangs over the text below on a phone */
   garland(document.querySelector(".bridge"), [[0,0,"star",30,-.3],[1,.62,"ball",30,0]]);
-  /* «Ріжемо»: the garland is off (no light), «Робимо»: it glows, so the pair differs without getting busy (Diana 25.11) */
-  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]], "before");   /* glows until the knife has cut, then «Робимо» takes over */
+  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]], "before");
   garland(document.querySelector(".card-build"), [[1,0,"star",30,.3],[1,.66,"ball",30,0],[0,.36,"ball",26,0],[.38,1,"star",26,-.2],[.8,1,"star",22,.35]], "after");
   const redraw=()=>garlands.forEach(f=>f());
   addEventListener("resize",redraw); if(document.fonts) document.fonts.ready.then(redraw);
-
   return {
     cardBack(g){
       if(NY){ for(let i=0;i<120;i++){ const f=newFlake(1080,1920,true); f.r*=2.6; flakeDraw(g,f); } g.globalAlpha=1; }
@@ -1006,14 +879,11 @@ const DECO=(()=>{
         hill(1560,140,"#FFB3D6"); hill(1660,110,"#FFC8E2"); hill(1740,70,"#FFF6FA");
       }
     },
-    async cardFrame(g){ const img=await frameImg(); if(img) g.drawImage(img,-10,208,1100,1560); },   /* a touch wider than the card, so the frame fills it */
-    /* the result card is hidden at load, so its snow cap is added the first time it appears */
+    async cardFrame(g){ const img=await frameImg(); if(img) g.drawImage(img,-10,208,1100,1560); },
     capResult(){ if(this.done || !NY) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); },
     snowOn, redraw, lightUp(){ if(lightsOn) return; lightsOn=true; redraw(); }
   };
 })();
-
-/* ===== Word ===== */
 function setWord(t){
   const spans=word.querySelectorAll("span"); spans.forEach(s=>s.textContent=t);
   const box=word.parentElement.getBoundingClientRect();
@@ -1021,8 +891,6 @@ function setWord(t){
   const whole=word.querySelector(".whole");
   while((whole.offsetHeight>box.height*.98 || whole.scrollWidth>whole.clientWidth+1) && fs>13){fs-=2;spans.forEach(s=>s.style.fontSize=fs+"px")}
 }
-
-/* ===== The slash ===== */
 let busy=false, lastWord="";
 async function slash(raw){
   const t=(raw||"").trim().replace(/\s+/g," ").slice(0,34);
@@ -1065,7 +933,6 @@ function toOffer(ms){
   setTimeout(()=>{ go(); l.classList.add("out"); setTimeout(()=>l.remove(),400); }, ms+150);
 }
 $("enoughBtn").onclick=()=>{ say("Домовились. Далі - серйозно.",2400); track("enough"); setTimeout(()=>toOffer(2200),350); };
-
 function wave(){chick.classList.remove("wave"); void chick.offsetWidth; chick.classList.add("wave"); setTimeout(()=>chick.classList.remove("wave"),700)}
 let taps=[];
 function tapChick(){
@@ -1078,8 +945,6 @@ function tapChick(){
 }
 chick.addEventListener("click",tapChick);
 chick.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();tapChick()}});
-
-/* ===== Season switch: grab the knife and spin it a full circle ===== */
 const SEASON=(()=>{
   const knifeEl=document.querySelector(".puff .knife");
   const hit=document.createElement("div"); hit.className="knife-hit"; hit.tabIndex=0; hit.setAttribute("role","button");
@@ -1089,7 +954,6 @@ const SEASON=(()=>{
   rig.append(hint);
   let used=false; try{ used=sessionStorage.getItem("spun")==="1" }catch(e){}
   if(used) hint.classList.add("off");
-  /* the knife turns around its grip; the grip point in % of the chick box */
   const grip=()=>{ const K=CHICK.knife; return [K.l+.24*K.w, K.t+.70*(K.w*203/360/CHICK.ar)]; };
   const placeHint=()=>{ const [x,y]=grip(); hint.style.setProperty("--gx",x+"%"); hint.style.setProperty("--gy",y+"%"); };
   placeHint();
@@ -1119,21 +983,18 @@ const SEASON=(()=>{
   });
   function end(e,done){
     if(!drag) return; drag=false; knifeEl.style.transition=""; knifeEl.style.transform=""; chick.classList.remove("busy-chick");
-    if(done) switchSeason(e); else if(Math.abs(acc)<8) tapChick();   /* a plain tap on the knife is just a tap */
+    if(done) switchSeason(e); else if(Math.abs(acc)<8) tapChick();
   }
   hit.addEventListener("pointerup",e=>end(e,false)); hit.addEventListener("pointercancel",e=>end(e,false));
   hit.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); switchSeason(null); } });
   return { get used(){ return used; }, flip:e=>switchSeason(e) };
 })();
-
-/* ===== Season button: tap the snow globe (the chick in a hat is inside: you see what you get), tap the snowball to go back ===== */
 (function(){
   const b=document.createElement("button"); b.type="button"; b.className="season-btn idle"; stage.append(b);
   const draw=()=>{ b.classList.toggle("ball",NY);
     b.innerHTML = NY ? '<img src="ny-snowball.webp" alt=""><span class="tag">Кинь сніжку</span>' : '<img src="ny-globe.webp" alt=""><span class="tag">Струсни</span>';
     b.setAttribute("aria-label", NY ? "Кинути сніжку: повернути звичайне курча" : "Струснути сніжну кулю: новорічне курча"); };
   draw();
-  /* shake detection: two strong jolts within 0.8 s */
   let lastJolt=0, prev=null, armed=false;
   const onMotion=e=>{ const a=e.accelerationIncludingGravity; if(!a || a.x==null) return;
     if(prev){ const d=Math.abs(a.x-prev.x)+Math.abs(a.y-prev.y)+Math.abs(a.z-prev.z), now=Date.now();
@@ -1151,16 +1012,12 @@ const SEASON=(()=>{
         sfx("cut"); buzz(30); SEASON.flip(null); b.classList.remove("throw"); draw(); b.disabled=false; }, reduce?0:520); }
   });
 })();
-
-/* ===== Story card 1080x1920 ===== */
 const cardAssets=()=>Promise.all([CHICK.src,"v2-knife.webp",CHICK.paw,"v2-bow.webp","v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(loadC));
 cardAssets();
 const fontsReady=document.fonts?Promise.race([Promise.all([document.fonts.load('900 120px Unbounded'),document.fonts.load('800 40px Manrope'),document.fonts.load('600 30px Manrope')]).catch(()=>{}),wait(3000)]):Promise.resolve();
 let cardBlob=null, cardUrl="";
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
 function fitFont(g,text,weight,size,family,maxW,min){let fs=size; g.font=`${weight} ${fs}px ${family}`; while(g.measureText(text).width>maxW&&fs>min){fs-=2; g.font=`${weight} ${fs}px ${family}`} return fs}
-/* Poster style (Diana 25.11, after a loading-screen reference): a dreamy pink sky, the cut word huge, a dry line above it,
-   tiny captions in the corners. The lines depend on what was cut. */
 let cardStyle="classic";
 const POSTER=[
   [/відключ|світл|графік|генератор|свічк/, "і що тепер, свічки?", ["буває","це Україна","дихай","але заряджай"]],
@@ -1176,17 +1033,14 @@ async function makePoster(t){
   const c=document.createElement("canvas"); c.width=1080; c.height=1920; const g=c.getContext("2d");
   const low=t.toLowerCase(), hit=POSTER.find(([re])=>re.test(low)), top=hit?hit[1]:"і що тепер?", corners=hit?hit[2]:["буває","це життя","дихай","але ріж"];
   const sky=g.createLinearGradient(0,0,0,1920); sky.addColorStop(0,"#FFB8DA"); sky.addColorStop(.45,"#FFDDEE"); sky.addColorStop(1,"#FFF4FA"); g.fillStyle=sky; g.fillRect(0,0,1080,1920);
-  /* grain over the sky */
   const nt=document.createElement("canvas"); nt.width=nt.height=160; const ng=nt.getContext("2d"), id=ng.createImageData(160,160);
   for(let i=0;i<id.data.length;i+=4){ const v=Math.random()*255; id.data[i]=id.data[i+1]=id.data[i+2]=v; id.data[i+3]=18; }
   ng.putImageData(id,0,0); g.fillStyle=g.createPattern(nt,"repeat"); g.fillRect(0,0,1080,1920);
-  /* puffy cumulus clouds: a row of round bumps, bigger in the middle, a soft pink shadow under them, light from the top left */
   const cloud=(x,y,w)=>{ const n=6+Math.round(Math.random()*2), bumps=[];
     for(let i=0;i<n;i++){ const t=i/(n-1), r=w*(.16+.14*Math.sin(Math.PI*t))*(.85+Math.random()*.3); bumps.push([x-w/2+t*w, y-r*.55*Math.sin(Math.PI*t)-w*.02, r]); }
     g.save(); g.shadowColor="rgba(214,90,150,.28)"; g.shadowBlur=w*.12; g.shadowOffsetY=w*.06; g.fillStyle="#FFF4F9";
     g.beginPath(); bumps.forEach(([bx,by,r])=>{ g.moveTo(bx+r,by); g.arc(bx,by,r,0,7); }); g.rect(x-w/2,y-w*.06,w,w*.12); g.fill(); g.restore();
     bumps.forEach(([bx,by,r])=>{ const rg=g.createRadialGradient(bx-r*.35,by-r*.45,r*.1,bx,by,r); rg.addColorStop(0,"#FFFFFF"); rg.addColorStop(.65,"#FFF7FB"); rg.addColorStop(1,"#FFDCEC"); g.fillStyle=rg; g.beginPath(); g.arc(bx,by,r,0,7); g.fill(); }); };
-  /* Diana's plush clouds (from her reference), the hand-drawn ones stay as a fallback */
   const cl=await Promise.all(["cloud-c2.webp","cloud-c3.webp","cloud-c4.webp","cloud-c5.webp"].map(loadC));
   const put=(im,x,y,w,flip)=>{ if(!im) return false; const h=w*im.naturalHeight/im.naturalWidth; g.save(); if(flip){ g.translate(x+w,y); g.scale(-1,1); g.drawImage(im,0,0,w,h); } else g.drawImage(im,x,y,w,h); g.restore(); return true; };
   if(!put(cl[0],-50,300,430)) { cloud(220,470,330); cloud(880,380,280); cloud(170,1330,300); cloud(930,1290,320); cloud(540,1720,620); }
@@ -1194,7 +1048,6 @@ async function makePoster(t){
   if(DECOR && NY) DECO.cardBack(g);
   g.textBaseline="alphabetic";
   g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.textAlign="center"; g.fillText(CONFIG.sign,540,188);
-  /* corner captions as little stickers, like the chips on the site */
   const sticker=(txt,x,y,rot,right)=>{ g.save(); g.font="800 36px Manrope"; const w=g.measureText(txt).width+44, h=64;
     g.translate(right?x-w/2:x+w/2, y); g.rotate(rot); g.fillStyle="#2A0F2B"; rr(g,-w/2+5,-h/2+5,w,h,32); g.fill();
     g.fillStyle="#FFF6FA"; rr(g,-w/2,-h/2,w,h,32); g.fill(); g.lineWidth=3; g.strokeStyle="#2A0F2B"; g.stroke();
@@ -1203,17 +1056,14 @@ async function makePoster(t){
   sticker(corners[2],70,1600,.05,false); sticker(corners[3],1010,1600,-.05,true);
   g.textBaseline="alphabetic";
   g.textAlign="center"; g.fillStyle="#2A0F2B"; g.font="400 50px Unbounded"; g.fillText(top,540,600);
-  /* the word: as big as it fits, up to two lines */
   const W=t.toUpperCase(); let lines=[W]; g.font="900 200px Unbounded";
   if(g.measureText(W).width>960 && W.includes(" ")){ const ws=W.split(" "); let best=null; for(let i=1;i<ws.length;i++){ const a=ws.slice(0,i).join(" "), b=ws.slice(i).join(" "), m=Math.max(g.measureText(a).width,g.measureText(b).width); if(!best||m<best[0]) best=[m,a,b]; } lines=[best[1],best[2]]; }
   const longest=lines.reduce((a,b)=>g.measureText(a).width>g.measureText(b).width?a:b), fs=fitFont(g,longest,900,lines.length>1?170:210,"Unbounded",960,56), lh=fs*1.02;
   const y0=760+fs*.8;
   lines.forEach((ln,i)=>{ const y=y0+i*lh; g.fillStyle="rgba(42,15,43,.18)"; g.fillText(ln,548,y+10); g.fillStyle="#E5007A"; g.fillText(ln,540,y); });
   const yb=y0+(lines.length-1)*lh;
-  /* the slash through it */
-  g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=24; g.beginPath(); g.moveTo(70,yb-fs*.05); g.lineTo(1010,y0-fs*.8); g.stroke(); g.restore();   /* one slash across all lines */
+  g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=24; g.beginPath(); g.moveTo(70,yb-fs*.05); g.lineTo(1010,y0-fs*.8); g.stroke(); g.restore();
   g.fillStyle="#2A0F2B"; g.font="400 56px Unbounded"; g.fillText("зарізано.",540,yb+fs*.2+90);
-  /* the chick sits on the clouds */
   const cw=CHICK.ny?470:560, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=Math.max(yb+fs*.2+150, 1660-ch);
   if(body) g.drawImage(body,X,Y,cw,ch);
   if(bow && CHICK.bow){ const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2,Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore(); }
@@ -1230,11 +1080,7 @@ async function makeCard(t,style=cardStyle){
   g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
   g.save(); g.translate(540,960); g.rotate(-28*Math.PI/180); g.fillStyle="rgba(255,179,214,.6)"; for(let x=-1600;x<1600;x+=150) g.fillRect(x,-1600,10,3200); g.restore();
   if(DECOR) DECO.cardBack(g);
-  /* The garland frame only on cards made in the New Year version (Diana 25.11). It starts near the top (1000x1448 from y=96),
-     the title, word and chick shrink to fit inside it. No big handle on top any more: one quiet line at the bottom,
-     above the Instagram reply bar, so the card is worth posting even for people who never need a site. */
   const FR=NY && !!DECOR;
-  /* top: a thin, quiet signature; bottom: the dark banner with the question (Diana liked it, 25.11) */
   const head=()=>{ g.textAlign="center"; g.textBaseline="alphabetic"; g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.fillText(CONFIG.sign,540,188); };
   const foot=()=>{ g.fillStyle="#2A0F2B"; rr(g,90,1784,900,96,48); g.fill();
     g.fillStyle="#FFF6FA"; g.textBaseline="middle"; g.textAlign="center"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1833); };
@@ -1264,7 +1110,7 @@ async function makeCard(t,style=cardStyle){
   const spots=[[150,880,-.6,120],[930,840,.7,110],[110,1300,.3,90],[985,1250,-.4,100],[230,1640,1.1,70],[860,1660,-1,80]];
   spots.forEach(([x,y,r,s],i)=>{const im=feathers[i%4]; if(!im) return; g.save(); g.translate(x,y); g.rotate(r); g.globalAlpha=.95; g.drawImage(im,-s/2,-s/2*im.naturalHeight/im.naturalWidth,s,s*im.naturalHeight/im.naturalWidth); g.restore();});
   // chick
-  const cw=CHICK.ny?600:760, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=CHICK.ny?Math.max(870,qy+20):Math.max(900,qy+60);   /* never under the quip */
+  const cw=CHICK.ny?600:760, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=CHICK.ny?Math.max(870,qy+20):Math.max(900,qy+60);
   g.save(); g.fillStyle="rgba(110,20,70,.22)"; g.filter&&(g.filter="blur(18px)"); g.beginPath(); g.ellipse(X+cw/2,Y+ch*.98,cw*.38,40,0,0,7); g.fill(); g.restore();
   if(body) g.drawImage(body,X,Y,cw,ch);
   if(bow && CHICK.bow){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
@@ -1274,7 +1120,6 @@ async function makeCard(t,style=cardStyle){
   foot();
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
-/* both styles are made at once and shown side by side; the chosen one is saved */
 const cards={classic:null,poster:null}, cardUrls={classic:"",poster:""};
 function pickCard(st){ cardStyle=st; cardBlob=cards[st]; cardUrl=cardUrls[st];
   document.querySelectorAll(".thumb").forEach(b=>{ const on=b.dataset.s===st; b.classList.toggle("on",on); b.setAttribute("aria-checked",on); });
@@ -1291,8 +1136,6 @@ async function showResult(t){
   $("resultTitle").textContent="Зарізано: «"+t+"»"; $("saveNote").hidden=true; $("result").hidden=false; if(DECO) DECO.capResult();
   try{ $("result").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}) }catch(e){}
 }
-
-/* save: downloads capability, fallback to long-press sheet */
 let downloads=null;
 if(window.claude?.use) window.claude.use("downloads").then(d=>{downloads=d}).catch(()=>{});
 $("saveBtn").onclick=async()=>{
@@ -1307,8 +1150,6 @@ $("saveBtn").onclick=async()=>{
 function note(t){const n=$("saveNote");n.textContent=t;n.hidden=false}
 $("sheetClose").onclick=()=>{$("sheet").hidden=true};
 $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidden=true});
-
-/* ===== Offer: grab the knife, cut the problems ===== */
 (function(){
   const card=$("cutCard"), grab=$("grab"), tip=$("grabTip"), fly=$("flyknife"), items=[...$("cutList").children], done=$("cutDone");
   let running=false, cutOnce=false;
@@ -1321,7 +1162,6 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidd
     },{passive:true});
   }
   if("IntersectionObserver" in window){
-    /* «Візьми мене» shows once the card is on screen, wherever the mouse is */
     new IntersectionObserver(es=>es.forEach(e=>grab.classList.toggle("hint", e.isIntersecting && !cutOnce)),{threshold:.6}).observe(card);
   }
   const place=(x,y,rot,ms)=>{ fly.style.transition=ms?`transform ${ms}ms cubic-bezier(.5,0,.3,1)`:"none"; fly.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg)`; };
@@ -1345,13 +1185,9 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidd
   function finish(){ fly.style.opacity=0; grab.classList.remove("busy"); grab.classList.add("used"); tip.textContent="Ще раз?"; cutOnce=true; running=false; if(DECO) DECO.lightUp(); }
   grab.addEventListener("click",run);
 })();
-
-/* analytics hooks */
 ["cta","tg","ig","th"].forEach(id=>$(id).addEventListener("click",()=>track("cta_click",{to:id})));
 $("skip").addEventListener("click",e=>{ e.preventDefault(); track("skip_to_offer"); toOffer(1300); });
 if("IntersectionObserver" in window){ let seen=false; new IntersectionObserver(es=>{ if(!seen && es.some(e=>e.isIntersecting)){ seen=true; track("offer_view",{cuts:sessionCuts}); } },{threshold:.3}).observe($("offer")); }
-
-/* greeting: first invite to play with the feathers, then ask for a word */
 if(reduce){ setTimeout(()=>say("Ну? Пиши. Я чекаю.",0),500); }
 else{
   setTimeout(()=>{
@@ -1360,47 +1196,8 @@ else{
     say(HINT,0);
   },500);
   setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },13000);
-  /* the season secret: a nudge after a while, if nobody has found it */
   setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Зими забагато? Кинь у мене сніжку." : "Бачиш кулю? Там я, але в шапці. Струсни.",5000); },7000);
 }
-
-/* Desktop: «Беру тільки те, що зроблю добре» lies under yellow fur. Each hair is a real stroke; the cursor pushes the hairs
-   aside and they settle back slowly, so the text shows where you comb (Diana 25.11). Phones keep the plain sticker for now. */
-if(matchMedia("(pointer:fine) and (min-width:900px)").matches && !reduce){
-  const el=document.querySelector(".honest"), c=document.createElement("canvas"); c.className="fur"; c.setAttribute("aria-hidden","true"); el.append(c);
-  const tag=document.createElement("span"); tag.className="fur-tag"; tag.textContent="Розчеши мене"; el.append(tag);
-  const g=c.getContext("2d"), P=8, COLS=["#E9A800","#F7C300","#FFD21F","#FFE15C","#FFF0A6"];
-  let W=0,H=0,hairs=[],mx=-999,my=-999,inside=false,raf=0,combed=false;
-  const build=()=>{ const d=Math.min(devicePixelRatio||1,2); W=el.offsetWidth; H=el.offsetHeight; c.width=(W+2*P)*d; c.height=(H+2*P)*d; g.setTransform(d,0,0,d,0,0); hairs=[];
-    for(let y=-2;y<H+2;y+=2.6) for(let x=-2;x<W+2;x+=2.6){ const a=1.2+Math.random()*.7;   /* lying down and to the right, like stroked fur */
-      hairs.push({x:x+Math.random()*2.6+P,y:y+Math.random()*2.6+P,a,len:9+Math.random()*9,c:(Math.random()*COLS.length)|0,s:0,dx:0,dy:0,k:Math.random()}); }
-    draw(); };
-  function draw(){
-    g.clearRect(0,0,W+2*P,H+2*P);
-    /* undercoat, with holes where the fur is parted */
-    g.fillStyle="#EDB000"; g.beginPath(); g.roundRect?g.roundRect(P,P,W,H,[4,18,18,18]):g.rect(P,P,W,H); g.fill();
-    g.save(); g.globalCompositeOperation="destination-out"; g.beginPath();
-    for(const h of hairs) if(h.s>.15){ g.moveTo(h.x+7*h.s,h.y); g.arc(h.x,h.y,7*h.s,0,7); } g.fill(); g.restore();
-    const paths=COLS.map(()=>new Path2D());
-    for(const h of hairs){ const s=h.s, sx=h.x+h.dx*s*22, sy=h.y+h.dy*s*22, ex=sx+Math.cos(h.a)*h.len*(1-.5*s)+h.dx*s*20, ey=sy+Math.sin(h.a)*h.len*(1-.5*s)+h.dy*s*20;
-      const p=paths[h.c]; p.moveTo(sx,sy); p.quadraticCurveTo((sx+ex)/2+Math.sin(h.a)*2*h.k,(sy+ey)/2-Math.cos(h.a)*2*h.k,ex,ey); }
-    g.lineCap="round"; g.lineWidth=1.25; COLS.forEach((col,i)=>{ g.strokeStyle=col; g.stroke(paths[i]); });
-  }
-  function tick(){
-    let moving=false; const R=40;
-    for(const h of hairs){ let t=0;
-      if(inside){ const dx=h.x-mx, dy=h.y-my, d=Math.hypot(dx,dy); if(d<R){ t=1-d/R; h.dx=dx/(d||1); h.dy=dy/(d||1); } }
-      h.s += t>h.s ? (t-h.s)*.5 : (t-h.s)*.009;   /* quick to part, slow to settle back */
-      if(h.s>.01) moving=true; }
-    draw(); raf=(moving||inside)?requestAnimationFrame(tick):0;
-  }
-  el.addEventListener("pointermove",e=>{ const r=c.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; inside=true;
-    if(!combed){ combed=true; el.classList.add("combed"); track("fur_comb"); } if(!raf) raf=requestAnimationFrame(tick); },{passive:true});
-  el.addEventListener("pointerleave",()=>{ inside=false; });
-  build(); addEventListener("resize",build); if(document.fonts) document.fonts.ready.then(build);
-}
-
-/* the chick sheds a loose feather now and then, while it is on screen */
 (function shedLoop(){
   setTimeout(()=>{
     const r=rig.getBoundingClientRect();
