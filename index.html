@@ -258,15 +258,12 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .offer-in{position:relative}
 .garland{position:absolute;pointer-events:none;z-index:3}
 body:not(.ny) .garland{display:none}
-.honest{--fr:url(fur-frame.webp);--ar:760/420;--hole:21.9% 10.2% 18% 11.4%;--pad:23% 13% 19%;
-  position:relative;z-index:4;width:min(100%,380px);aspect-ratio:var(--ar);margin:0;display:grid;place-content:center;text-align:center;padding:var(--pad);
-  font-size:16px;line-height:1.3;transform:rotate(-1.5deg);filter:drop-shadow(0 8px 10px rgba(120,60,0,.22))}
-.ny .honest{--fr:url(ny-fur-frame.webp);--ar:760/556;--hole:33.8% 14.4% 19.2% 14.5%;--pad:41% 17% 20%}
-.honest::before{content:"";position:absolute;inset:var(--hole);background:linear-gradient(170deg,#FFFFFF,#FFF0F7);border-radius:14px}
-.honest::after{content:"";position:absolute;inset:0;background:var(--fr) center/100% 100% no-repeat;pointer-events:none;z-index:1}
-.h-in{position:relative;z-index:2;display:grid;gap:3px}
-.h-in b{font-weight:800;font-size:1em}
-.h-in>span{font-weight:600;font-size:.84em;color:var(--ink-soft)}
+.honest{justify-self:start;max-width:440px;background:linear-gradient(172deg,#FFE878 0%,var(--yolk) 55%,#F7C400 100%);border-radius:4px 18px 18px 18px;padding:16px 20px;font-weight:800;font-size:17px;line-height:1.35;transform:rotate(-1.2deg);box-shadow:4px 4px 0 var(--ink);margin:0;position:relative;z-index:4}
+.honest span{display:block;font-weight:600;font-size:14px;margin-top:4px;opacity:.85}
+.toy{display:none;z-index:3}
+.ny .toy{display:block;position:absolute;right:-3px;top:10px;width:2px;height:24px;background:#C9A45C;transform-origin:50% 0;animation:toy 3.2s ease-in-out infinite}
+.ny .toy svg{position:absolute;left:50%;top:100%;transform:translate(-50%,-4px);overflow:visible}
+@keyframes toy{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
 .cta{background:radial-gradient(60% 70% at 0 100%,rgba(255,210,31,.14),transparent 70%),linear-gradient(160deg,#3B1741 0%,var(--ink) 60%,#1C0720 100%);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
 .cta::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(229,0,122,.7), transparent 70%);pointer-events:none}
 .slogan{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(26px,5.4vw,46px);line-height:1.05;text-wrap:balance;position:relative;z-index:1}
@@ -357,10 +354,8 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}
   .o-head .eyebrow{grid-area:eye}
   .o-head h2{grid-area:h2;font-size:clamp(40px,4.3vw,56px)}
   .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
-  .extras{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:28px}
-  .prize-wrap{justify-self:stretch;width:auto}
-  .honest{width:330px;font-size:15px}
-  .cta{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:32px}
+  .honest{justify-self:end;max-width:360px;margin:0 32px -84px 0;transform:rotate(2.5deg);font-size:18px}
+  .cta{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:32px;padding-top:56px}
   .slogan{max-width:none}
   .cta-row{align-self:end;justify-self:end}
 }
@@ -493,8 +488,8 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}
         </div>
         <div class="stub"><span>для перших</span><b>10</b><span>місць</span></div>
       </div></div>
-      <p class="honest"><span class="h-in"><b>Беру тільки те, що зроблю добре.</b><span>Якщо задача не моя, скажу одразу і чесно.</span></span></p>
     </div>
+    <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span><i class="toy" aria-hidden="true"><svg viewBox="-20 -24 40 46" width="30" height="34"><defs><radialGradient id="tb" cx=".35" cy=".35" r=".75"><stop offset="0" stop-color="#FF8CC4"/><stop offset=".45" stop-color="#E5007A"/><stop offset="1" stop-color="#7E0042"/></radialGradient><linearGradient id="tc"><stop offset="0" stop-color="#B8893A"/><stop offset=".5" stop-color="#F6DC8C"/><stop offset="1" stop-color="#A87A2E"/></linearGradient></defs><rect x="-5" y="-22" width="10" height="5" fill="url(#tc)"/><circle r="18" fill="url(#tb)"/><ellipse cx="-7" cy="-8" rx="4" ry="2.4" fill="#fff" opacity=".75" transform="rotate(-35 -7 -8)"/></svg></i></p>
     <div class="cta">
       <p class="slogan">Ідеям потрібна форма. <span>Тобі&nbsp;-&nbsp;одна&nbsp;я.</span></p>
       <div class="cta-row">
@@ -541,7 +536,19 @@ const LOW = (navigator.hardwareConcurrency||8)<=4 || (navigator.deviceMemory||8)
 const DPR = Math.min(devicePixelRatio||1, LOW?1.25:1.75);
 const pick = a => a[Math.floor(Math.random()*a.length)];
 const wait = ms => new Promise(r=>setTimeout(r,ms));
-function track(event, data={}){ try{ (window.dataLayer=window.dataLayer||[]).push({event, ...data}); }catch(e){} }
+const ANALYTICS={ ga4:"", clarity:"" };
+(function(){
+  const add=src=>{ const sc=document.createElement("script"); sc.async=true; sc.src=src; document.head.append(sc); };
+  if(ANALYTICS.ga4){ window.dataLayer=window.dataLayer||[]; window.gtag=function(){ dataLayer.push(arguments); };
+    gtag("js",new Date()); gtag("config",ANALYTICS.ga4,{anonymize_ip:true}); add("https://www.googletagmanager.com/gtag/js?id="+ANALYTICS.ga4); }
+  if(ANALYTICS.clarity){ window.clarity=window.clarity||function(){ (window.clarity.q=window.clarity.q||[]).push(arguments); };
+    add("https://www.clarity.ms/tag/"+ANALYTICS.clarity); }
+})();
+function track(event, data={}){ try{
+  if(window.gtag) gtag("event",event,data);
+  if(window.clarity) clarity("event",event);
+  if(!window.gtag) (window.dataLayer=window.dataLayer||[]).push({event, ...data});
+}catch(e){} }
 $("cta").href=CONFIG.tgUrl;
 function addChip(t,cls){const b=document.createElement("button");b.type="button";b.className="chip"+(cls?" "+cls:"");b.textContent=t;b.onclick=()=>{input.value=t;slash(t)};$("chips").append(b)}
 CHIPS.forEach(t=>addChip(t)); CHIPS_LIFE.forEach(t=>addChip(t,"life"));
@@ -757,6 +764,7 @@ const DECO=(()=>{
   function settle(){
     cap(document.querySelector(".field"),{x:.06,w:.42,h:12});
     const chips=[...document.querySelectorAll(".chip")]; [0,3,6].forEach(i=>cap(chips[i],{x:.15,w:.55,h:8}));
+    cap(document.querySelector(".honest"),{x:.45,w:.45,h:11});
   }
   if(DECOR==="snow"){ snowOn(); }
   if(DECOR==="deep"){
