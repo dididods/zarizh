@@ -152,6 +152,29 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes flash{0%{opacity:1}100%{opacity:0}}
 .count{position:absolute;left:0;bottom:0;z-index:3;font-weight:800;font-size:12px;background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 11px}
 .fx{position:absolute;left:50%;top:0;width:100vw;height:100%;transform:translateX(-50%);pointer-events:none;z-index:30}
+/* season switch: a snow globe with the New Year chick inside (what you get), a snowball to go back */
+.season-btn{position:absolute;right:0;bottom:2%;width:clamp(64px,17%,92px);aspect-ratio:300/365;z-index:7;border:0;padding:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transform-origin:50% 90%}
+.season-btn img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(110,20,70,.28));pointer-events:none}
+.season-btn .tag{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-4px);white-space:nowrap;font:800 12px var(--body);background:var(--ink);color:var(--paper);padding:4px 9px;border-radius:999px;pointer-events:none}
+.season-btn .tag::after{content:"";position:absolute;left:50%;top:100%;border:5px solid transparent;border-top-color:var(--ink);transform:translateX(-50%)}
+.season-btn:hover img,.season-btn:focus-visible img{animation:wobble .6s ease-in-out}
+.season-btn.idle img{animation:wobble 1s ease-in-out 3s 2}
+.season-btn.shake img{animation:shakeGlobe .7s ease-in-out}
+.season-btn.ball{aspect-ratio:1;width:clamp(52px,13%,74px)}
+.season-btn.throw img{animation:throwBall .55s cubic-bezier(.4,0,.6,1) forwards}
+@keyframes wobble{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+@keyframes shakeGlobe{0%,100%{transform:none}15%{transform:translate(-6px,-4px) rotate(-12deg)}30%{transform:translate(6px,-8px) rotate(12deg)}45%{transform:translate(-5px,-3px) rotate(-10deg)}60%{transform:translate(5px,-6px) rotate(9deg)}80%{transform:rotate(-4deg)}}
+@keyframes throwBall{0%{transform:none}100%{transform:translate(-30vw,-30vh) scale(5);opacity:.95}}
+.splat{position:fixed;inset:0;z-index:61;pointer-events:none;background:radial-gradient(circle at var(--fx,50%) var(--fy,40%),#fff 0,#fff 18%,rgba(255,255,255,.85) 30%,rgba(255,255,255,0) 62%);animation:splat 1.1s ease-out forwards}
+@keyframes splat{0%{opacity:0;transform:scale(.6)}15%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.15)}}
+/* loading screen on the way to the offer, a nod to game loading tips */
+.loader{position:fixed;inset:0;z-index:90;display:grid;place-content:center;justify-items:center;gap:18px;padding:24px;text-align:center;background:radial-gradient(70% 60% at 50% 40%,#FFF3F9,var(--blush));transition:opacity .35s}
+.loader.out{opacity:0;pointer-events:none}
+.loader img{width:120px;height:auto;animation:breathe 1.2s ease-in-out infinite}
+.loader b{font-family:var(--display);font-weight:800;font-size:clamp(20px,4vw,28px)}
+.loader .bar{width:min(320px,70vw);height:12px;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--paper)}
+.loader .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yolk),var(--hot));transition:width var(--t,1.8s) cubic-bezier(.3,.1,.3,1)}
+.loader p{margin:0;max-width:34ch;font-weight:700;color:var(--ink-soft);font-size:15px}
 .haptic{position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none}
 
 /* Form */
@@ -345,7 +368,7 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 .knife-hit{position:absolute;left:50%;top:18%;width:52%;height:52%;z-index:6;border-radius:50%;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent}
 .knife-hit:active{cursor:grabbing}
 .knife-hit:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
-.spin-hint{position:absolute;left:var(--gx,70%);top:var(--gy,60%);width:44%;aspect-ratio:1;pointer-events:none;z-index:5;transform:translate(-50%,-50%);transition:opacity .4s}
+.spin-hint{display:none!important;position:absolute;left:var(--gx,70%);top:var(--gy,60%);width:44%;aspect-ratio:1;pointer-events:none;z-index:5;transform:translate(-50%,-50%);transition:opacity .4s}
 .spin-hint svg{width:100%;height:100%;animation:spinHint 3.2s linear infinite;overflow:visible}
 @keyframes spinHint{to{transform:rotate(360deg)}}
 .spin-hint.off,.busy-chick .spin-hint{opacity:0}
@@ -444,6 +467,7 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
           <h2 id="resultTitle">Зарізано</h2>
           <p>Картка для сторіс готова. Відміть того, кого це теж бісить.</p>
           <button class="btn" id="saveBtn" type="button">Зберегти для сторіс</button>
+          <button class="btn ghost" id="styleBtn" type="button">Інший стиль</button>
         </div>
       </div>
       <p class="note" id="saveNote" hidden></p>
@@ -1005,7 +1029,19 @@ async function slash(raw){
 }
 $("form").addEventListener("submit",e=>{e.preventDefault();slash(input.value)});
 $("againBtn").onclick=()=>{ $("result").hidden=true; input.focus({preventScroll:true}); stage.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"}); say("Давай наступне.",2000) };
-$("enoughBtn").onclick=()=>{ say("Домовились. Далі - серйозно.",2400); track("enough"); setTimeout(()=>$("offer").scrollIntoView({behavior:reduce?"auto":"smooth"}),reduce?0:350) };
+const LOAD_TIPS=["Порада: голосові на 10 хвилин можна слухати на 2x. Або не слухати.","Порада: «зробіть красиво» - це не ТЗ. Це крик про допомогу.",
+  "Порада: якщо ідея третій рік у нотатках, вона вже не ідея, а сусідка.","Порада: дедлайн «на вчора» означає, що вчора ніхто не почав.",
+  "Порада: сайт за три копійки коштує дорожче. Просто пізніше.","Порада: «є хвилинка?» ніколи не займає хвилинку.","Порада: пух м'який. Ніж - ні. Запам'ятай обидва."];
+function toOffer(ms){
+  const go=()=>{ document.documentElement.style.scrollBehavior="auto"; $("offer").scrollIntoView(); document.documentElement.style.scrollBehavior=""; };
+  if(reduce){ go(); return; }
+  const l=document.createElement("div"); l.className="loader"; l.setAttribute("role","status");
+  l.innerHTML=`<img src="${CHICK.src}" alt=""><b>Завантажую сенс…</b><div class="bar"><i></i></div><p>${pick(LOAD_TIPS)}</p>`;
+  l.style.setProperty("--t",ms+"ms"); document.body.append(l);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ l.querySelector(".bar i").style.width="100%"; }));
+  setTimeout(()=>{ go(); l.classList.add("out"); setTimeout(()=>l.remove(),400); }, ms+150);
+}
+$("enoughBtn").onclick=()=>{ say("Домовились. Далі - серйозно.",2400); track("enough"); setTimeout(()=>toOffer(2200),350); };
 
 function wave(){chick.classList.remove("wave"); void chick.offsetWidth; chick.classList.add("wave"); setTimeout(()=>chick.classList.remove("wave"),700)}
 let taps=[];
@@ -1064,7 +1100,23 @@ const SEASON=(()=>{
   }
   hit.addEventListener("pointerup",e=>end(e,false)); hit.addEventListener("pointercancel",e=>end(e,false));
   hit.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); switchSeason(null); } });
-  return { get used(){ return used; } };
+  return { get used(){ return used; }, flip:e=>switchSeason(e) };
+})();
+
+/* ===== Season button: tap the snow globe (the chick in a hat is inside: you see what you get), tap the snowball to go back ===== */
+(function(){
+  const b=document.createElement("button"); b.type="button"; b.className="season-btn idle"; stage.append(b);
+  const draw=()=>{ b.classList.toggle("ball",NY);
+    b.innerHTML = NY ? '<img src="ny-snowball.webp" alt=""><span class="tag">Кинь сніжку</span>' : '<img src="ny-globe.webp" alt=""><span class="tag">Струсни</span>';
+    b.setAttribute("aria-label", NY ? "Кинути сніжку: повернути звичайне курча" : "Струснути сніжну кулю: новорічне курча"); };
+  draw();
+  b.addEventListener("click",e=>{
+    if(busy || b.disabled) return; b.disabled=true; b.classList.remove("idle");
+    if(!NY){ b.classList.add("shake"); sfx("whoosh"); buzz([10,30,10,30]); setTimeout(()=>{ SEASON.flip(e); b.classList.remove("shake"); draw(); b.disabled=false; }, reduce?0:650); }
+    else{ b.classList.add("throw"); sfx("whoosh");
+      setTimeout(()=>{ const sp=document.createElement("div"); sp.className="splat"; sp.style.setProperty("--fx",(innerWidth*.4)+"px"); sp.style.setProperty("--fy",(innerHeight*.35)+"px"); document.body.append(sp); setTimeout(()=>sp.remove(),1200);
+        sfx("cut"); buzz(30); SEASON.flip(null); b.classList.remove("throw"); draw(); b.disabled=false; }, reduce?0:520); }
+  });
 })();
 
 /* ===== Story card 1080x1920 ===== */
@@ -1074,7 +1126,56 @@ const fontsReady=document.fonts?Promise.race([Promise.all([document.fonts.load('
 let cardBlob=null, cardUrl="";
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
 function fitFont(g,text,weight,size,family,maxW,min){let fs=size; g.font=`${weight} ${fs}px ${family}`; while(g.measureText(text).width>maxW&&fs>min){fs-=2; g.font=`${weight} ${fs}px ${family}`} return fs}
+/* Poster style (Diana 25.11, after a loading-screen reference): a dreamy pink sky, the cut word huge, a dry line above it,
+   tiny captions in the corners. The lines depend on what was cut. */
+let cardStyle="classic";
+const POSTER=[
+  [/відключ|світл|графік|генератор|свічк/, "і що тепер, свічки?", ["буває","це Україна","дихай","але заряджай"]],
+  [/дедлайн|термін|вчора/, "і що тепер, не спати?", ["буває","це робота","дихай","але встигай"]],
+  [/будильн|ранок|понеділ/, "і що тепер, вставати?", ["буває","це ранок","дихай","але повільно"]],
+  [/голосов|хвилинк|дзвін|чат|повідомл/, "і що тепер, слухати?", ["буває","це люди","дихай","але на 2x"]],
+  [/порад/, "і що тепер, слухатись?", ["буває","це родина","кивай","але по-своєму"]],
+  [/сайт|лендінг|дизайн/, "і що тепер, соромитись?", ["буває","це бізнес","дихай","але переробляй"]],
+  [/клієнт|заявк|продаж/, "і що тепер, плакати?", ["буває","це бізнес","дихай","але дій"]],
+  [/ідея|ідеї|нотатк|план/, "і що тепер, чекати?", ["буває","це ідеї","дихай","але починай"]]];
+async function makePoster(t){
+  const [body,knife,paw,bow]=await cardAssets(); await fontsReady;
+  const c=document.createElement("canvas"); c.width=1080; c.height=1920; const g=c.getContext("2d");
+  const low=t.toLowerCase(), hit=POSTER.find(([re])=>re.test(low)), top=hit?hit[1]:"і що тепер?", corners=hit?hit[2]:["буває","це життя","дихай","але ріж"];
+  const sky=g.createLinearGradient(0,0,0,1920); sky.addColorStop(0,"#FFB8DA"); sky.addColorStop(.45,"#FFDDEE"); sky.addColorStop(1,"#FFF4FA"); g.fillStyle=sky; g.fillRect(0,0,1080,1920);
+  const cloud=(x,y,s)=>{ for(let i=0;i<9;i++){ const cx=x+(Math.random()-.5)*s*1.6, cy=y+(Math.random()-.5)*s*.5, r=s*(.35+Math.random()*.4); const rg=g.createRadialGradient(cx,cy,0,cx,cy,r); rg.addColorStop(0,"rgba(255,255,255,.95)"); rg.addColorStop(.6,"rgba(255,255,255,.7)"); rg.addColorStop(1,"rgba(255,255,255,0)"); g.fillStyle=rg; g.beginPath(); g.arc(cx,cy,r,0,7); g.fill(); } };
+  cloud(200,420,170); cloud(900,330,150); cloud(560,1180,230); cloud(120,1500,200); cloud(980,1560,210); cloud(540,1720,260);
+  if(DECOR && NY) DECO.cardBack(g);
+  /* thin guide lines, like an editorial layout */
+  g.strokeStyle="rgba(110,59,98,.18)"; g.lineWidth=2; g.beginPath(); g.moveTo(60,260); g.lineTo(1020,260); g.moveTo(60,1690); g.lineTo(1020,1690); g.moveTo(540,230); g.lineTo(540,290); g.stroke();
+  g.textBaseline="alphabetic";
+  g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.textAlign="center"; g.fillText(CONFIG.sign,540,188);
+  g.fillStyle="#6E3B62"; g.font="700 28px Manrope";
+  g.textAlign="left"; g.fillText(corners[0],70,330); g.fillText(corners[2],70,1650);
+  g.textAlign="right"; g.fillText(corners[1],1010,330); g.fillText(corners[3],1010,1650);
+  g.textAlign="center"; g.fillStyle="#2A0F2B"; g.font="400 50px Unbounded"; g.fillText(top,540,600);
+  /* the word: as big as it fits, up to two lines */
+  const W=t.toUpperCase(); let lines=[W]; g.font="900 200px Unbounded";
+  if(g.measureText(W).width>960 && W.includes(" ")){ const ws=W.split(" "); let best=null; for(let i=1;i<ws.length;i++){ const a=ws.slice(0,i).join(" "), b=ws.slice(i).join(" "), m=Math.max(g.measureText(a).width,g.measureText(b).width); if(!best||m<best[0]) best=[m,a,b]; } lines=[best[1],best[2]]; }
+  const longest=lines.reduce((a,b)=>g.measureText(a).width>g.measureText(b).width?a:b), fs=fitFont(g,longest,900,lines.length>1?170:210,"Unbounded",960,56), lh=fs*1.02;
+  const y0=760+fs*.8;
+  lines.forEach((ln,i)=>{ const y=y0+i*lh; g.fillStyle="rgba(42,15,43,.18)"; g.fillText(ln,548,y+10); g.fillStyle="#E5007A"; g.fillText(ln,540,y); });
+  const yb=y0+(lines.length-1)*lh;
+  /* the slash through it */
+  g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=24; g.beginPath(); g.moveTo(80,yb-fs*.1); g.lineTo(1000,yb-fs*.55); g.stroke(); g.restore();
+  g.fillStyle="#2A0F2B"; g.font="400 56px Unbounded"; g.fillText("зарізано.",540,yb+fs*.2+90);
+  /* the chick sits on the clouds */
+  const cw=CHICK.ny?520:560, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=Math.max(yb+fs*.2+150, 1660-ch);
+  if(body) g.drawImage(body,X,Y,cw,ch);
+  if(bow && CHICK.bow){ const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2,Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore(); }
+  if(knife){ const K=CHICK.knife, kw=cw*K.w/100, kh=kw*203/360, gx=X+cw*K.l/100+kw*.24, gy=Y+ch*K.t/100+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore(); }
+  if(paw){ const P=CHICK.pawPos, pw=cw*P.w/100; g.drawImage(paw,X+cw*P.l/100,Y+ch*P.t/100,pw,pw); }
+  g.fillStyle="#2A0F2B"; rr(g,90,1784,900,96,48); g.fill();
+  g.fillStyle="#FFF6FA"; g.textBaseline="middle"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1833);
+  return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
+}
 async function makeCard(t){
+  if(cardStyle==="poster") return makePoster(t);
   const [body,knife,paw,bow,...feathers]=await cardAssets(); await fontsReady;
   const c=document.createElement("canvas"); c.width=1080;c.height=1920; const g=c.getContext("2d");
   g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
@@ -1124,6 +1225,12 @@ async function makeCard(t){
   foot();
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
+$("styleBtn").onclick=async()=>{
+  if(!lastWord) return; cardStyle = cardStyle==="poster" ? "classic" : "poster"; track("card_style",{style:cardStyle});
+  $("styleBtn").disabled=true;
+  try{ const b=await Promise.race([makeCard(lastWord), wait(7000).then(()=>null)]); if(b){ cardBlob=b; if(cardUrl) URL.revokeObjectURL(cardUrl); cardUrl=URL.createObjectURL(b); $("cardThumb").src=cardUrl; } }catch(e){}
+  $("styleBtn").disabled=false;
+};
 async function showResult(t){
   cardBlob=null;
   try{
@@ -1191,7 +1298,7 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidd
 
 /* analytics hooks */
 ["cta","tg","ig","th"].forEach(id=>$(id).addEventListener("click",()=>track("cta_click",{to:id})));
-$("skip").addEventListener("click",()=>track("skip_to_offer"));
+$("skip").addEventListener("click",e=>{ e.preventDefault(); track("skip_to_offer"); toOffer(1300); });
 if("IntersectionObserver" in window){ let seen=false; new IntersectionObserver(es=>{ if(!seen && es.some(e=>e.isIntersecting)){ seen=true; track("offer_view",{cuts:sessionCuts}); } },{threshold:.3}).observe($("offer")); }
 
 /* greeting: first invite to play with the feathers, then ask for a word */
@@ -1204,7 +1311,7 @@ else{
   },500);
   setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },6500);
   /* the season secret: a nudge after a while, if nobody has found it */
-  setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Покрути мій ніж по колу, якщо зими забагато." : "Покрути мій ніж по колу. Буде сюрприз.",5000); },15000);
+  setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Зими забагато? Кинь у мене сніжку." : "Бачиш кулю? Там я, але в шапці. Струсни.",5000); },15000);
 }
 
 /* the chick sheds a loose feather now and then, while it is on screen */
