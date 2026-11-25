@@ -1110,7 +1110,17 @@ const SEASON=(()=>{
     b.innerHTML = NY ? '<img src="ny-snowball.webp" alt=""><span class="tag">Кинь сніжку</span>' : '<img src="ny-globe.webp" alt=""><span class="tag">Струсни</span>';
     b.setAttribute("aria-label", NY ? "Кинути сніжку: повернути звичайне курча" : "Струснути сніжну кулю: новорічне курча"); };
   draw();
+  /* shake detection: two strong jolts within 0.8 s */
+  let lastJolt=0, prev=null, armed=false;
+  const onMotion=e=>{ const a=e.accelerationIncludingGravity; if(!a || a.x==null) return;
+    if(prev){ const d=Math.abs(a.x-prev.x)+Math.abs(a.y-prev.y)+Math.abs(a.z-prev.z), now=Date.now();
+      if(d>28){ if(now-lastJolt<800 && !NY && !busy && !b.disabled){ lastJolt=0; track("season_shake"); b.click(); } else lastJolt=now; } }
+    prev={x:a.x,y:a.y,z:a.z}; };
+  const arm=()=>{ if(armed) return; armed=true; addEventListener("devicemotion",onMotion,{passive:true}); };
+  const needsAsk = typeof DeviceMotionEvent!=="undefined" && typeof DeviceMotionEvent.requestPermission==="function";
+  if(!needsAsk && "ondevicemotion" in window && matchMedia("(pointer:coarse)").matches) arm();
   b.addEventListener("click",e=>{
+    if(needsAsk && !armed){ DeviceMotionEvent.requestPermission().then(r=>{ if(r==="granted") arm(); }).catch(()=>{}); }
     if(busy || b.disabled) return; b.disabled=true; b.classList.remove("idle");
     if(!NY){ b.classList.add("shake"); sfx("whoosh"); buzz([10,30,10,30]); setTimeout(()=>{ SEASON.flip(e); b.classList.remove("shake"); draw(); b.disabled=false; }, reduce?0:650); }
     else{ b.classList.add("throw"); sfx("whoosh");
@@ -1143,16 +1153,28 @@ async function makePoster(t){
   const c=document.createElement("canvas"); c.width=1080; c.height=1920; const g=c.getContext("2d");
   const low=t.toLowerCase(), hit=POSTER.find(([re])=>re.test(low)), top=hit?hit[1]:"і що тепер?", corners=hit?hit[2]:["буває","це життя","дихай","але ріж"];
   const sky=g.createLinearGradient(0,0,0,1920); sky.addColorStop(0,"#FFB8DA"); sky.addColorStop(.45,"#FFDDEE"); sky.addColorStop(1,"#FFF4FA"); g.fillStyle=sky; g.fillRect(0,0,1080,1920);
-  const cloud=(x,y,s)=>{ for(let i=0;i<9;i++){ const cx=x+(Math.random()-.5)*s*1.6, cy=y+(Math.random()-.5)*s*.5, r=s*(.35+Math.random()*.4); const rg=g.createRadialGradient(cx,cy,0,cx,cy,r); rg.addColorStop(0,"rgba(255,255,255,.95)"); rg.addColorStop(.6,"rgba(255,255,255,.7)"); rg.addColorStop(1,"rgba(255,255,255,0)"); g.fillStyle=rg; g.beginPath(); g.arc(cx,cy,r,0,7); g.fill(); } };
-  cloud(200,420,170); cloud(900,330,150); cloud(560,1180,230); cloud(120,1500,200); cloud(980,1560,210); cloud(540,1720,260);
+  /* grain over the sky */
+  const nt=document.createElement("canvas"); nt.width=nt.height=160; const ng=nt.getContext("2d"), id=ng.createImageData(160,160);
+  for(let i=0;i<id.data.length;i+=4){ const v=Math.random()*255; id.data[i]=id.data[i+1]=id.data[i+2]=v; id.data[i+3]=18; }
+  ng.putImageData(id,0,0); g.fillStyle=g.createPattern(nt,"repeat"); g.fillRect(0,0,1080,1920);
+  /* puffy cumulus clouds: a row of round bumps, bigger in the middle, a soft pink shadow under them, light from the top left */
+  const cloud=(x,y,w)=>{ const n=6+Math.round(Math.random()*2), bumps=[];
+    for(let i=0;i<n;i++){ const t=i/(n-1), r=w*(.16+.14*Math.sin(Math.PI*t))*(.85+Math.random()*.3); bumps.push([x-w/2+t*w, y-r*.55*Math.sin(Math.PI*t)-w*.02, r]); }
+    g.save(); g.shadowColor="rgba(214,90,150,.28)"; g.shadowBlur=w*.12; g.shadowOffsetY=w*.06; g.fillStyle="#FFF4F9";
+    g.beginPath(); bumps.forEach(([bx,by,r])=>{ g.moveTo(bx+r,by); g.arc(bx,by,r,0,7); }); g.rect(x-w/2,y-w*.06,w,w*.12); g.fill(); g.restore();
+    bumps.forEach(([bx,by,r])=>{ const rg=g.createRadialGradient(bx-r*.35,by-r*.45,r*.1,bx,by,r); rg.addColorStop(0,"#FFFFFF"); rg.addColorStop(.65,"#FFF7FB"); rg.addColorStop(1,"#FFDCEC"); g.fillStyle=rg; g.beginPath(); g.arc(bx,by,r,0,7); g.fill(); }); };
+  cloud(220,470,330); cloud(880,380,280); cloud(170,1330,300); cloud(930,1290,320); cloud(540,1720,620);
   if(DECOR && NY) DECO.cardBack(g);
-  /* thin guide lines, like an editorial layout */
-  g.strokeStyle="rgba(110,59,98,.18)"; g.lineWidth=2; g.beginPath(); g.moveTo(60,260); g.lineTo(1020,260); g.moveTo(60,1690); g.lineTo(1020,1690); g.moveTo(540,230); g.lineTo(540,290); g.stroke();
   g.textBaseline="alphabetic";
   g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.textAlign="center"; g.fillText(CONFIG.sign,540,188);
-  g.fillStyle="#6E3B62"; g.font="700 28px Manrope";
-  g.textAlign="left"; g.fillText(corners[0],70,330); g.fillText(corners[2],70,1650);
-  g.textAlign="right"; g.fillText(corners[1],1010,330); g.fillText(corners[3],1010,1650);
+  /* corner captions as little stickers, like the chips on the site */
+  const sticker=(txt,x,y,rot,right)=>{ g.save(); g.font="800 36px Manrope"; const w=g.measureText(txt).width+44, h=64;
+    g.translate(right?x-w/2:x+w/2, y); g.rotate(rot); g.fillStyle="#2A0F2B"; rr(g,-w/2+5,-h/2+5,w,h,32); g.fill();
+    g.fillStyle="#FFF6FA"; rr(g,-w/2,-h/2,w,h,32); g.fill(); g.lineWidth=3; g.strokeStyle="#2A0F2B"; g.stroke();
+    g.fillStyle="#2A0F2B"; g.textAlign="center"; g.textBaseline="middle"; g.fillText(txt,0,2); g.restore(); };
+  sticker(corners[0],70,300,-.06,false); sticker(corners[1],1010,300,.05,true);
+  sticker(corners[2],70,1600,.05,false); sticker(corners[3],1010,1600,-.05,true);
+  g.textBaseline="alphabetic";
   g.textAlign="center"; g.fillStyle="#2A0F2B"; g.font="400 50px Unbounded"; g.fillText(top,540,600);
   /* the word: as big as it fits, up to two lines */
   const W=t.toUpperCase(); let lines=[W]; g.font="900 200px Unbounded";
@@ -1162,7 +1184,7 @@ async function makePoster(t){
   lines.forEach((ln,i)=>{ const y=y0+i*lh; g.fillStyle="rgba(42,15,43,.18)"; g.fillText(ln,548,y+10); g.fillStyle="#E5007A"; g.fillText(ln,540,y); });
   const yb=y0+(lines.length-1)*lh;
   /* the slash through it */
-  g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=24; g.beginPath(); g.moveTo(80,yb-fs*.1); g.lineTo(1000,yb-fs*.55); g.stroke(); g.restore();
+  g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=24; g.beginPath(); g.moveTo(70,yb-fs*.05); g.lineTo(1010,y0-fs*.8); g.stroke(); g.restore();   /* one slash across all lines */
   g.fillStyle="#2A0F2B"; g.font="400 56px Unbounded"; g.fillText("зарізано.",540,yb+fs*.2+90);
   /* the chick sits on the clouds */
   const cw=CHICK.ny?520:560, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=Math.max(yb+fs*.2+150, 1660-ch);
@@ -1309,9 +1331,9 @@ else{
     [.28,.5,.72].forEach((k,i)=>setTimeout(()=>FX.shed(r.left+r.width*k, r.top+r.height*.12),i*260));
     say(HINT,0);
   },500);
-  setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },6500);
+  setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },13000);
   /* the season secret: a nudge after a while, if nobody has found it */
-  setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Зими забагато? Кинь у мене сніжку." : "Бачиш кулю? Там я, але в шапці. Струсни.",5000); },15000);
+  setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Зими забагато? Кинь у мене сніжку." : "Бачиш кулю? Там я, але в шапці. Струсни.",5000); },7000);
 }
 
 /* the chick sheds a loose feather now and then, while it is on screen */
