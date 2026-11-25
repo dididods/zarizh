@@ -199,7 +199,11 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .btn.hot{background:var(--hot);border-color:var(--hot);color:#fff}
 .btn.ghost{background:transparent}
 .card-row{display:flex;gap:14px;align-items:center;padding-top:14px;border-top:2px dashed var(--blush-deep)}
-.card-row img{width:86px;aspect-ratio:9/16;border-radius:10px;border:2px solid var(--ink);flex:none;object-fit:cover;background:var(--blush)}
+.thumbs{display:flex;gap:8px;flex:none}
+.thumb{border:0;padding:0;background:none;border-radius:12px;cursor:pointer;outline:3px solid transparent;outline-offset:2px;transition:outline-color .15s,transform .15s}
+.thumb.on{outline-color:var(--hot)}
+.thumb:hover{transform:translateY(-2px)}
+.card-row img{width:64px;display:block;aspect-ratio:9/16;border-radius:10px;border:2px solid var(--ink);flex:none;object-fit:cover;background:var(--blush)}
 .card-row h2{font-family:var(--display);font-weight:800;font-size:16px;margin:0 0 4px;line-height:1.2}
 .card-row p{margin:0 0 10px;font-size:14px;color:var(--ink-soft);font-weight:600}
 .note{font-size:13px;color:var(--ink-soft);font-weight:700;margin:0}
@@ -282,8 +286,12 @@ body:not(.ny) .garland{display:none}
 .honest span{display:block;font-weight:600;font-size:14px;margin-top:4px;opacity:.85}
 .honest{position:relative;z-index:4}
 .toy{display:none}
+.fur{position:absolute;inset:-8px;width:calc(100% + 16px);height:calc(100% + 16px);z-index:2;pointer-events:none}
+.fur-tag{position:absolute;left:14px;top:-14px;z-index:3;font:800 12px var(--body);background:var(--ink);color:var(--paper);padding:5px 10px;border-radius:999px;pointer-events:none;transition:opacity .4s}
+.honest.combed .fur-tag{opacity:0}
 .ny .toy{display:block;position:absolute;right:-3px;top:10px;width:2px;height:24px;background:#C9A45C;transform-origin:50% 0;animation:toy 3.2s ease-in-out infinite}
-.ny .toy img{position:absolute;left:50%;top:100%;width:30px;height:auto;transform:translate(-50%,-4px)}
+.ny .toy svg{position:absolute;left:50%;top:100%;transform:translate(-50%,-4px);overflow:visible}
+.toy{z-index:3}
 @keyframes toy{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
 .cta{background:radial-gradient(60% 70% at 0 100%,rgba(255,210,31,.14),transparent 70%),linear-gradient(160deg,#3B1741 0%,var(--ink) 60%,#1C0720 100%);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
 .cta::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(229,0,122,.7), transparent 70%);pointer-events:none}
@@ -363,7 +371,7 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 .decor-frame .game{padding-top:calc(330px*var(--s) + 4px)}
 .decor-frame .offer{padding-bottom:calc(240px*var(--s) + 48px)}
 /* New Year chick in a hat is taller: narrower box, same bottom line */
-.ny .rig{left:9%;width:76%;aspect-ratio:1000/1084}   /* same width as the base chick, so both look the same size; only the hat adds height */
+.ny .rig{left:12%;width:70%;aspect-ratio:768/1024}   /* same width as the base chick, so both look the same size; only the hat adds height */
 /* spin the knife round to switch the season: a grab zone over the blade and a turning dashed ring as the hint */
 .knife-hit{position:absolute;left:50%;top:18%;width:52%;height:52%;z-index:6;border-radius:50%;cursor:grab;touch-action:none;-webkit-tap-highlight-color:transparent}
 .knife-hit:active{cursor:grabbing}
@@ -399,7 +407,9 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   /* the prize card sits in the middle, as wide as its longest sentence; one sentence per line */
   /* «Беру тільки те…» is stuck on the top right corner of the dark slogan block */
   .honest{justify-self:end;position:relative;z-index:4;max-width:360px;margin:0 32px -84px 0;transform:rotate(2.5deg);font-size:18px}
-  .slogan{max-width:62%}
+  .cta{grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:32px;padding-top:56px}
+  .slogan{max-width:none}
+  .cta-row{align-self:end;justify-self:end}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -462,12 +472,14 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
         <button class="btn ghost" id="enoughBtn" type="button">Досить, полегшало</button>
       </div>
       <div class="card-row">
-        <img id="cardThumb" alt="Картка для сторіс">
+        <div class="thumbs" role="radiogroup" aria-label="Стиль картки">
+          <button type="button" class="thumb on" data-s="classic" role="radio" aria-checked="true"><img id="cardThumb" alt="Класична картка"></button>
+          <button type="button" class="thumb" data-s="poster" role="radio" aria-checked="false"><img id="cardThumb2" alt="Картка-постер"></button>
+        </div>
         <div>
           <h2 id="resultTitle">Зарізано</h2>
-          <p>Картка для сторіс готова. Відміть того, кого це теж бісить.</p>
+          <p>Дві картки на вибір: обери свою і збережи. Відміть того, кого це теж бісить.</p>
           <button class="btn" id="saveBtn" type="button">Зберегти для сторіс</button>
-          <button class="btn ghost" id="styleBtn" type="button">Інший стиль</button>
         </div>
       </div>
       <p class="note" id="saveNote" hidden></p>
@@ -540,7 +552,7 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
       </div>
     </div>
 
-    <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span><i class="toy" aria-hidden="true"><img src="xf-ball.webp" alt=""></i></p>
+    <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span><i class="toy" aria-hidden="true"><svg viewBox="-20 -24 40 46" width="30" height="34"><defs><radialGradient id="tb" cx=".35" cy=".35" r=".75"><stop offset="0" stop-color="#FF8CC4"/><stop offset=".45" stop-color="#E5007A"/><stop offset="1" stop-color="#7E0042"/></radialGradient><linearGradient id="tc"><stop offset="0" stop-color="#B8893A"/><stop offset=".5" stop-color="#F6DC8C"/><stop offset="1" stop-color="#A87A2E"/></linearGradient></defs><rect x="-5" y="-22" width="10" height="5" fill="url(#tc)"/><circle r="18" fill="url(#tb)"/><ellipse cx="-7" cy="-8" rx="4" ry="2.4" fill="#fff" opacity=".75" transform="rotate(-35 -7 -8)"/></svg></i></p>
 
     <div class="cta">
       <p class="slogan">Ідеям потрібна форма. <span>Тобі&nbsp;-&nbsp;одна&nbsp;я.</span></p>
@@ -760,8 +772,8 @@ const NY_BY_DATE=(()=>{ const n=new Date(); return n>=new Date(NY_FROM+"T00:00:0
 let NY = QS.get("ny")==="1" ? true : QS.get("ny")==="0" ? false : NY_BY_DATE;
 /* Positions are % of each chick image */
 const CHICKS={
-  ny:  {ny:true, src:"ny-chick.webp", blink:"ny-blink.webp", paw:"ny-paw.webp", ar:1084/1000, w:1000, h:1084, bow:false,
-        knife:{l:58.4,t:50.6,w:46}, pawPos:{l:58.6,t:58.3,w:21.6}, blinkPos:{l:30.8,t:37.73,w:38.6}},
+  ny:  {ny:true, src:"ny-chick.webp", blink:"ny-blink.webp", paw:"ny-paw.webp", ar:1024/768, w:768, h:1024, bow:false,
+        knife:{l:58,t:54.8,w:46}, pawPos:{l:68.49-10.16,t:68.36-7.62,w:20.31}, blinkPos:{l:0,t:0,w:100}},
   base:{ny:false, src:"v2-chick.webp", blink:"v2-blink.webp", paw:"v2-paw.webp", ar:743/760, w:760, h:743, bow:true,
         knife:{l:58.13,t:43.34,w:50}, pawPos:{l:58.29,t:52.76,w:23.68}, blinkPos:{l:32.43,t:36.3,w:41.13}}
 };
@@ -915,7 +927,19 @@ const DECO=(()=>{
 
   /* ---- garland round the bridge and both offer cards: a twisted cord waving across the border,
      warm pearl lights where it turns, a few ornaments hanging off it (no fur, Diana 25.11) ---- */
-  const orn={ball:loadC("xf-ball.webp"), star:loadC("xf-star.webp")};
+  /* glossy ball with a gold cap and a felt star, drawn in code */
+  const drawOrn=(g,kind,sz)=>{
+    if(kind==="ball"){ const r=sz/2;
+      const b=g.createRadialGradient(-r*.35,-r*.35,r*.1,0,0,r); b.addColorStop(0,"#FF8CC4"); b.addColorStop(.45,"#E5007A"); b.addColorStop(1,"#7E0042");
+      g.fillStyle=b; g.beginPath(); g.arc(0,0,r,0,7); g.fill();
+      g.fillStyle="rgba(255,255,255,.75)"; g.beginPath(); g.ellipse(-r*.38,-r*.42,r*.22,r*.13,-.6,0,7); g.fill();
+      const cg=g.createLinearGradient(-r*.3,0,r*.3,0); cg.addColorStop(0,"#B8893A"); cg.addColorStop(.5,"#F6DC8C"); cg.addColorStop(1,"#A87A2E");
+      g.fillStyle=cg; g.fillRect(-r*.28,-r*1.12,r*.56,r*.26);
+    } else { const R=sz/2, ri=R*.48; g.beginPath();
+      for(let i=0;i<10;i++){ const a=-Math.PI/2+i*Math.PI/5, rr=i%2?ri:R; g.lineTo(Math.cos(a)*rr,Math.sin(a)*rr); } g.closePath();
+      const sg=g.createLinearGradient(-R,-R,R,R); sg.addColorStop(0,"#FFA8D0"); sg.addColorStop(1,"#EC5C9E");
+      g.save(); g.shadowColor="rgba(120,20,70,.3)"; g.shadowBlur=3; g.shadowOffsetY=1.5; g.fillStyle=sg; g.fill(); g.restore();
+      g.lineJoin="round"; g.lineWidth=1.2; g.strokeStyle="rgba(255,255,255,.45)"; g.stroke(); } };
   const offerIn=document.querySelector(".offer-in"), garlands=[]; let lightsOn=false;
   function garland(el, hang, lit=true){
     if(!el) return;
@@ -950,15 +974,14 @@ const DECO=(()=>{
         else { b.addColorStop(0,"#FFFFFF"); b.addColorStop(.5,"#F1ECE6"); b.addColorStop(1,"#C9BCB0"); }
         g.fillStyle=b; g.beginPath(); g.arc(px,py,r,0,7); g.fill(); }
       /* ornaments: [x, y as a share of the box (the nearest point of the border is used), kind, size px, tilt] */
-      const [ball,star]=await Promise.all([orn.ball,orn.star]);
       for(const [fx,fy,kind,sz,rot] of hang){
-        const im=kind==="ball"?ball:star; if(!im) continue;
+
         const tx=M+fx*w, ty=M+fy*h; let i=0, best=1e9; pts.forEach((p,j)=>{ const dd=(p[0]-tx)**2+(p[1]-ty)**2; if(dd<best){ best=dd; i=j; } });
         const [px,py]=at(i), nrm=pts[i];
-        const ih=sz*im.naturalHeight/im.naturalWidth;
+        const ih=sz;
         g.save(); g.translate(px,py);
         if(kind==="ball" && nrm[3]>.5){ g.strokeStyle="#C9A45C"; g.lineWidth=1.4; g.beginPath(); g.moveTo(0,0); g.lineTo(0,10); g.stroke(); g.translate(0,10+ih/2); }
-        g.rotate(rot); g.drawImage(im,-sz/2,-ih/2,sz,ih); g.restore();
+        g.rotate(rot); drawOrn(g,kind,sz); g.restore();
       }
     }
     garlands.push(draw);
@@ -1191,7 +1214,7 @@ async function makePoster(t){
   g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=24; g.beginPath(); g.moveTo(70,yb-fs*.05); g.lineTo(1010,y0-fs*.8); g.stroke(); g.restore();   /* one slash across all lines */
   g.fillStyle="#2A0F2B"; g.font="400 56px Unbounded"; g.fillText("зарізано.",540,yb+fs*.2+90);
   /* the chick sits on the clouds */
-  const cw=CHICK.ny?520:560, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=Math.max(yb+fs*.2+150, 1660-ch);
+  const cw=CHICK.ny?470:560, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=Math.max(yb+fs*.2+150, 1660-ch);
   if(body) g.drawImage(body,X,Y,cw,ch);
   if(bow && CHICK.bow){ const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2,Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore(); }
   if(knife){ const K=CHICK.knife, kw=cw*K.w/100, kh=kw*203/360, gx=X+cw*K.l/100+kw*.24, gy=Y+ch*K.t/100+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore(); }
@@ -1200,8 +1223,8 @@ async function makePoster(t){
   g.fillStyle="#FFF6FA"; g.textBaseline="middle"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1833);
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
-async function makeCard(t){
-  if(cardStyle==="poster") return makePoster(t);
+async function makeCard(t,style=cardStyle){
+  if(style==="poster") return makePoster(t);
   const [body,knife,paw,bow,...feathers]=await cardAssets(); await fontsReady;
   const c=document.createElement("canvas"); c.width=1080;c.height=1920; const g=c.getContext("2d");
   g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
@@ -1241,7 +1264,7 @@ async function makeCard(t){
   const spots=[[150,880,-.6,120],[930,840,.7,110],[110,1300,.3,90],[985,1250,-.4,100],[230,1640,1.1,70],[860,1660,-1,80]];
   spots.forEach(([x,y,r,s],i)=>{const im=feathers[i%4]; if(!im) return; g.save(); g.translate(x,y); g.rotate(r); g.globalAlpha=.95; g.drawImage(im,-s/2,-s/2*im.naturalHeight/im.naturalWidth,s,s*im.naturalHeight/im.naturalWidth); g.restore();});
   // chick
-  const cw=CHICK.ny?700:760, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=CHICK.ny?Math.max(870,qy+20):Math.max(900,qy+60);   /* never under the quip */
+  const cw=CHICK.ny?600:760, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=CHICK.ny?Math.max(870,qy+20):Math.max(900,qy+60);   /* never under the quip */
   g.save(); g.fillStyle="rgba(110,20,70,.22)"; g.filter&&(g.filter="blur(18px)"); g.beginPath(); g.ellipse(X+cw/2,Y+ch*.98,cw*.38,40,0,0,7); g.fill(); g.restore();
   if(body) g.drawImage(body,X,Y,cw,ch);
   if(bow && CHICK.bow){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
@@ -1251,17 +1274,18 @@ async function makeCard(t){
   foot();
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
-$("styleBtn").onclick=async()=>{
-  if(!lastWord) return; cardStyle = cardStyle==="poster" ? "classic" : "poster"; track("card_style",{style:cardStyle});
-  $("styleBtn").disabled=true;
-  try{ const b=await Promise.race([makeCard(lastWord), wait(7000).then(()=>null)]); if(b){ cardBlob=b; if(cardUrl) URL.revokeObjectURL(cardUrl); cardUrl=URL.createObjectURL(b); $("cardThumb").src=cardUrl; } }catch(e){}
-  $("styleBtn").disabled=false;
-};
+/* both styles are made at once and shown side by side; the chosen one is saved */
+const cards={classic:null,poster:null}, cardUrls={classic:"",poster:""};
+function pickCard(st){ cardStyle=st; cardBlob=cards[st]; cardUrl=cardUrls[st];
+  document.querySelectorAll(".thumb").forEach(b=>{ const on=b.dataset.s===st; b.classList.toggle("on",on); b.setAttribute("aria-checked",on); });
+  $("saveBtn").disabled=!cardBlob; }
+document.querySelectorAll(".thumb").forEach(b=>b.addEventListener("click",()=>{ pickCard(b.dataset.s); track("card_style",{style:b.dataset.s}); }));
 async function showResult(t){
   cardBlob=null;
   try{
-    const b=await Promise.race([makeCard(t), wait(7000).then(()=>null)]);
-    if(b){ cardBlob=b; if(cardUrl) URL.revokeObjectURL(cardUrl); cardUrl=URL.createObjectURL(b); $("cardThumb").src=cardUrl; }
+    const [a,b]=await Promise.all(["classic","poster"].map(st=>Promise.race([makeCard(t,st), wait(7000).then(()=>null)]).catch(()=>null)));
+    [["classic",a,"cardThumb"],["poster",b,"cardThumb2"]].forEach(([st,bl,id])=>{ if(cardUrls[st]) URL.revokeObjectURL(cardUrls[st]); cards[st]=bl; cardUrls[st]=bl?URL.createObjectURL(bl):""; $(id).src=cardUrls[st]; });
+    pickCard(cards[cardStyle]?cardStyle:"classic");
   }catch(e){}
   $("saveBtn").disabled=!cardBlob;
   $("resultTitle").textContent="Зарізано: «"+t+"»"; $("saveNote").hidden=true; $("result").hidden=false; if(DECO) DECO.capResult();
@@ -1338,6 +1362,42 @@ else{
   setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },13000);
   /* the season secret: a nudge after a while, if nobody has found it */
   setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Зими забагато? Кинь у мене сніжку." : "Бачиш кулю? Там я, але в шапці. Струсни.",5000); },7000);
+}
+
+/* Desktop: «Беру тільки те, що зроблю добре» lies under yellow fur. Each hair is a real stroke; the cursor pushes the hairs
+   aside and they settle back slowly, so the text shows where you comb (Diana 25.11). Phones keep the plain sticker for now. */
+if(matchMedia("(pointer:fine) and (min-width:900px)").matches && !reduce){
+  const el=document.querySelector(".honest"), c=document.createElement("canvas"); c.className="fur"; c.setAttribute("aria-hidden","true"); el.append(c);
+  const tag=document.createElement("span"); tag.className="fur-tag"; tag.textContent="Розчеши мене"; el.append(tag);
+  const g=c.getContext("2d"), P=8, COLS=["#E9A800","#F7C300","#FFD21F","#FFE15C","#FFF0A6"];
+  let W=0,H=0,hairs=[],mx=-999,my=-999,inside=false,raf=0,combed=false;
+  const build=()=>{ const d=Math.min(devicePixelRatio||1,2); W=el.offsetWidth; H=el.offsetHeight; c.width=(W+2*P)*d; c.height=(H+2*P)*d; g.setTransform(d,0,0,d,0,0); hairs=[];
+    for(let y=-2;y<H+2;y+=2.6) for(let x=-2;x<W+2;x+=2.6){ const a=1.2+Math.random()*.7;   /* lying down and to the right, like stroked fur */
+      hairs.push({x:x+Math.random()*2.6+P,y:y+Math.random()*2.6+P,a,len:9+Math.random()*9,c:(Math.random()*COLS.length)|0,s:0,dx:0,dy:0,k:Math.random()}); }
+    draw(); };
+  function draw(){
+    g.clearRect(0,0,W+2*P,H+2*P);
+    /* undercoat, with holes where the fur is parted */
+    g.fillStyle="#EDB000"; g.beginPath(); g.roundRect?g.roundRect(P,P,W,H,[4,18,18,18]):g.rect(P,P,W,H); g.fill();
+    g.save(); g.globalCompositeOperation="destination-out"; g.beginPath();
+    for(const h of hairs) if(h.s>.15){ g.moveTo(h.x+7*h.s,h.y); g.arc(h.x,h.y,7*h.s,0,7); } g.fill(); g.restore();
+    const paths=COLS.map(()=>new Path2D());
+    for(const h of hairs){ const s=h.s, sx=h.x+h.dx*s*22, sy=h.y+h.dy*s*22, ex=sx+Math.cos(h.a)*h.len*(1-.5*s)+h.dx*s*20, ey=sy+Math.sin(h.a)*h.len*(1-.5*s)+h.dy*s*20;
+      const p=paths[h.c]; p.moveTo(sx,sy); p.quadraticCurveTo((sx+ex)/2+Math.sin(h.a)*2*h.k,(sy+ey)/2-Math.cos(h.a)*2*h.k,ex,ey); }
+    g.lineCap="round"; g.lineWidth=1.25; COLS.forEach((col,i)=>{ g.strokeStyle=col; g.stroke(paths[i]); });
+  }
+  function tick(){
+    let moving=false; const R=40;
+    for(const h of hairs){ let t=0;
+      if(inside){ const dx=h.x-mx, dy=h.y-my, d=Math.hypot(dx,dy); if(d<R){ t=1-d/R; h.dx=dx/(d||1); h.dy=dy/(d||1); } }
+      h.s += t>h.s ? (t-h.s)*.5 : (t-h.s)*.009;   /* quick to part, slow to settle back */
+      if(h.s>.01) moving=true; }
+    draw(); raf=(moving||inside)?requestAnimationFrame(tick):0;
+  }
+  el.addEventListener("pointermove",e=>{ const r=c.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top; inside=true;
+    if(!combed){ combed=true; el.classList.add("combed"); track("fur_comb"); } if(!raf) raf=requestAnimationFrame(tick); },{passive:true});
+  el.addEventListener("pointerleave",()=>{ inside=false; });
+  build(); addEventListener("resize",build); if(document.fonts) document.fonts.ready.then(build);
 }
 
 /* the chick sheds a loose feather now and then, while it is on screen */
