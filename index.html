@@ -192,7 +192,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes nudge{50%{transform:rotate(1deg) scale(1.03)}}
 .o-head{display:grid;gap:10px}
 .o-head h2{font-family:var(--display);font-weight:900;margin:0;line-height:1;letter-spacing:-.02em;font-size:clamp(32px,8vw,68px);text-wrap:balance}
-.o-sub{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(17px,2vw,21px);line-height:1.45;letter-spacing:-.01em;max-width:32ch;color:var(--ink)}
+.o-sub{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(16px,1.4vw,18px);text-wrap:balance;line-height:1.45;letter-spacing:-.01em;max-width:32ch;color:var(--ink)}
 .o-sub em{font-style:normal;font-weight:500;background:linear-gradient(transparent 58%, var(--yolk) 58% 92%, transparent 92%)}
 .pair{display:grid;gap:16px}
 .card{background:linear-gradient(160deg,#FFFFFF 0%,#FFF1F8 100%);border:2px solid var(--ink);border-radius:22px;padding:20px;box-shadow:6px 6px 0 var(--ink);min-width:0}
@@ -369,9 +369,9 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   .bridge{max-width:none;padding:14px 22px;transform:rotate(-.5deg)}
   .bridge p{font-size:20px}
   .bridge p b{display:inline;margin-right:.35em}
-  .o-head{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);column-gap:40px;align-items:end;grid-template-areas:"eye eye" "h2 sub"}
+  .o-head{grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);column-gap:36px;align-items:end;grid-template-areas:"eye eye" "h2 sub"}
   .o-head .eyebrow{grid-area:eye}
-  .o-head h2{grid-area:h2;font-size:clamp(40px,4.6vw,60px)}
+  .o-head h2{grid-area:h2;font-size:clamp(40px,4.3vw,56px)}
   .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
   /* the prize card sits in the middle, as wide as its longest sentence; one sentence per line */
   /* «Беру тільки те…» is stuck on the top right corner of the dark slogan block */
@@ -899,7 +899,7 @@ const DECO=(()=>{
     const g=c.getContext("2d"), M=46;
     async function draw(){
       if(!NY) return;
-      const L = lit===true || (lit==="after" && lightsOn);
+      const L = lit===true || (lit==="after" && lightsOn) || (lit==="before" && !lightsOn);
       const w=el.offsetWidth, h=el.offsetHeight; if(!w) return;
       const tf=getComputedStyle(el).transform;
       Object.assign(c.style,{left:(el.offsetLeft-M)+"px", top:(el.offsetTop-M)+"px", width:(w+2*M)+"px", height:(h+2*M)+"px", transform: tf==="none"?"":tf});
@@ -944,7 +944,7 @@ const DECO=(()=>{
   /* ornaments sit on the side edges, so nothing hangs over the text below on a phone */
   garland(document.querySelector(".bridge"), [[0,0,"star",30,-.3],[1,.62,"ball",30,0]]);
   /* «Ріжемо»: the garland is off (no light), «Робимо»: it glows, so the pair differs without getting busy (Diana 25.11) */
-  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]], "after");
+  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]], "before");   /* glows until the knife has cut, then «Робимо» takes over */
   garland(document.querySelector(".card-build"), [[1,0,"star",30,.3],[1,.66,"ball",30,0],[0,.36,"ball",26,0],[.38,1,"star",26,-.2],[.8,1,"star",22,.35]], "after");
   const redraw=()=>garlands.forEach(f=>f());
   addEventListener("resize",redraw); if(document.fonts) document.fonts.ready.then(redraw);
