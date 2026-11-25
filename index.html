@@ -8,7 +8,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800;900&family=Manrope:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800;900&family=Manrope:wght@500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap">
 <style>
 /* v2. One bubblegum page: game first screen (headline, live chick, input, chips, result), then the offer as the next chapter.
    Deliberately single-theme (a pink toy world), every colour set explicitly. */
@@ -47,15 +47,19 @@ a{color:inherit}
 .top-r{margin-left:auto}
 .top{position:relative}
 .mistle{display:none}
-.sk-s{display:none}
-@media (max-width:400px){.sk-l{display:none}.sk-s{display:inline}}   /* one line on small phones */
 .ny .mistle{display:block;position:absolute;left:50%;top:50%;width:clamp(78px,9vw,112px);height:auto;transform:translate(-50%,-50%) rotate(-3deg);pointer-events:none;z-index:2;filter:drop-shadow(0 4px 6px rgba(110,20,70,.22))}
 /* phone: the top line is full (it wraps), so the mistletoe hangs above it and the line moves down */
-@media (max-width:640px){.top{flex-wrap:nowrap}.brand b{font-size:16px}.brand small{font-size:8px;letter-spacing:.14em}.skip{font-size:12px}.sound{padding:5px 8px}.top-r{gap:6px}
-  .ny .top{padding-top:50px}.ny .mistle{top:-8px;width:76px;transform:translateX(-50%) rotate(-3deg)}}
-.brand{display:grid;line-height:1;white-space:nowrap;flex:none}
-.brand b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em}
-.brand small{font:700 9.5px var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px}
+.brand{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;line-height:1.2;white-space:nowrap}
+.brand b,.brand small{font:inherit}
+.brand span{color:var(--hot)}
+.ico{display:none;width:18px;height:18px}
+.sound[aria-pressed="true"] .off,.sound[aria-pressed="false"] .on{display:none}
+/* phone: one row - the name stacked small, the mistletoe in the middle, the arrow and the sound switch as round icon buttons */
+@media (max-width:640px){.top{flex-wrap:nowrap;min-height:40px}
+  .brand{display:grid;font-size:12px;line-height:1.05}.brand span{display:none}.brand small{font:700 8px var(--body);letter-spacing:.16em;color:var(--ink-soft);margin-top:2px}
+  .sk-l,.snd-t{display:none}.ico{display:block}.top-r{gap:8px}
+  .skip,.sound{display:grid;place-items:center;width:38px;height:38px;padding:0;border:2px solid var(--ink);border-radius:50%;background:var(--paper);color:var(--ink)}
+  .ny .mistle{width:66px}}
 .top-r{display:flex;gap:8px;align-items:center}
 .skip{font-weight:800;font-size:13px;text-decoration:none;border-bottom:2px solid var(--hot);white-space:nowrap}
 .sound{font:700 12px var(--body);color:var(--ink);background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:5px 10px;cursor:pointer;white-space:nowrap}
@@ -179,8 +183,8 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes nudge{50%{transform:rotate(1deg) scale(1.03)}}
 .o-head{display:grid;gap:10px}
 .o-head h2{font-family:var(--display);font-weight:900;margin:0;line-height:1;letter-spacing:-.02em;font-size:clamp(32px,8vw,68px);text-wrap:balance}
-.o-sub{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(17px,2.2vw,21px);line-height:1.4;letter-spacing:-.01em;max-width:32ch;color:var(--ink)}
-.o-sub em{font-style:normal;font-weight:700;background:linear-gradient(transparent 58%, var(--yolk) 58% 92%, transparent 92%)}
+.o-sub{margin:0;font-family:var(--body);font-weight:500;font-size:clamp(18px,2vw,23px);line-height:1.4;letter-spacing:-.005em;color:var(--ink-soft)}
+.o-sub em{font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:600;font-size:1.14em;color:var(--hot);white-space:nowrap}
 .pair{display:grid;gap:16px}
 .card{background:var(--paper);border:2px solid var(--ink);border-radius:22px;padding:20px;box-shadow:6px 6px 0 var(--ink);min-width:0}
 .card h3{margin:0 0 14px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
@@ -336,10 +340,10 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   .bridge{max-width:none;padding:14px 22px;transform:rotate(-.5deg)}
   .bridge p{font-size:20px}
   .bridge p b{display:inline;margin-right:.35em}
-  .o-head{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);column-gap:40px;align-items:end;grid-template-areas:"eye eye" "h2 sub"}
+  .o-head{grid-template-columns:minmax(0,1fr);row-gap:14px;grid-template-areas:"eye" "h2" "sub"}
   .o-head .eyebrow{grid-area:eye}
   .o-head h2{grid-area:h2;font-size:clamp(40px,4.6vw,60px)}
-  .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
+  .o-sub{grid-area:sub}
   /* the prize card sits in the middle, as wide as its longest sentence; one sentence per line */
   .prize{width:fit-content;max-width:100%;text-align:center;padding:24px 40px;gap:8px}
   .prize strong{font-size:27px}
@@ -361,11 +365,11 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 <main>
 <div class="game pad">
   <div class="top">
-    <div class="brand" id="brand"><b>didi.ods</b><small>digital designer</small></div>
+    <div class="brand" id="brand"><b>Діана</b> <span>·</span> <small>digital designer</small></div>
     <img class="mistle" src="ny-mistletoe.webp" alt="" width="629" height="447">
     <div class="top-r">
-      <a class="skip" href="#offer" id="skip"><span class="sk-l">Одразу до справи ↓</span><span class="sk-s">До справи ↓</span></a>
-      <button class="sound" id="sound" type="button" aria-pressed="true">Звук увімк.</button>
+      <a class="skip" href="#offer" id="skip" aria-label="Одразу до справи"><span class="sk-l">Одразу до справи ↓</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+      <button class="sound" id="sound" type="button" aria-pressed="true" aria-label="Звук"><span class="snd-t">Звук увімк.</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path class="on" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
     </div>
   </div>
 
@@ -512,7 +516,7 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 /* ===== Дані: міняти тут ===== */
 const CONFIG = {
   handle: "@didi.ods",
-  sign: "didi.ods · digital designer",
+  sign: "Діана · digital designer",
   tgUrl: "https://t.me/thisisdi",
   cardFooter: "А що заріжеш ти? Шукай @didi.ods",
 };
@@ -548,7 +552,7 @@ showCount();
 
 /* sound */
 let soundOn=true, ac=null;
-$("sound").onclick=()=>{soundOn=!soundOn;$("sound").textContent=soundOn?"Звук увімк.":"Звук вимк.";$("sound").setAttribute("aria-pressed",soundOn)};
+$("sound").onclick=()=>{soundOn=!soundOn;$("sound").querySelector(".snd-t").textContent=soundOn?"Звук увімк.":"Звук вимк.";$("sound").setAttribute("aria-pressed",soundOn)};
 function sfx(kind){
   if(!soundOn) return;
   try{
@@ -855,13 +859,14 @@ const DECO=(()=>{
   /* ---- garland round the bridge and both offer cards: a twisted cord waving across the border,
      warm pearl lights where it turns, a few ornaments hanging off it (no fur, Diana 25.11) ---- */
   const orn={ball:loadC("xf-ball.webp"), star:loadC("xf-star.webp")};
-  const offerIn=document.querySelector(".offer-in"), garlands=[];
+  const offerIn=document.querySelector(".offer-in"), garlands=[]; let lightsOn=false;
   function garland(el, hang, lit=true){
     if(!el) return;
     const c=document.createElement("canvas"); c.className="garland"; c.setAttribute("aria-hidden","true"); offerIn.append(c);
     const g=c.getContext("2d"), M=46;
     async function draw(){
       if(!NY) return;
+      const L = lit===true || (lit==="after" && lightsOn);
       const w=el.offsetWidth, h=el.offsetHeight; if(!w) return;
       const tf=getComputedStyle(el).transform;
       Object.assign(c.style,{left:(el.offsetLeft-M)+"px", top:(el.offsetTop-M)+"px", width:(w+2*M)+"px", height:(h+2*M)+"px", transform: tf==="none"?"":tf});
@@ -878,13 +883,13 @@ const DECO=(()=>{
       const cw=2.2, cord=(lw,col,dy)=>{ g.strokeStyle=col; g.lineWidth=lw; g.lineCap="round"; g.lineJoin="round"; g.beginPath();
         for(let i=0;i<=N;i++){ const [x,y]=at(i); i?g.lineTo(x,y+dy):g.moveTo(x,y+dy); } g.stroke(); };
       cord(cw*1.7,"rgba(110,60,40,.28)",cw*.6); cord(cw,"#E6D3AE",0); cord(cw*.4,"rgba(255,255,255,.6)",-cw*.2);
-      const r=lit?4.6:4;
+      const r=L?4.6:4;
       for(let k=0;k<waves;k++){ const [px,py]=at(Math.round((k+.5)*N/waves));
-        if(lit){ const gl=g.createRadialGradient(px,py,r*.5,px,py,r*3.4); gl.addColorStop(0,"rgba(255,232,175,.8)"); gl.addColorStop(.45,"rgba(255,220,150,.32)"); gl.addColorStop(1,"rgba(255,220,150,0)");
+        if(L){ const gl=g.createRadialGradient(px,py,r*.5,px,py,r*3.4); gl.addColorStop(0,"rgba(255,232,175,.8)"); gl.addColorStop(.45,"rgba(255,220,150,.32)"); gl.addColorStop(1,"rgba(255,220,150,0)");
           g.fillStyle=gl; g.beginPath(); g.arc(px,py,r*3.4,0,7); g.fill(); }
         /* unlit: a plain glass bead, no glow */
         const b=g.createRadialGradient(px-r*.35,py-r*.35,r*.1,px,py,r);
-        if(lit){ b.addColorStop(0,"#FFFFFF"); b.addColorStop(.55,"#FFF6DE"); b.addColorStop(1,"#F2D59B"); }
+        if(L){ b.addColorStop(0,"#FFFFFF"); b.addColorStop(.55,"#FFF6DE"); b.addColorStop(1,"#F2D59B"); }
         else { b.addColorStop(0,"#FFFFFF"); b.addColorStop(.5,"#F1ECE6"); b.addColorStop(1,"#C9BCB0"); }
         g.fillStyle=b; g.beginPath(); g.arc(px,py,r,0,7); g.fill(); }
       /* ornaments: [x, y as a share of the box (the nearest point of the border is used), kind, size px, tilt] */
@@ -906,8 +911,8 @@ const DECO=(()=>{
   /* ornaments sit on the side edges, so nothing hangs over the text below on a phone */
   garland(document.querySelector(".bridge"), [[0,0,"star",30,-.3],[1,.62,"ball",30,0]]);
   /* «Ріжемо»: the garland is off (no light), «Робимо»: it glows, so the pair differs without getting busy (Diana 25.11) */
-  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]], false);
-  garland(document.querySelector(".card-build"), [[1,0,"star",30,.3],[1,.66,"ball",30,0],[0,.36,"ball",26,0],[.38,1,"star",26,-.2],[.8,1,"star",22,.35]]);
+  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]], "after");
+  garland(document.querySelector(".card-build"), [[1,0,"star",30,.3],[1,.66,"ball",30,0],[0,.36,"ball",26,0],[.38,1,"star",26,-.2],[.8,1,"star",22,.35]], "after");
   const redraw=()=>garlands.forEach(f=>f());
   addEventListener("resize",redraw); if(document.fonts) document.fonts.ready.then(redraw);
 
@@ -924,7 +929,7 @@ const DECO=(()=>{
     async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,-10,140,1100,1604); },   /* a touch wider than the card, so the frame fills it */
     /* the result card is hidden at load, so its snow cap is added the first time it appears */
     capResult(){ if(this.done || !NY) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); },
-    snowOn, redraw
+    snowOn, redraw, lightUp(){ if(lightsOn) return; lightsOn=true; redraw(); }
   };
 })();
 
@@ -1147,7 +1152,7 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidd
     place(g.left-c.left, g.top-c.top+10, -24, 380); await wait(390);
     done.classList.add("on"); finish();
   }
-  function finish(){ fly.style.opacity=0; grab.classList.remove("busy"); grab.classList.add("used"); tip.textContent="Ще раз?"; cutOnce=true; running=false; }
+  function finish(){ fly.style.opacity=0; grab.classList.remove("busy"); grab.classList.add("used"); tip.textContent="Ще раз?"; cutOnce=true; running=false; if(DECO) DECO.lightUp(); }
   grab.addEventListener("click",run);
 })();
 
