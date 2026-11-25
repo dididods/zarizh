@@ -148,10 +148,6 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes flash{0%{opacity:1}100%{opacity:0}}
 .count{position:absolute;left:0;bottom:0;z-index:3;font-weight:800;font-size:12px;background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 11px}
 .fx{position:absolute;left:50%;top:0;width:100vw;height:100%;transform:translateX(-50%);pointer-events:none;z-index:30}
-.font-chip{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:80;display:flex;gap:4px;padding:4px;background:#2A0F2B;border-radius:999px;box-shadow:0 8px 24px -8px rgba(42,15,43,.6)}
-.font-chip button{font:800 13px system-ui,sans-serif;color:#FFF6FA;background:none;border:0;border-radius:999px;padding:8px 12px;cursor:pointer;white-space:nowrap}
-.font-chip button[aria-pressed="true"]{background:#E5007A}
-:root[data-font] *{font-synthesis:none}   /* the preview fonts have one weight; no fake bold */
 .haptic{position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none}
 
 /* Form */
@@ -1181,22 +1177,6 @@ else{
   setTimeout(()=>{ if(!busy && !sessionCuts && !typedOnce) say("Ну? Пиши. Я чекаю.",0); },6500);
   /* the season secret: a nudge after a while, if nobody has found it */
   setTimeout(()=>{ if(!busy && !SEASON.used) say(NY ? "Покрути мій ніж по колу, якщо зими забагато." : "Покрути мій ніж по колу. Буде сюрприз.",5000); },15000);
-}
-
-/* review-only font preview (?fonts=1): the current pair and two alternatives on the live page (Diana 25.11).
-   The story card keeps its own fonts. */
-if(QS.get("fonts")==="1"){
-  const PAIRS={now:{name:"Зараз",d:'"Unbounded"',b:'"Manrope"'},
-    a:{name:"А · Yeseva One",d:'"Yeseva One"',b:'"Manrope"',url:"family=Yeseva+One"},
-    b:{name:"Б · Dela Gothic",d:'"Dela Gothic One"',b:'"Nunito"',url:"family=Dela+Gothic+One&family=Nunito:wght@500;600;700;800"}};
-  const box=document.createElement("div"); box.className="font-chip"; box.setAttribute("role","group"); box.setAttribute("aria-label","Шрифти");
-  box.innerHTML=Object.entries(PAIRS).map(([k,p])=>`<button type="button" data-k="${k}">${p.name}</button>`).join("");
-  document.body.append(box); const loaded={};
-  const set=k=>{ const p=PAIRS[k], r=document.documentElement;
-    if(p.url && !loaded[k]){ loaded[k]=1; const l=document.createElement("link"); l.rel="stylesheet"; l.href="https://fonts.googleapis.com/css2?"+p.url+"&display=swap"; document.head.append(l); }
-    r.style.setProperty("--display",p.d+',"Arial Black",system-ui,sans-serif'); r.style.setProperty("--body",p.b+',system-ui,sans-serif'); r.toggleAttribute("data-font",k!=="now");
-    box.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===k)); };
-  box.addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) set(b.dataset.k); }); set("now");
 }
 
 /* the chick sheds a loose feather now and then, while it is on screen */
