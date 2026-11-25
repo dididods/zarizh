@@ -8,7 +8,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&family=Manrope:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;700;800;900&family=Manrope:wght@500;600;700;800&display=swap">
 <style>
 /* v2. One bubblegum page: game first screen (headline, live chick, input, chips, result), then the offer as the next chapter.
    Deliberately single-theme (a pink toy world), every colour set explicitly. */
@@ -27,6 +27,9 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .1 0 0 0 0 .3 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(55vw 45vh at 88% 6%,rgba(255,255,255,.7),transparent 70%),radial-gradient(50vw 50vh at 4% 55%,rgba(255,140,195,.32),transparent 70%),radial-gradient(45vw 40vh at 75% 100%,rgba(255,210,31,.2),transparent 70%);
+  background-size:160px,auto,auto,auto;opacity:.95}
 body{
   margin:0;background:var(--blush);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;overflow-x:hidden;
   background-image:repeating-linear-gradient(-28deg, transparent 0 46px, rgba(255,179,214,.45) 46px 50px, transparent 50px 140px);
@@ -77,6 +80,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 
 /* Stage */
 .stage{grid-area:stage;position:relative;width:100%;max-width:500px;justify-self:center;aspect-ratio:1/.9;margin-top:-6px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.stage::before{content:"";position:absolute;inset:6% 0 0;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,0));pointer-events:none}
 .stage.shake{animation:shake .32s linear}
 @keyframes shake{0%,100%{transform:none}20%{transform:translate(-9px,5px)}40%{transform:translate(8px,-6px)}60%{transform:translate(-6px,-3px)}80%{transform:translate(5px,4px)}}
 .rig{position:absolute;left:9%;width:76%;bottom:5%;aspect-ratio:760/743;transform-origin:50% 95%;
@@ -152,7 +156,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 
 /* Form */
 .form{grid-area:form;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-content:start}
-.field{display:flex;gap:8px;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:6px;box-shadow:5px 5px 0 var(--ink)}
+.field{display:flex;gap:8px;background:linear-gradient(180deg,#FFFFFF,var(--paper));border:3px solid var(--ink);border-radius:18px;padding:6px;box-shadow:5px 5px 0 var(--ink)}
 .field input{flex:1;min-width:0;border:0;background:transparent;font:700 17px var(--body);color:var(--ink);padding:10px;outline:none}
 .field input::placeholder{color:#a77897}
 .cut-btn{font-family:var(--display);font-weight:800;font-size:15px;background:var(--hot);color:#fff;border:0;border-radius:12px;padding:0 18px;cursor:pointer;white-space:nowrap;transition:transform .1s}
@@ -165,7 +169,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .chip.life{border-style:dashed}
 
 /* Result */
-.result{display:grid;gap:14px;background:var(--paper);border:3px solid var(--ink);border-radius:20px;padding:16px;box-shadow:5px 5px 0 var(--ink)}
+.result{display:grid;gap:14px;background:linear-gradient(160deg,#FFFFFF,#FFEFF7);border:3px solid var(--ink);border-radius:20px;padding:16px;box-shadow:5px 5px 0 var(--ink)}
 .result-q{margin:0;font-family:var(--display);font-weight:800;font-size:19px;line-height:1.2}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .btn{font:800 15px var(--body);border-radius:12px;padding:11px 15px;cursor:pointer;border:2px solid var(--ink);background:var(--yolk);color:var(--ink);text-decoration:none;display:inline-flex;align-items:center}
@@ -180,7 +184,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 /* ---------- Offer ---------- */
 .offer{padding-block:8px 48px;overflow-x:clip}   /* the garlands reach past the cards; keep them off the page width */
 .offer-in{display:grid;gap:clamp(22px,4vw,36px)}
-.bridge{display:flex;gap:12px;align-items:center;max-width:620px;background:var(--yolk);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;padding:12px 16px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-1deg)}
+.bridge{display:flex;gap:12px;align-items:center;max-width:620px;background:linear-gradient(172deg,#FFE878 0%,var(--yolk) 50%,#F7C400 100%);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;padding:12px 16px;box-shadow:4px 4px 0 var(--ink),inset 0 2px 0 rgba(255,255,255,.65);transform:rotate(-1deg)}
 .bridge img{width:58px;height:58px;flex:none;object-fit:contain;padding:4px;background:var(--paper);border:2px solid var(--ink);border-radius:50%}
 .bridge p{margin:0;font-family:var(--display);font-weight:700;font-size:clamp(15px,3.9vw,19px);line-height:1.3;color:var(--ink);letter-spacing:-.005em}
 .bridge p b{display:block;color:var(--hot);font-weight:900}
@@ -191,7 +195,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .o-sub{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(17px,2vw,21px);line-height:1.45;letter-spacing:-.01em;max-width:32ch;color:var(--ink)}
 .o-sub em{font-style:normal;font-weight:500;background:linear-gradient(transparent 58%, var(--yolk) 58% 92%, transparent 92%)}
 .pair{display:grid;gap:16px}
-.card{background:var(--paper);border:2px solid var(--ink);border-radius:22px;padding:20px;box-shadow:6px 6px 0 var(--ink);min-width:0}
+.card{background:linear-gradient(160deg,#FFFFFF 0%,#FFF1F8 100%);border:2px solid var(--ink);border-radius:22px;padding:20px;box-shadow:6px 6px 0 var(--ink);min-width:0}
 .card h3{margin:0 0 14px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
 .tag{font:800 11px var(--body);letter-spacing:.08em;padding:3px 8px;border-radius:999px;background:var(--blush);color:var(--ink-soft)}
 .card-cut{position:relative;overflow:hidden}
@@ -216,43 +220,63 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .grab.busy{visibility:hidden}
 .grab.busy .ring,.grab.used .ring{animation:none;opacity:0}
 .flyknife{position:absolute;width:62px;height:auto;left:0;top:0;pointer-events:none;z-index:3;opacity:0;transform-origin:20% 70%}
-.card-build{background:var(--ink);color:var(--paper);box-shadow:6px 6px 0 var(--hot)}
+.card-build{background:radial-gradient(90% 80% at 100% 0,rgba(229,0,122,.28),transparent 60%),linear-gradient(160deg,#3B1741 0%,var(--ink) 55%,#1C0720 100%);color:var(--paper);box-shadow:6px 6px 0 var(--hot)}
 .card-build .tag{background:rgba(255,246,250,.14);color:var(--paper)}
 .build{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0}
 .build li{list-style:none;font-weight:700;font-size:15px;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,246,250,.35)}
 .build li.main{background:var(--hot);border-color:var(--hot);color:#fff}
 .build-note{margin:14px 0 0;font-size:14px;color:rgba(255,246,250,.75);max-width:44ch}
 .extras{display:grid;justify-items:center}
-.prize{background:var(--paper);border:2.5px dashed var(--hot);border-radius:22px;padding:18px 20px;display:grid;gap:6px}
-.prize small{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--hot)}
-.prize strong{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.2}
-.prize p{margin:0;color:var(--ink-soft);font-weight:600;font-size:15px}
+/* Gift ticket: a torn-off coupon with round notches at the perforation, a hot stub with the «10», the Telegram button inside.
+   The notches are a mask, so the outline shadow comes from a drop-shadow on the wrapper. */
+.extras{filter:drop-shadow(5px 5px 0 var(--ink))}
+.prize{--n:13px;--stub:150px;position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--stub);width:min(100%,860px);border-radius:22px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .1 0 0 0 0 .3 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),radial-gradient(120% 140% at 0 0,#FFFFFF 0%,#FFF2F8 45%,#FFDDEE 100%);background-size:160px,auto;
+  -webkit-mask:radial-gradient(circle var(--n) at calc(100% - var(--stub)) 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle var(--n) at calc(100% - var(--stub)) 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+          mask:radial-gradient(circle var(--n) at calc(100% - var(--stub)) 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle var(--n) at calc(100% - var(--stub)) 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.ticket{display:grid;gap:8px;justify-items:start;padding:24px 26px 24px 26px;border:2.5px solid var(--ink);border-right:0;border-radius:22px 0 0 22px}
+.ticket small{font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--hot)}
+.ticket strong{font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,30px);line-height:1.1;letter-spacing:-.01em}
+.ticket p{margin:0 0 6px;color:var(--ink-soft);font-weight:600;font-size:15.5px;max-width:52ch}
+.stub{display:grid;place-content:center;justify-items:center;text-align:center;gap:2px;color:#fff;border:2.5px solid var(--ink);border-left:3px dashed rgba(255,246,250,.75);border-radius:0 22px 22px 0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42 0 0 0 0 .1 0 0 0 0 .3 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),linear-gradient(160deg,#FF2E97 0%,var(--hot) 45%,#B0005C 100%);background-size:160px,auto}
+.stub b{font-family:var(--display);font-weight:900;font-size:64px;line-height:.9;letter-spacing:-.04em;text-shadow:0 3px 0 rgba(42,15,43,.35)}
+.stub span{font-weight:800;font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.9}
+@media (max-width:640px){
+  .prize{--stubh:76px;grid-template-columns:1fr;grid-template-rows:var(--stubh) auto;
+    -webkit-mask:radial-gradient(circle var(--n) at 0 var(--stubh),#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle var(--n) at 100% var(--stubh),#0000 97%,#000) right/51% 100% no-repeat;
+            mask:radial-gradient(circle var(--n) at 0 var(--stubh),#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle var(--n) at 100% var(--stubh),#0000 97%,#000) right/51% 100% no-repeat}
+  .stub{order:-1;display:flex;align-items:center;gap:10px;border:2.5px solid var(--ink);border-bottom:3px dashed rgba(255,246,250,.75);border-radius:22px 22px 0 0}
+  .stub b{font-size:44px}
+  .ticket{border:2.5px solid var(--ink);border-top:0;border-radius:0 0 22px 22px;padding:20px 20px 22px}
+  .ticket .btn-main{justify-self:stretch;justify-content:center;text-align:center}
+}
 /* New Year: a light garland with ornaments runs round the bridge and both offer cards (drawn in code) */
 .offer-in{position:relative}
 .garland{position:absolute;pointer-events:none;z-index:3}
 body:not(.ny) .garland{display:none}
-.honest{justify-self:start;max-width:440px;background:var(--yolk);border-radius:4px 18px 18px 18px;padding:16px 20px;font-weight:800;font-size:17px;line-height:1.35;transform:rotate(-1.2deg);box-shadow:4px 4px 0 var(--ink);margin:0}
+.honest{justify-self:start;max-width:440px;background:linear-gradient(172deg,#FFE878 0%,var(--yolk) 55%,#F7C400 100%);border-radius:4px 18px 18px 18px;padding:16px 20px;font-weight:800;font-size:17px;line-height:1.35;transform:rotate(-1.2deg);box-shadow:4px 4px 0 var(--ink);margin:0}
 .honest span{display:block;font-weight:600;font-size:14px;margin-top:4px;opacity:.85}
 .honest{position:relative;z-index:4}
 .toy{display:none}
 .ny .toy{display:block;position:absolute;right:-3px;top:10px;width:2px;height:24px;background:#C9A45C;transform-origin:50% 0;animation:toy 3.2s ease-in-out infinite}
 .ny .toy img{position:absolute;left:50%;top:100%;width:30px;height:auto;transform:translate(-50%,-4px)}
 @keyframes toy{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
-.cta{background:var(--ink);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
+.cta{background:radial-gradient(60% 70% at 0 100%,rgba(255,210,31,.14),transparent 70%),linear-gradient(160deg,#3B1741 0%,var(--ink) 60%,#1C0720 100%);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
 .cta::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(229,0,122,.7), transparent 70%);pointer-events:none}
 .slogan{margin:0;font-family:var(--display);font-weight:900;font-size:clamp(26px,5.4vw,46px);line-height:1.05;text-wrap:balance;position:relative;z-index:1}
 .slogan span{color:var(--hot)}
 .cta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:relative;z-index:1}
-.cta .btn-main{display:inline-flex;text-decoration:none;font:800 17px var(--body);padding:15px 22px;border-radius:999px;background:var(--hot);color:#fff;transition:transform .15s, box-shadow .15s}
-.cta .btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px var(--hot)}
+.btn-main{display:inline-flex;text-decoration:none;font:800 17px var(--body);padding:15px 22px;border-radius:999px;background:var(--hot);color:#fff;transition:transform .15s, box-shadow .15s}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px var(--hot)}
 .cta-row{gap:16px 18px}
-.cta .btn-main{gap:0 .32em;flex-wrap:wrap}
+.btn-main{gap:0 .32em;flex-wrap:wrap}
 .socials{display:flex;gap:10px}
 .soc{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,246,250,.35);color:var(--paper);transition:border-color .15s,background .15s,transform .15s}
 .soc svg{width:22px;height:22px}
 .soc:hover{border-color:var(--paper);background:rgba(255,246,250,.08);transform:translateY(-2px)}
 /* phone: the button text breaks after the question, so it doesn't read as one glued line */
-@media (max-width:640px){.cta .btn-main{display:inline-grid;line-height:1.25;padding:14px 22px}.cta .btn-main span{display:block}.cta .btn-main span+span{font-weight:700;opacity:.95}}
+@media (max-width:640px){.btn-main{display:inline-grid;line-height:1.25;padding:14px 22px}.btn-main span{display:block;white-space:nowrap}.btn-main span+span{font-weight:700;opacity:.95}}
 
 /* Save sheet fallback */
 .sheet{position:fixed;inset:0;z-index:40;background:rgba(42,15,43,.72);display:grid;place-items:center;padding:20px}
@@ -350,10 +374,6 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   .o-head h2{grid-area:h2;font-size:clamp(40px,4.6vw,60px)}
   .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
   /* the prize card sits in the middle, as wide as its longest sentence; one sentence per line */
-  .prize{width:fit-content;max-width:100%;text-align:center;padding:24px 40px;gap:8px}
-  .prize strong{font-size:27px}
-  .prize p{font-size:17px}
-  .prize p span{display:block}
   /* «Беру тільки те…» is stuck on the top right corner of the dark slogan block */
   .honest{justify-self:end;position:relative;z-index:4;max-width:360px;margin:0 32px -84px 0;transform:rotate(2.5deg);font-size:18px}
   .slogan{max-width:62%}
@@ -486,9 +506,13 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 
     <div class="extras">
       <div class="prize">
-        <small id="prizeLabel">Безкоштовно для перших 10</small>
-        <strong id="prizeTitle">Форма для твоєї ідеї</strong>
-        <p id="prizeText"><span>Напиши свою ідею в Telegram, і я підкажу, яким продуктом їй стати, що поставити на перший екран і з чого почати.</span> <span>А якщо сайт у тебе вже є, покажу, що в ньому варто прибрати.</span></p>
+        <div class="ticket">
+          <small>Подарунок · безкоштовно</small>
+          <strong>Форма для твоєї ідеї</strong>
+          <p>Напиши свою ідею в Telegram, і я підкажу, яким продуктом їй стати, що поставити на перший екран і з чого почати. А якщо сайт у тебе вже є, покажу, що в ньому варто прибрати.</p>
+          <a class="btn-main" id="cta" href="https://t.me/thisisdi" target="_blank" rel="noopener"><span>Маєш ідею?</span> <span>Давай надамо їй форму →</span></a>
+        </div>
+        <div class="stub"><span>для перших</span><b>10</b><span>місць</span></div>
       </div>
     </div>
 
@@ -497,7 +521,6 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
     <div class="cta">
       <p class="slogan">Ідеям потрібна форма. <span>Тобі&nbsp;-&nbsp;одна&nbsp;я.</span></p>
       <div class="cta-row">
-        <a class="btn-main" id="cta" href="https://t.me/thisisdi" target="_blank" rel="noopener"><span>Маєш ідею?</span> <span>Давай надамо їй форму →</span></a>
         <div class="socials">
           <a class="soc" id="tg" href="https://t.me/thisisdi" target="_blank" rel="noopener" aria-label="Telegram @thisisdi" title="Telegram @thisisdi"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.4 3.6 2.9 10.8c-1 .4-1 1.8 0 2.1l4.5 1.5 1.7 5.3c.3.9 1.4 1.1 2 .4l2.5-2.6 4.6 3.4c.8.6 1.9.1 2.1-.9l3-14.6c.3-1.3-.9-2.3-1.9-1.8ZM9.6 14l7.6-6.4-6 7.2-.3 3.1Z"/></svg></a>
           <a class="soc" id="ig" href="https://instagram.com/didi.ods" target="_blank" rel="noopener" aria-label="Instagram @didi.ods" title="Instagram @didi.ods"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg></a>
@@ -542,6 +565,9 @@ const CARD_QUIPS = ["Без жалю.","Пух м'який. Ніж - ні.","Ч�
 const $ = id => document.getElementById(id);
 const stage=$("stage"), chick=$("chick"), rig=$("rig"), word=$("word"), bubble=$("bubble"), input=$("pain"), btn=$("cutBtn");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* weaker phones: fewer flakes, lower canvas resolution, snow at half the frame rate */
+const LOW = (navigator.hardwareConcurrency||8)<=4 || (navigator.deviceMemory||8)<=4;
+const DPR = Math.min(devicePixelRatio||1, LOW?1.25:1.75);
 const pick = a => a[Math.floor(Math.random()*a.length)];
 const wait = ms => new Promise(r=>setTimeout(r,ms));
 function track(event, data={}){ try{ (window.dataLayer=window.dataLayer||[]).push({event, ...data}); }catch(e){} }
@@ -611,7 +637,7 @@ const FX=(()=>{
   const g=c.getContext("2d"); let parts=[], raf=0, last=0, W=0, H=0;
   const canBlur="filter" in g;
   const imgs=["v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(s=>{const i=new Image(); i.src=s; return i});
-  const size=()=>{const d=Math.min(devicePixelRatio||1,2); c.style.width=document.documentElement.clientWidth+"px"; W=c.clientWidth||host.clientWidth;   /* the window width without the scrollbar */ H=host.clientHeight; c.width=W*d; c.height=H*d; g.setTransform(d,0,0,d,0,0)};
+  const size=()=>{const d=DPR; c.style.width=document.documentElement.clientWidth+"px"; W=c.clientWidth||host.clientWidth;   /* the window width without the scrollbar */ H=host.clientHeight; c.width=W*d; c.height=H*d; g.setTransform(d,0,0,d,0,0)};
   size(); addEventListener("resize",size); if("ResizeObserver" in window) new ResizeObserver(size).observe(host);
   const toHost=(x,y)=>{const r=c.getBoundingClientRect(); return [x-r.left, y-r.top]};
   function tick(now){
@@ -743,7 +769,7 @@ const DECO=(()=>{
   const game=document.querySelector(".game"), stage=$("stage");
   const P = FRAME_COLOR==="blue" ? "xfb-" : "xf-";
   /* the story card uses the whole garland frame in its own proportions */
-  const frameImg=new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=FRAME_COLOR==="blue"?"v2-frame-garland-blue.webp":"v2-frame-garland.webp"; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
+  const frameImg=()=>loadC(FRAME_COLOR==="blue"?"v2-frame-garland-blue.webp":"v2-frame-garland.webp");
 
   /* ---- snow: falls over the whole screen in three depths; far flakes small and crisp, near ones big and soft, a few real crystals ---- */
   function flakeDraw(g,f){
@@ -766,16 +792,18 @@ const DECO=(()=>{
   function startSnow(){
     const c=document.createElement("canvas"); c.className="snowfall"; document.body.append(c);
     const g=c.getContext("2d"); let W=0,H=0, flakes=[];
-    const size=()=>{const dpr=Math.min(devicePixelRatio||1,2); W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; g.setTransform(dpr,0,0,dpr,0,0);
-      const n=Math.min(130,Math.round(W*H/9000)); while(flakes.length<n) flakes.push(newFlake(W,H,true)); flakes.length=n; draw(0);};
+    const size=()=>{const dpr=DPR; W=innerWidth; H=innerHeight; c.width=W*dpr; c.height=H*dpr; g.setTransform(dpr,0,0,dpr,0,0);
+      const n=Math.min(LOW?55:110,Math.round(W*H/(LOW?16000:10000))); while(flakes.length<n) flakes.push(newFlake(W,H,true)); flakes.length=n; draw(0);};
     function draw(dt){ g.clearRect(0,0,W,H);
       for(const f of flakes){ if(dt){ f.y+=f.v*dt; f.ph+=.015*dt; f.x+=Math.sin(f.ph)*f.sw*dt; f.rot+=f.spin*dt; if(f.y>H+14) Object.assign(f,newFlake(W,H,false)); }
         flakeDraw(g,f); } }
     size(); addEventListener("resize",size);
-    if(!reduce){ let last=0; (function loop(now){ const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now; if(!document.hidden && NY) draw(dt); requestAnimationFrame(loop); })(0); }
+    if(!reduce){ let last=0, odd=false; (function loop(now){ odd=!odd;
+      if(!document.hidden && NY){ if(!(LOW && odd)){ const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now; draw(dt); } } else last=0;
+      requestAnimationFrame(loop); })(0); }
   }
   let snowReady=false;
-  function snowOn(){ if(snowReady) return; snowReady=true; startSnow(); settle(); }
+  function snowOn(){ if(snowReady) return; snowReady=true; startSnow(); settle(); frameImg(); }
 
   /* ---- snow that settles: a fluffy cap grows slowly on top of chosen things ---- */
   function cap(el,{x=.08,w=.5,h=12,top=null,grow=true}={}){
@@ -808,7 +836,7 @@ const DECO=(()=>{
 
   /* frame mode: Diana's garland frame runs around the whole screen (corners, bow and ornaments from her picture,
      seamless fur in between so it fits any width), plus falling and settling snow */
-  if(DECOR==="frame"){
+  if(DECOR==="frame" && (QS.get("frame")==="1" || QS.get("review")==="1")){
     const x=document.createElement("div"); x.className="xframe"; x.setAttribute("aria-hidden","true");
     x.innerHTML=`<i class="f2-top"></i><i class="f2-bot"></i><i class="f2-left"></i><i class="f2-right"></i>
       <canvas class="f2-lights"></canvas>
@@ -819,7 +847,7 @@ const DECO=(()=>{
     /* garland: a thin warm wire waving along the middle of each side band, round glowing lights like on the corners */
     const lc=x.querySelector(".f2-lights"), lg=lc.getContext("2d");
     function lights(){
-      const dpr=Math.min(devicePixelRatio||1,2), W=x.clientWidth||innerWidth, H=x.clientHeight||innerHeight; lc.width=W*dpr; lc.height=H*dpr; lg.setTransform(dpr,0,0,dpr,0,0); lg.clearRect(0,0,W,H);
+      const dpr=DPR, W=x.clientWidth||innerWidth, H=x.clientHeight||innerHeight; lc.width=W*dpr; lc.height=H*dpr; lg.setTransform(dpr,0,0,dpr,0,0); lg.clearRect(0,0,W,H);
       const s=parseFloat(getComputedStyle(document.body).getPropertyValue("--s"))||.15, band=174*s, mid=147*s, side=134*s, end=560*s;
       /* Like the garland on Diana's reference frame: a twisted beige cord crossing the fur from edge to edge
          in long soft S-curves, big pearly lights sitting on the edges of the band where the cord turns. */
@@ -875,7 +903,7 @@ const DECO=(()=>{
       const w=el.offsetWidth, h=el.offsetHeight; if(!w) return;
       const tf=getComputedStyle(el).transform;
       Object.assign(c.style,{left:(el.offsetLeft-M)+"px", top:(el.offsetTop-M)+"px", width:(w+2*M)+"px", height:(h+2*M)+"px", transform: tf==="none"?"":tf});
-      const d=Math.min(devicePixelRatio||1,2); c.width=(w+2*M)*d; c.height=(h+2*M)*d; g.setTransform(d,0,0,d,0,0);
+      const d=DPR; c.width=(w+2*M)*d; c.height=(h+2*M)*d; g.setTransform(d,0,0,d,0,0);
       /* the border as a list of points with outward normals, every ~2px */
       const R=Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius)||20, h/2, w/2), x0=M, y0=M, x1=M+w, y1=M+h, pts=[];
       const line=(ax,ay,bx,by,nx,ny)=>{ const L=Math.hypot(bx-ax,by-ay), n=Math.max(1,Math.round(L/2)); for(let i=0;i<n;i++){ const t=i/n; pts.push([ax+(bx-ax)*t, ay+(by-ay)*t, nx, ny]); } };
@@ -931,7 +959,7 @@ const DECO=(()=>{
         hill(1560,140,"#FFB3D6"); hill(1660,110,"#FFC8E2"); hill(1740,70,"#FFF6FA");
       }
     },
-    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,-10,140,1100,1604); },   /* a touch wider than the card, so the frame fills it */
+    async cardFrame(g){ const img=await frameImg(); if(img) g.drawImage(img,-10,208,1100,1560); },   /* a touch wider than the card, so the frame fills it */
     /* the result card is hidden at load, so its snow cap is added the first time it appears */
     capResult(){ if(this.done || !NY) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); },
     snowOn, redraw, lightUp(){ if(lightsOn) return; lightsOn=true; redraw(); }
@@ -1057,11 +1085,11 @@ async function makeCard(t){
      above the Instagram reply bar, so the card is worth posting even for people who never need a site. */
   const FR=NY && !!DECOR;
   /* top: a thin, quiet signature; bottom: the dark banner with the question (Diana liked it, 25.11) */
-  const head=()=>{ g.textAlign="center"; g.textBaseline="alphabetic"; g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.fillText(CONFIG.sign,540,104); };
+  const head=()=>{ g.textAlign="center"; g.textBaseline="alphabetic"; g.fillStyle="rgba(110,59,98,.75)"; g.font="500 30px Manrope"; g.fillText(CONFIG.sign,540,188); };
   const foot=()=>{ g.fillStyle="#2A0F2B"; rr(g,90,1784,900,96,48); g.fill();
     g.fillStyle="#FFF6FA"; g.textBaseline="middle"; g.textAlign="center"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1833); };
   head();
-  if(FR){ g.save(); g.translate(540,1086); g.scale(.70,.70); g.translate(-540,-980); }
+  if(FR){ g.save(); g.translate(540,1128); g.scale(.69,.69); g.translate(-540,-980); }
   g.textAlign="center"; g.textBaseline="alphabetic";
   g.fillStyle="#E5007A"; g.font="900 66px Unbounded"; g.fillText("СЬОГОДНІ",540,320); g.fillText("ЗАРІЗАНО:",540,402);
   g.font="900 120px Unbounded";
