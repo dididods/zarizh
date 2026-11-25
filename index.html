@@ -8,7 +8,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800;900&family=Manrope:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800;900&family=Manrope:wght@500;600;700;800&display=swap">
 <style>
 /* v2. One bubblegum page: game first screen (headline, live chick, input, chips, result), then the offer as the next chapter.
    Deliberately single-theme (a pink toy world), every colour set explicitly. */
@@ -45,6 +45,11 @@ a{color:inherit}
 .result{grid-area:result}
 .top{grid-area:top;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 10px}
 .top-r{margin-left:auto}
+.top{position:relative}
+.mistle{display:none}
+.ny .mistle{display:block;position:absolute;left:50%;top:50%;width:clamp(78px,9vw,112px);height:auto;transform:translate(-50%,-50%) rotate(-3deg);pointer-events:none;z-index:2;filter:drop-shadow(0 4px 6px rgba(110,20,70,.22))}
+/* phone: the top line is full (it wraps), so the mistletoe hangs above it and the line moves down */
+@media (max-width:640px){.ny .top{padding-top:50px}.ny .mistle{top:-8px;width:76px;transform:translateX(-50%) rotate(-3deg)}}
 .brand{font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;line-height:1.2}
 .brand span{color:var(--hot)}
 .top-r{display:flex;gap:8px;align-items:center}
@@ -54,7 +59,7 @@ a{color:inherit}
 .eyebrow{margin:0;font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--hot)}
 h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-spacing:-.02em;font-size:clamp(36px, 10.5vw, 80px);text-wrap:balance}
 .knife-word{color:var(--hot);position:relative;display:inline-block}
-.knife-word::after{content:"";position:absolute;left:-3%;right:-3%;top:56%;height:.09em;background:var(--ink);transform:rotate(-1.5deg);border-radius:4px}
+.knife-word::after{content:"";position:absolute;left:-3%;right:-3%;top:57%;height:.09em;background:var(--ink);transform:rotate(-2.2deg);transform-origin:100% 50%;border-radius:4px}   /* lower at the left end, so the «з» reads (25.11) */
 .sub{margin:0;color:var(--ink-soft);font-weight:600;max-width:36ch}
 
 /* Stage */
@@ -129,7 +134,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .flash.on{animation:flash .35s ease-out}
 @keyframes flash{0%{opacity:1}100%{opacity:0}}
 .count{position:absolute;left:0;bottom:0;z-index:3;font-weight:800;font-size:12px;background:var(--ink);color:var(--paper);border-radius:999px;padding:5px 11px}
-.fx{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:30}
+.fx{position:absolute;left:50%;top:0;width:100vw;height:100%;transform:translateX(-50%);pointer-events:none;z-index:30}
 .haptic{position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none}
 
 /* Form */
@@ -160,7 +165,7 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .note{font-size:13px;color:var(--ink-soft);font-weight:700;margin:0}
 
 /* ---------- Offer ---------- */
-.offer{padding-block:8px 48px}
+.offer{padding-block:8px 48px;overflow-x:clip}   /* the garlands reach past the cards; keep them off the page width */
 .offer-in{display:grid;gap:clamp(22px,4vw,36px)}
 .bridge{display:flex;gap:12px;align-items:center;max-width:620px;background:var(--yolk);border:2.5px solid var(--ink);border-radius:20px 20px 20px 4px;padding:12px 16px;box-shadow:4px 4px 0 var(--ink);transform:rotate(-1deg)}
 .bridge img{width:58px;height:58px;flex:none;object-fit:contain;padding:4px;background:var(--paper);border:2px solid var(--ink);border-radius:50%}
@@ -170,8 +175,8 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 @keyframes nudge{50%{transform:rotate(1deg) scale(1.03)}}
 .o-head{display:grid;gap:10px}
 .o-head h2{font-family:var(--display);font-weight:900;margin:0;line-height:1;letter-spacing:-.02em;font-size:clamp(32px,8vw,68px);text-wrap:balance}
-.o-sub{margin:0;font-weight:700;font-size:clamp(18px,2.6vw,23px);line-height:1.35;max-width:32ch}
-.o-sub em{font-style:normal;background:linear-gradient(transparent 58%, var(--yolk) 58% 92%, transparent 92%)}
+.o-sub{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(17px,2.2vw,21px);line-height:1.4;letter-spacing:-.01em;max-width:32ch;color:var(--ink)}
+.o-sub em{font-style:normal;font-weight:700;background:linear-gradient(transparent 58%, var(--yolk) 58% 92%, transparent 92%)}
 .pair{display:grid;gap:16px}
 .card{background:var(--paper);border:2px solid var(--ink);border-radius:22px;padding:20px;box-shadow:6px 6px 0 var(--ink);min-width:0}
 .card h3{margin:0 0 14px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;display:flex;gap:10px;align-items:center}
@@ -209,6 +214,17 @@ h1{font-family:var(--display);font-weight:900;margin:0;line-height:.95;letter-sp
 .prize small{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--hot)}
 .prize strong{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.2}
 .prize p{margin:0;color:var(--ink-soft);font-weight:600;font-size:15px}
+.gift{display:contents}
+.ny .prize{background:none;border:0;padding:0;gap:10px}
+.ny .gift{display:grid;align-content:center;justify-items:center;gap:4px;text-align:center;aspect-ratio:1100/805;margin-inline:-3%;background:url(ny-gift-frame.webp) center/100% 100% no-repeat;padding:31% 17% 21%}
+.ny .gift strong{font-size:clamp(17px,2.4vw,24px)}
+.ny .prize{justify-items:center}
+.ny .gift{width:min(106%,540px)}
+.ny .prize p{padding-inline:4px;text-align:center;max-width:46ch}
+/* New Year: a light garland with ornaments runs round the bridge and both offer cards (drawn in code) */
+.offer-in{position:relative}
+.garland{position:absolute;pointer-events:none;z-index:3}
+body:not(.ny) .garland{display:none}
 .honest{justify-self:start;max-width:440px;background:var(--yolk);border-radius:4px 18px 18px 18px;padding:16px 20px;font-weight:800;font-size:17px;line-height:1.35;transform:rotate(-1.2deg);box-shadow:4px 4px 0 var(--ink);margin:0}
 .honest span{display:block;font-weight:600;font-size:14px;margin-top:4px;opacity:.85}
 .cta{background:var(--ink);color:var(--paper);border-radius:28px;padding:clamp(22px,5vw,44px);display:grid;gap:20px;position:relative;overflow:hidden}
@@ -318,8 +334,8 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
   .o-head .eyebrow{grid-area:eye}
   .o-head h2{grid-area:h2;font-size:clamp(40px,4.6vw,60px)}
   .o-sub{grid-area:sub;max-width:none;padding-bottom:.35em}
-  .extras{grid-template-columns:1.3fr 1fr;align-items:stretch}
-  .honest{justify-self:stretch;max-width:none;display:flex;flex-direction:column;justify-content:center;transform:rotate(-.6deg);font-size:19px}
+  .extras{grid-template-columns:1.3fr 1fr;align-items:center}
+  .honest{justify-self:center;max-width:380px;transform:rotate(-1.5deg);font-size:18px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -334,6 +350,7 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 <div class="game pad">
   <div class="top">
     <div class="brand" id="brand">Діана <span>·</span> digital designer</div>
+    <img class="mistle" src="ny-mistletoe.webp" alt="" width="629" height="447">
     <div class="top-r">
       <a class="skip" href="#offer" id="skip">Одразу до справи ↓</a>
       <button class="sound" id="sound" type="button" aria-pressed="true">Звук увімк.</button>
@@ -448,8 +465,10 @@ body:not(.ny) .snowfall, body:not(.ny) .snowcap{display:none}   /* snow belongs 
 
     <div class="extras">
       <div class="prize">
-        <small id="prizeLabel">Безкоштовно для перших 10</small>
-        <strong id="prizeTitle">Форма для твоєї ідеї</strong>
+        <div class="gift">
+          <small id="prizeLabel">Безкоштовно для перших 10</small>
+          <strong id="prizeTitle">Форма для твоєї ідеї</strong>
+        </div>
         <p id="prizeText">Напиши свою ідею в Telegram, і я підкажу, яким продуктом їй стати, що поставити на перший екран і з чого почати. А якщо сайт у тебе вже є, покажу, що в ньому варто прибрати.</p>
       </div>
       <p class="honest">Беру тільки те, що зроблю добре.<span>Якщо задача не моя, скажу одразу і чесно.</span></p>
@@ -482,11 +501,11 @@ const CONFIG = {
   handle: "@didi.ods",
   sign: "Діана · digital designer",
   tgUrl: "https://t.me/thisisdi",
-  cardFooter: "А що заріжеш ти? Шукай @didi.ods",
+  cardAsk: "А що заріжеш ти?",
 };
 const CHIPS = [
-  "Ідея третій рік у нотатках","Сайт, за який соромно","Заявки, що губляться",
-  "Клієнти не розуміють, що я продаю","Сайт за три копійки",
+  "Ідея третій рік у нотатках","Графіки відключень","Заявки, що губляться",
+  "Клієнти не розуміють, що я продаю","Відключення не по графіку",
 ];
 const CHIPS_LIFE = ["Голосові на 10 хвилин","Непрохані поради","Будильник"];
 const HINT = matchMedia("(pointer:coarse)").matches ? "Пір'я можна ганяти пальцем. Мене - ні." : "Пір'я можна ганяти курсором. Мене - ні.";
@@ -570,9 +589,9 @@ const FX=(()=>{
   const g=c.getContext("2d"); let parts=[], raf=0, last=0, W=0, H=0;
   const canBlur="filter" in g;
   const imgs=["v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(s=>{const i=new Image(); i.src=s; return i});
-  const size=()=>{const d=Math.min(devicePixelRatio||1,2); W=host.clientWidth; H=host.clientHeight; c.width=W*d; c.height=H*d; g.setTransform(d,0,0,d,0,0)};
+  const size=()=>{const d=Math.min(devicePixelRatio||1,2); c.style.width=document.documentElement.clientWidth+"px"; W=c.clientWidth||host.clientWidth;   /* the window width without the scrollbar */ H=host.clientHeight; c.width=W*d; c.height=H*d; g.setTransform(d,0,0,d,0,0)};
   size(); addEventListener("resize",size); if("ResizeObserver" in window) new ResizeObserver(size).observe(host);
-  const toHost=(x,y)=>{const r=host.getBoundingClientRect(); return [x-r.left, y-r.top]};
+  const toHost=(x,y)=>{const r=c.getBoundingClientRect(); return [x-r.left, y-r.top]};
   function tick(now){
     const dt=Math.min(3,(now-(last||now))/16.67)||1; last=now;
     g.clearRect(0,0,W,H);
@@ -691,6 +710,11 @@ function applyChick(){
 }
 applyChick();
 
+/* onload instead of decode(): decode() can stay pending forever in some browsers; a 6 s cap so nothing ever hangs */
+const load=s=>new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=s; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
+/* images are loaded once and reused; the chick set depends on the season the card is made in */
+const imgCache={}; const loadC=s=>imgCache[s]||(imgCache[s]=load(s));
+
 const DECO=(()=>{
   if(!DECOR) return null;
   document.body.classList.add("decor","decor-"+DECOR);
@@ -747,9 +771,7 @@ const DECO=(()=>{
     /* no snow on the chick itself: it sits wrong on the round fur (Diana, 24.11) */
     cap(document.querySelector(".field"),{x:.06,w:.42,h:12});
     const chips=[...document.querySelectorAll(".chip")]; [0,3,6].forEach(i=>cap(chips[i],{x:.15,w:.55,h:8}));
-    cap(document.querySelector(".bridge"),{x:.04,w:.3,h:12});
-    cap(document.querySelector(".card-build"),{x:.6,w:.32,h:12});
-    cap(document.querySelector(".prize"),{x:.1,w:.28,h:11});
+    /* the bridge and the two cards wear a garland instead, the gift block has its fluffy frame */
     cap(document.querySelector(".honest"),{x:.45,w:.45,h:11});
   }
 
@@ -817,6 +839,61 @@ const DECO=(()=>{
   }
   if(NY) snowOn();
 
+  /* ---- garland round the bridge and both offer cards: a twisted cord waving across the border,
+     warm pearl lights where it turns, a few ornaments hanging off it (no fur, Diana 25.11) ---- */
+  const orn={ball:loadC("xf-ball.webp"), star:loadC("xf-star.webp")};
+  const offerIn=document.querySelector(".offer-in"), garlands=[];
+  function garland(el, hang){
+    if(!el) return;
+    const c=document.createElement("canvas"); c.className="garland"; c.setAttribute("aria-hidden","true"); offerIn.append(c);
+    const g=c.getContext("2d"), M=46;
+    async function draw(){
+      if(!NY) return;
+      const w=el.offsetWidth, h=el.offsetHeight; if(!w) return;
+      const tf=getComputedStyle(el).transform;
+      Object.assign(c.style,{left:(el.offsetLeft-M)+"px", top:(el.offsetTop-M)+"px", width:(w+2*M)+"px", height:(h+2*M)+"px", transform: tf==="none"?"":tf});
+      const d=Math.min(devicePixelRatio||1,2); c.width=(w+2*M)*d; c.height=(h+2*M)*d; g.setTransform(d,0,0,d,0,0);
+      /* the border as a list of points with outward normals, every ~2px */
+      const R=Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius)||20, h/2, w/2), x0=M, y0=M, x1=M+w, y1=M+h, pts=[];
+      const line=(ax,ay,bx,by,nx,ny)=>{ const L=Math.hypot(bx-ax,by-ay), n=Math.max(1,Math.round(L/2)); for(let i=0;i<n;i++){ const t=i/n; pts.push([ax+(bx-ax)*t, ay+(by-ay)*t, nx, ny]); } };
+      const arc=(cx,cy,a0)=>{ const n=Math.max(2,Math.round(R*1.57/2)); for(let i=0;i<n;i++){ const a=a0+Math.PI/2*i/n; pts.push([cx+Math.cos(a)*R, cy+Math.sin(a)*R, Math.cos(a), Math.sin(a)]); } };
+      line(x0+R,y0,x1-R,y0,0,-1); arc(x1-R,y0+R,-Math.PI/2); line(x1,y0+R,x1,y1-R,1,0); arc(x1-R,y1-R,0);
+      line(x1-R,y1,x0+R,y1,0,1); arc(x0+R,y1-R,Math.PI/2); line(x0,y1-R,x0,y0+R,-1,0); arc(x0+R,y0+R,Math.PI);
+      const N=pts.length, waves=Math.max(4, Math.round(N*2/44/2)*2), A=7;   /* a light every ~44px, an even count so the loop closes */
+      const at=i=>{ const p=pts[((i%N)+N)%N], o=A*Math.sin(Math.PI*waves*i/N); return [p[0]+p[2]*o, p[1]+p[3]*o]; };
+      g.clearRect(0,0,w+2*M,h+2*M);
+      const cw=2.2, cord=(lw,col,dy)=>{ g.strokeStyle=col; g.lineWidth=lw; g.lineCap="round"; g.lineJoin="round"; g.beginPath();
+        for(let i=0;i<=N;i++){ const [x,y]=at(i); i?g.lineTo(x,y+dy):g.moveTo(x,y+dy); } g.stroke(); };
+      cord(cw*1.7,"rgba(110,60,40,.28)",cw*.6); cord(cw,"#E6D3AE",0); cord(cw*.4,"rgba(255,255,255,.6)",-cw*.2);
+      const r=4.6;
+      for(let k=0;k<waves;k++){ const [px,py]=at(Math.round((k+.5)*N/waves));
+        const gl=g.createRadialGradient(px,py,r*.5,px,py,r*3.4); gl.addColorStop(0,"rgba(255,232,175,.8)"); gl.addColorStop(.45,"rgba(255,220,150,.32)"); gl.addColorStop(1,"rgba(255,220,150,0)");
+        g.fillStyle=gl; g.beginPath(); g.arc(px,py,r*3.4,0,7); g.fill();
+        const b=g.createRadialGradient(px-r*.35,py-r*.35,r*.1,px,py,r); b.addColorStop(0,"#FFFFFF"); b.addColorStop(.55,"#FFF6DE"); b.addColorStop(1,"#F2D59B");
+        g.fillStyle=b; g.beginPath(); g.arc(px,py,r,0,7); g.fill(); }
+      /* ornaments: [x, y as a share of the box (the nearest point of the border is used), kind, size px, tilt] */
+      const [ball,star]=await Promise.all([orn.ball,orn.star]);
+      for(const [fx,fy,kind,sz,rot] of hang){
+        const im=kind==="ball"?ball:star; if(!im) continue;
+        const tx=M+fx*w, ty=M+fy*h; let i=0, best=1e9; pts.forEach((p,j)=>{ const dd=(p[0]-tx)**2+(p[1]-ty)**2; if(dd<best){ best=dd; i=j; } });
+        const [px,py]=at(i), nrm=pts[i];
+        const ih=sz*im.naturalHeight/im.naturalWidth;
+        g.save(); g.translate(px,py);
+        if(kind==="ball" && nrm[3]>.5){ g.strokeStyle="#C9A45C"; g.lineWidth=1.4; g.beginPath(); g.moveTo(0,0); g.lineTo(0,10); g.stroke(); g.translate(0,10+ih/2); }
+        g.rotate(rot); g.drawImage(im,-sz/2,-ih/2,sz,ih); g.restore();
+      }
+    }
+    garlands.push(draw);
+    if("ResizeObserver" in window) new ResizeObserver(()=>draw()).observe(el);
+  }
+  /* positions picked to stay clear of the knife button (top right of «Ріжемо») and of the text */
+  /* ornaments sit on the side edges, so nothing hangs over the text below on a phone */
+  garland(document.querySelector(".bridge"), [[0,0,"star",30,-.3],[1,.62,"ball",30,0]]);
+  garland($("cutCard"), [[0,0,"star",30,-.25],[0,.68,"ball",30,0]]);
+  garland(document.querySelector(".card-build"), [[1,0,"star",30,.3],[1,.66,"ball",30,0]]);
+  const redraw=()=>garlands.forEach(f=>f());
+  addEventListener("resize",redraw); if(document.fonts) document.fonts.ready.then(redraw);
+
   return {
     cardBack(g){
       if(NY){ for(let i=0;i<120;i++){ const f=newFlake(1080,1920,true); f.r*=2.6; flakeDraw(g,f); } g.globalAlpha=1; }
@@ -827,10 +904,10 @@ const DECO=(()=>{
         hill(1560,140,"#FFB3D6"); hill(1660,110,"#FFC8E2"); hill(1740,70,"#FFF6FA");
       }
     },
-    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,0,200,1080,1564); },
+    async cardFrame(g){ const img=await frameImg; if(img) g.drawImage(img,40,96,1000,1448); },
     /* the result card is hidden at load, so its snow cap is added the first time it appears */
     capResult(){ if(this.done || !NY) return; this.done=true; cap($("result"),{x:.55,w:.35,h:12}); },
-    snowOn
+    snowOn, redraw
   };
 })();
 
@@ -905,7 +982,7 @@ const SEASON=(()=>{
   const angle=e=>{ const r=rig.getBoundingClientRect(), [gx,gy]=grip(); return Math.atan2(e.clientY-(r.top+r.height*gy/100), e.clientX-(r.left+r.width*gx/100))*180/Math.PI; };
   let drag=false, acc=0, last=0;
   function switchSeason(e){
-    NY=!NY; applyChick(); placeHint(); if(NY && DECO) DECO.snowOn();
+    NY=!NY; applyChick(); placeHint(); if(NY && DECO){ DECO.snowOn(); DECO.redraw(); }
     const f=document.createElement("div"); f.className="season-flash";
     if(e){ f.style.setProperty("--fx",e.clientX+"px"); f.style.setProperty("--fy",e.clientY+"px"); }
     document.body.append(f); setTimeout(()=>f.remove(),800);
@@ -936,10 +1013,6 @@ const SEASON=(()=>{
 })();
 
 /* ===== Story card 1080x1920 ===== */
-/* onload instead of decode(): decode() can stay pending forever in some browsers; a 6 s cap so nothing ever hangs */
-const load=s=>new Promise(res=>{const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=s; setTimeout(()=>res(i.naturalWidth?i:null),6000)});
-/* images are loaded once and reused; the chick set depends on the season the card is made in */
-const imgCache={}; const loadC=s=>imgCache[s]||(imgCache[s]=load(s));
 const cardAssets=()=>Promise.all([CHICK.src,"v2-knife.webp",CHICK.paw,"v2-bow.webp","v2-f1.webp","v2-f2.webp","v2-f3.webp","v2-f4.webp"].map(loadC));
 cardAssets();
 const fontsReady=document.fonts?Promise.race([Promise.all([document.fonts.load('900 120px Unbounded'),document.fonts.load('800 40px Manrope'),document.fonts.load('600 30px Manrope')]).catch(()=>{}),wait(3000)]):Promise.resolve();
@@ -952,14 +1025,15 @@ async function makeCard(t){
   g.fillStyle="#FFD9EC"; g.fillRect(0,0,1080,1920);
   g.save(); g.translate(540,960); g.rotate(-28*Math.PI/180); g.fillStyle="rgba(255,179,214,.6)"; for(let x=-1600;x<1600;x+=150) g.fillRect(x,-1600,10,3200); g.restore();
   if(DECOR) DECO.cardBack(g);
-  /* frame mode: the frame keeps its own proportions (1080x1564 from y=200); the title, word and chick shrink to fit inside it,
-     the handle sits above the bow and the footer below the frame */
-  const FR=DECOR==="frame";
-  const head=(y1,y2)=>{ g.textAlign="center"; g.textBaseline="alphabetic"; g.fillStyle="#2A0F2B"; g.font="800 42px Manrope"; g.fillText(CONFIG.handle.toUpperCase(),540,y1);
-    g.fillStyle="#6E3B62"; g.font="600 30px Manrope"; g.fillText(CONFIG.sign,540,y2); };
-  const foot=()=>{ g.fillStyle="#2A0F2B"; rr(g,90,1772,900,96,48); g.fill();
-    g.fillStyle="#FFF6FA"; g.textBaseline="middle"; g.textAlign="center"; fitFont(g,CONFIG.cardFooter,800,38,"Manrope",820,22); g.fillText(CONFIG.cardFooter,540,1821); };
-  if(FR){ g.save(); g.translate(540,1122); g.scale(.69,.69); g.translate(-540,-980); } else head(130,178);
+  /* The garland frame only on cards made in the New Year version (Diana 25.11). It starts near the top (1000x1448 from y=96),
+     the title, word and chick shrink to fit inside it. No big handle on top any more: one quiet line at the bottom,
+     above the Instagram reply bar, so the card is worth posting even for people who never need a site. */
+  const FR=NY && !!DECOR;
+  const foot=y=>{ const q=CONFIG.cardAsk+"   ", h=CONFIG.handle; g.textBaseline="middle"; g.textAlign="left";
+    g.font="800 40px Manrope"; const w1=g.measureText(q).width; g.font="700 34px Manrope"; const w2=g.measureText(h).width;
+    const x=540-(w1+w2)/2; g.fillStyle="#2A0F2B"; g.font="800 40px Manrope"; g.fillText(q,x,y);
+    g.fillStyle="#E5007A"; g.font="700 34px Manrope"; g.fillText(h,x+w1,y+1); g.textAlign="center"; };
+  if(FR){ g.save(); g.translate(540,964); g.scale(.639,.639); g.translate(-540,-980); }
   g.textAlign="center"; g.textBaseline="alphabetic";
   g.fillStyle="#E5007A"; g.font="900 66px Unbounded"; g.fillText("СЬОГОДНІ",540,320); g.fillText("ЗАРІЗАНО:",540,402);
   g.font="900 120px Unbounded";
@@ -979,19 +1053,19 @@ async function makeCard(t){
   half(true,26,-26,-0.05); half(false,-22,22,0.04);
   g.save(); g.strokeStyle="#FFF6FA"; g.lineCap="round"; g.lineWidth=14; g.shadowColor="#E5007A"; g.shadowBlur=26;
   g.beginPath(); g.moveTo(x0-70,cy+h*.2); g.lineTo(x0+w+70,cy-h*.2); g.stroke(); g.restore();
-  g.fillStyle="#6E3B62"; g.textBaseline="alphabetic"; g.font="800 44px Manrope"; g.fillText(pick(CARD_QUIPS),540,cy+h/2+110);
+  g.fillStyle="#6E3B62"; g.textBaseline="alphabetic"; g.font="800 44px Manrope"; const qy=cy+h/2+110; g.fillText(pick(CARD_QUIPS),540,qy);
   // feathers drifting
   const spots=[[150,880,-.6,120],[930,840,.7,110],[110,1300,.3,90],[985,1250,-.4,100],[230,1640,1.1,70],[860,1660,-1,80]];
   spots.forEach(([x,y,r,s],i)=>{const im=feathers[i%4]; if(!im) return; g.save(); g.translate(x,y); g.rotate(r); g.globalAlpha=.95; g.drawImage(im,-s/2,-s/2*im.naturalHeight/im.naturalWidth,s,s*im.naturalHeight/im.naturalWidth); g.restore();});
   // chick
-  const cw=CHICK.ny?700:800, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=CHICK.ny?870:920;
+  const cw=CHICK.ny?700:760, ch=cw*CHICK.ar, X=(1080-cw)/2, Y=CHICK.ny?Math.max(870,qy+20):Math.max(900,qy+60);   /* never under the quip */
   g.save(); g.fillStyle="rgba(110,20,70,.22)"; g.filter&&(g.filter="blur(18px)"); g.beginPath(); g.ellipse(X+cw/2,Y+ch*.98,cw*.38,40,0,0,7); g.fill(); g.restore();
   if(body) g.drawImage(body,X,Y,cw,ch);
   if(bow && CHICK.bow){const bw=cw*.27, bh=bw*bow.naturalHeight/bow.naturalWidth; g.save(); g.translate(X+cw*.37+bw/2, Y-ch*.02+bh/2); g.rotate(-9*Math.PI/180); g.drawImage(bow,-bw/2,-bh/2,bw,bh); g.restore();}
   if(knife){const K=CHICK.knife, kw=cw*K.w/100, kh=kw*203/360, gx=X+cw*K.l/100+kw*.24, gy=Y+ch*K.t/100+kh*.70; g.save(); g.translate(gx,gy); g.rotate(-18*Math.PI/180); g.drawImage(knife,-kw*.24,-kh*.70,kw,kh); g.restore();}
   if(paw){const P=CHICK.pawPos, pw=cw*P.w/100; g.drawImage(paw,X+cw*P.l/100,Y+ch*P.t/100,pw,pw);}
-  if(FR){ g.restore(); await DECO.cardFrame(g); head(80,124); }
-  foot();
+  if(FR){ g.restore(); await DECO.cardFrame(g); }
+  foot(FR?1640:1730);
   return new Promise(res=>c.toBlob(b=>res(b),"image/png"));
 }
 async function showResult(t){
@@ -1032,8 +1106,9 @@ $("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidd
       const d=Math.hypot(e.clientX-(r.left+r.width/2), e.clientY-(r.top+r.height/2));
       grab.classList.toggle("near", d<110);
     },{passive:true});
-  } else if("IntersectionObserver" in window){
-    /* no hover on phones: the hint shows once the card is on screen */
+  }
+  if("IntersectionObserver" in window){
+    /* «Візьми мене» shows once the card is on screen, wherever the mouse is */
     new IntersectionObserver(es=>es.forEach(e=>grab.classList.toggle("hint", e.isIntersecting && !cutOnce)),{threshold:.6}).observe(card);
   }
   const place=(x,y,rot,ms)=>{ fly.style.transition=ms?`transform ${ms}ms cubic-bezier(.5,0,.3,1)`:"none"; fly.style.transform=`translate(${x}px,${y}px) rotate(${rot}deg)`; };
