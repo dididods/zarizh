@@ -1045,7 +1045,8 @@ const SEASON=(()=>{
   b.addEventListener("click",e=>{
     if(needsAsk && !armed){ DeviceMotionEvent.requestPermission().then(r=>{ if(r==="granted") arm(); }).catch(()=>{}); }
     if(busy || b.disabled) return; b.disabled=true; b.classList.remove("idle");
-    if(!NY){ b.classList.add("shake"); sfx("whoosh"); buzz([10,30,10,30]); setTimeout(()=>{ SEASON.flip(e); b.classList.remove("shake"); draw(); b.disabled=false; }, reduce?0:650); }
+    if(!NY){ b.classList.add("shake"); sfx("whoosh"); buzz([10,30,10,30]);
+      setTimeout(()=>{ b.classList.remove("shake"); whirl(()=>{ SEASON.flip(null,true); draw(); }, ()=>{ b.disabled=false; }); }, reduce?0:650); }
     else{ sfx("whoosh");
       throwAtChick(()=>{ sfx("cut"); b.style.visibility="hidden";
         whirl(()=>{ SEASON.flip(null,true); draw(); }, ()=>{ b.style.visibility=""; b.disabled=false; }); }); }
@@ -1245,7 +1246,7 @@ else{
     setTimeout(()=>{ if(tappedOnce) return; const rr=rig.getBoundingClientRect(); FX.burst(rr.left+rr.width*.56, rr.top+rr.height*.6, 6, .7);
       chick.classList.remove("boing"); void chick.offsetWidth; chick.classList.add("boing"); setTimeout(()=>chick.classList.remove("boing"),700); }, 950);
     setTimeout(()=>h.remove(),2300); setTimeout(show,13000); };
-  setTimeout(show,10000);
+  setTimeout(show,5000);
 })();
 (function shedLoop(){
   setTimeout(()=>{
